@@ -6,6 +6,8 @@ import streamlit as st
 
 # from streamlit_js_eval import get_page_location
 
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
 
 def main():
     st.set_page_config(
