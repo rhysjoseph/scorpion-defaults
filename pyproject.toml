@@ -1,0 +1,34 @@
+[project]
+name = "{{REPO_NAME}}"
+version = "0.1.0"
+description = ""
+authors = [{name ="cloudsupport", email=  "cloudsupport@ctus.com"}]
+license = {file = "LICENSE"}
+readme = "docs/README.md"
+
+dependencies = [
+    "streamlit >= 1.33.0",
+    "streamlit-js-eval >= 0.1.7",
+    "netaddr >= 1.2.1",
+    "typer"
+    
+]
+[project.optional-dependencies]
+pi = [
+    "rpi-gpio >= 0.7.1",
+    "adafruit-circuitpython-ssd1306 >= 2.12.17",
+    "adafruit-python-shell >= 1.8.1", 
+    "adafruit-blinka >= 8.39.1",
+    "pillow >= 10.3.0",
+    "psutil >= 5.9.8",
+]
+[tool.setuptools.packages.find]
+include = ["src"] 
+namespaces = false
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+{{CLI_NAME}} = "src.cli:main"
