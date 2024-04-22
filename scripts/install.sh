@@ -47,10 +47,12 @@ mkdir -p tmp
 
 sudo cp scripts/services/app.service tmp/app.service
 sed -i "s|{{HOME}}|$HOME|g" tmp/app.service
+sudo cp tmp/app.service /etc/systemd/system/app.service
 sudo cp scripts/services/app-service-start.sh tmp/app.sh
 sed -i "s|{{HOME}}|$HOME|g" tmp/app.sh
 sudo cp tmp/app.sh scripts/app.sh
 sudo chmod +x scripts/app.sh
+
 sudo systemctl daemon-reload
 sudo systemctl enable app.service
 # sudo systemctl start app.service
