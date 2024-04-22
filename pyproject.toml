@@ -1,5 +1,5 @@
 [project]
-name = "{{REPO_NAME}}"
+name = "ct-flows"
 version = "0.1.0"
 description = ""
 authors = [{name ="cloudsupport", email=  "cloudsupport@ctus.com"}]
@@ -31,4 +31,4 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project.scripts]
-{{CLI_NAME}} = "src.cli:main"
+flows = "src.cli:main"

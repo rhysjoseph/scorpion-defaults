@@ -4,6 +4,6 @@ After=multi-user.target
 [Service]
 Type=simple
 Restart=always
-ExecStart=/home/{{USER}}/{{REPO_NAME}}/.venv/bin/python /home/{{USER}}/{{REPO_NAME}}/src/stats.py
+ExecStart={{HOME}}/ct-flows/.venv/bin/python {{HOME}}/ct-flows/src/stats.py
 [Install]
 WantedBy=multi-user.target

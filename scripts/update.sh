@@ -31,8 +31,8 @@ sudo ln -s /etc/nginx/sites-available/app /etc/nginx/sites-enabled
 sudo systemctl restart nginx
 
 # # cli alias
-alias="{{CLI_NAME}}"
-alias_target="/home/{{USER}}/{{REPO_NAME}}/.venv/bin/{{CLI_NAME}}"
+alias="flows"
+alias_target="$HOME/ct-flows/.venv/bin/flows"
 set_alias "$alias" "$alias_target"
 
 #set git for remote pushes

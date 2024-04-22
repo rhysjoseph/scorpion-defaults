@@ -12,8 +12,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
 def get_files():
-    folder = "/home/{{USER}}"
-    return [file for file in files if not file.startswith("system-")]
+    return ["test","one", "two"]
 
 
 def main():

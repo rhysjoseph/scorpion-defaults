@@ -22,7 +22,7 @@ function set_alias() {
   fi
 }
 
-cd /home/{{USER}}/{{REPO_NAME}}
+cd $HOME/ct-flows
 
 # updates and packages
 sudo apt-get update -y
@@ -60,7 +60,12 @@ source .venv/bin/activate
 python -m pip install -e .  # add [pi] after the . to install for the pi
 
 # python streamlit app as service optional button and stats display for pi
-# sudo cp scripts/services/stats.service /etc/systemd/system/stats.service
+
+sed -i "s|{{HOME}}|$HOME|g" scripts/services/stats.service
+sed -i "s|{{HOME}}|$HOME|g" scripts/services/button.service
+sed -i "s|{{HOME}}|$HOME|g" scripts/services/stats.service
+
+# sudo cp  /etc/systemd/system/stats.service
 # sudo cp scripts/services/button.service /etc/systemd/system/button.service
 sudo cp scripts/services/app.service /etc/systemd/system/app.service
 sudo systemctl daemon-reload
@@ -78,8 +83,8 @@ sudo ln -s /etc/nginx/sites-available/app /etc/nginx/sites-enabled
 sudo systemctl restart nginx
 
 # # cli alias
-alias="{{CLI_NAME}}"
-alias_target="/home/{{USER}}/{{REPO_NAME}}/.venv/bin/{{CLI_NAME}}"
+alias="flows"
+alias_target="$HOME/ct-flows/.venv/bin/flows"
 set_alias "$alias" "$alias_target"
 
 #set git for remote pushes

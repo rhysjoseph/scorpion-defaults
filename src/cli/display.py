@@ -21,7 +21,7 @@ def stats(
 @app.command()
 def message(text: Annotated[str, typer.Argument(help="Message to display")]):
     print(f"Displaying Message: {text}")
-    print("Warning:  Stats will be disabled, to re-enable '{{CLI_NAME}} display stats'")
+    print("Warning:  Stats will be disabled, to re-enable 'flows display stats'")
     show.text(text)
 
 

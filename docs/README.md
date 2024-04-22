@@ -1,20 +1,19 @@
-# {{REPO_NAME}}
+# ct-flows
 
 Template Setup
 
 Replacements
 
--   {{USER}} : linux user to install everything to
--   {{REPO_NAME}} : repo name in snake case
+-   ct-flows : repo name in snake case
 -   ((CLI_NAME)) : Cli command name for entry point
 
 ## Install
 
 ```
 cd ~
-sudo rm -d -r {{REPO_NAME}}
-git clone https://github.com/ctus-dev/{{REPO_NAME}}.git
-cd {{REPO_NAME}}
+sudo rm -d -r ct-flows
+git clone https://github.com/ctus-dev/ct-flows.git
+cd ct-flows
 chmod +x scripts/install.sh
 scripts/install.sh
 ```
@@ -39,12 +38,12 @@ _Web GUI address x.x.x.x/settings_
 
 ### CLI
 
-| Title             | Command                                           | Desscription                                        |
-| ----------------- | ------------------------------------------------- | --------------------------------------------------- |
-| Version           | `{{CLI_NAME}} --version`                          | Returns current cli version                         |
-| Update            | `{{CLI_NAME}} update`                             | Software Update                                     |
-| Net - DHCP        | `{{CLI_NAME}} net dhcp`                           | Switches device to DHCP mode                        |
-| Net - Static      | `{{CLI_NAME}} net static *ip address* *gateway*`  | Switches device to static and sets address          |
-| Net - Reset       | `{{CLI_NAME}} net reset`                          | Resets to static ip and sets mode to DHCP           |
-| Display - Stats   | `{{CLI_NAME}} display stats --enable/--no-enable` | Runs system stats on device screen                  |
-| Display - Message | `{{CLI_NAME}} display message *text*`             | Stops Stats and displays a message on device screen |
+| Title             | Command                                    | Desscription                                        |
+| ----------------- | ------------------------------------------ | --------------------------------------------------- |
+| Version           | `flows --version`                          | Returns current cli version                         |
+| Update            | `flows update`                             | Software Update                                     |
+| Net - DHCP        | `flows net dhcp`                           | Switches device to DHCP mode                        |
+| Net - Static      | `flows net static *ip address* *gateway*`  | Switches device to static and sets address          |
+| Net - Reset       | `flows net reset`                          | Resets to static ip and sets mode to DHCP           |
+| Display - Stats   | `flows display stats --enable/--no-enable` | Runs system stats on device screen                  |
+| Display - Message | `flows display message *text*`             | Stops Stats and displays a message on device screen |

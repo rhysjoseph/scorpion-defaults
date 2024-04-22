@@ -6,7 +6,7 @@ from src.net import adaptor
 
 
 def _run_process(commands):
-    return subprocess.run(commands, check=False, cwd="/home/{{USER}}/{{REPO_NAME}}")
+    return subprocess.run(commands, check=False, cwd="$HOME/ct-flows")
 
 
 def update():
@@ -14,8 +14,8 @@ def update():
     # show.text("Updating...")
     _run_process(["git", "fetch", "--all"])
     _run_process(["git", "reset", "--hard", "origin/master"])
-    _run_process(["chmod", "+x", "/home/{{USER}}/{{REPO_NAME}}/scripts/update.sh"])
-    _run_process(["/home/{{USER}}/{{REPO_NAME}}/scripts/update.sh"])
+    _run_process(["chmod", "+x", "$HOME/ct-flows/scripts/update.sh"])
+    _run_process(["$HOME/ct-flows/scripts/update.sh"])
     print("Update complete.")
     return
 
