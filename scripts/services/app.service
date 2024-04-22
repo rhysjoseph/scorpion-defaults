@@ -4,6 +4,6 @@ After=multi-user.target
 [Service]
 Type=simple
 Restart=always
-ExecStart={{HOME}}/ct-flows/scripts/services/app.sh
+ExecStart={{HOME}}/ct-flows/scripts/app.sh
 [Install]
 WantedBy=multi-user.target

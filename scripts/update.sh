@@ -17,6 +17,7 @@ python -m venv .venv --system-site-packages
 # shellcheck source=/dev/null
 source .venv/bin/activate
 python -m pip install -e .
+<<<<<<< Updated upstream
 
 # python streamlit app as service optional button and stats display for pi
 mkdir -p tmp
@@ -32,6 +33,19 @@ sed -i "s|{{HOME}}|$HOME|g" tmp/app.service
 sudo cp  tmp/button.service /etc/systemd/system/stats.service
 sudo cp tmp/button.service /etc/systemd/system/button.service
 sudo cp tmp/app.service /etc/systemd/system/app.service
+=======
+
+# python streamlit app as service optional button and stats display for pi
+mkdir -p tmp
+
+sudo cp scripts/services/app.service tmp/app.service
+sed -i "s|{{HOME}}|$HOME|g" tmp/app.service
+sudo cp tmp/app.service /etc/systemd/system/app.service
+
+sudo systemctl daemon-reload
+sudo systemctl enable app.service
+# sudo systemctl start app.service
+>>>>>>> Stashed changes
 
 # # app webserver
 sudo cp scripts/nginx/app /etc/nginx/sites-available

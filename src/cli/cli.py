@@ -7,10 +7,12 @@ from typing import Optional
 import typer
 
 from src import __app_name__, __version__
-from src.cli import display, net
+from src.cli import net, scorpion
+from src.settings import software
 
 app = typer.Typer()
 app.add_typer(net.app, name="net")
+app.add_typer(scorpion.app, name="scorpion")
 
 
 @app.command()

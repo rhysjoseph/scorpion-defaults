@@ -1,0 +1,1712 @@
+REST API Documentation 
+
+rest-api-name:EV
+rest-api-brief:REST API EV provides methods to support basic easy value request (get/set of parameter values)
+rest-api-method-request:SUMMARY
+rest-api-method-brief:Returns a simplified summary of the API.
+rest-api-method-syntax:v.api/apis/EV/SUMMARY
+rest-api-method-response:JSON data containing supported methods or error {"error":"error-message-text"}
+rest-api-method-request:GET
+rest-api-method-brief:Retrieves a value for a simple parameter.
+rest-api-method-syntax:v.api/apis/EV/GET/parameter?varid=<VARID> <br>v.api/apis/EV/GET/parameter/<VARID>
+rest-api-method-response:JSON data containing <VARID> and value or error {"error":"error-message-text"}
+rest-api-method-request:GET
+rest-api-method-brief:Retrieves value(s) for one or more parameters .
+rest-api-method-syntax:v.api/apis/EV/GET/parameters?varid=<VARID1>,<VARID2>... <br>v.api/apis/EV/GET/parameters/<VARID1>,<VARID2>...
+rest-api-method-response:JSON data containing a list of <VARID>s and values or error {"error":"error-message-text"}
+rest-api-method-request:SET
+rest-api-method-brief:Assigns a value to a simple parameter. JSON parameters are restricted.
+rest-api-method-syntax:v.api/apis/EV/SET/parameter?<VARID>=<VALUE> <br>v.api/apis/EV/SET/parameter/<VARID>/<VALUE>
+rest-api-method-response:JSON data containing <VARID> and execition statue or common error {"error":"error-message-text"}
+rest-api-method-request:SET
+rest-api-method-brief:Assigns value(s) to one or more parameters. JSON parameters are restricted.
+rest-api-method-syntax:v.api/apis/EV/SET/parameters?<VARID1>=<VALUE1>&<VARID2>=<VALUE2>... <br>v.api/apis/EV/SET/parameters/<VARID1>,<VARID2>.../<VALUE1>,<VALUE2>...
+rest-api-method-response:JSON data containing list of <VARID>s and execution status or common error {"error":"error-message-text"}
+
+rest-api-name:PT
+rest-api-brief:REST API PT provides a method to  pass-through request in base-64 encoded JSON data (used vary sparingly mostly for testing)
+rest-api-method-request:SUMMARY
+rest-api-method-brief:Returns a simplified summary of the API.
+rest-api-method-syntax:v.api/apis/PT/SUMMARY
+rest-api-method-response:JSON format data containing supported methods or error {"error":"error-message-text"}
+rest-api-method-request:CALL
+rest-api-method-brief:Performs a direct passthrough call of the json-rpc call to the device.
+rest-api-method-syntax:v.api/apis/PT/CALL/jsonrpc/<base64 rpc json>
+rest-api-method-response:JSON format data of RPC or error {"error":"error-message-text"}
+
+rest-api-name:RT
+rest-api-brief:REST API RT provides a method to allow routes to be made for applicable devices.
+rest-api-method-request:SUMMARY
+rest-api-method-brief:Returns a simplified summary of the RT API.
+rest-api-method-syntax:v.api/apis/RT/SUMMARY
+rest-api-method-response:JSON data containing supported methods or error {"error":"error-message-text"}
+rest-api-method-request:GET
+rest-api-method-brief:Retrieves Router output info
+rest-api-method-syntax:v.api/apis/RT/GET/router-destination/<ROUTER-VARID>/<OUTPUT-ID>
+rest-api-method-response:JSON data containing input vs output info,  or error {"error":"error-message-text"}
+rest-api-method-request:ROUTE
+rest-api-method-brief:Route an input to output, optionally specify aspen ID/aspen label or short label or state-type abbreviation
+rest-api-method-syntax:v.api/apis/RT/ROUTE/<ROUTER-VARID>/<OUTPUT-ID>/<INPUT-ID>[/aspen/<ASPEN-ID>][/state-type/<STATE-TYPE-ABBRS>]
+rest-api-method-response:JSON data containing ROUTE status,  or error {"error":"error-message-text"}
+rest-api-method-request:UNROUTE
+rest-api-method-brief:Un-Route an input from output or all inputs if no input is provided
+rest-api-method-syntax:v.api/apis/RT/UNROUTE/<ROUTER-VARID>/<OUTPUT-ID>[/<INPUT-ID>]
+rest-api-method-response:JSON data containing UNROUTE status,  or error {"error":"error-message-text"}
+
+table-mame:System General
+control-varid:9900
+control-name:IP Address
+control-description:This parameter allows user to set IP Address for the control port.
+control-indexes:This control API has indexes: .[0..3]
+control-varid:9901
+control-name:Netmask
+control-description:This parameter allows user to set netmask for the control port.
+control-indexes:This control API has indexes: .[0..3]
+control-varid:9902
+control-name:Gateway
+control-description:This parameter allows user to set gateway for the control port.
+control-indexes:This control API has indexes: .[0..3]
+control-varid:9903
+control-name:IP Address
+control-description:This parameter allows user to set IP Address for the data port.
+control-indexes:This control API has indexes: .[0..127]
+control-varid:9904
+control-name:Netmask
+control-description:This parameter allows user to set netmask for the data port.
+control-indexes:This control API has indexes: .[0..127]
+control-varid:9905
+control-name:Gateway
+control-description:This parameter allows user to set gateway for the data port.
+control-indexes:This control API has indexes: .[0..127]
+control-varid:9906
+control-name:Ethernet Link Status
+control-description:This parameter gets Ethernet port link status.
+control-indexes:This control API has indexes: .[0..127]
+control-varid:9907
+control-name:Ethernet Rx Bandwidth
+control-description:This parameter gets received Ethernet bandwidth - divided by 1000 and display as Mbps.
+control-indexes:This control API has indexes: .[0..127]
+control-varid:9908
+control-name:Ethernet Tx Bandwidth
+control-description:This parameter gets transmitted Ethernet bandwidth - divided by 1000 and display as Mbps.
+control-indexes:This control API has indexes: .[0..127]
+control-varid:9909
+control-name:Clear Stats
+control-description:This parameter is used to clear statistics.
+control-indexes:This control API has indexes: .[0..127]
+control-varid:9910
+control-name:SFP Part Number
+control-description:This parameter gets part number of SFP.
+control-indexes:This control API has indexes: .[0..127]
+control-varid:9911
+control-name:SFP Type
+control-description:This parameter gets type of SFP.
+control-indexes:This control API has indexes: .[0..127]
+control-varid:9912
+control-name:SFP Rx Power Level
+control-description:This parameter gets receiver power level of SFP,. 
+control-indexes:This control API has indexes: .[0..127]
+control-varid:9913
+control-name:SFP Tx Power Level
+control-description:This parameter gets transmitter power level of SFP.
+control-indexes:This control API has indexes: .[0..127]
+control-varid:9914
+control-name:Data Port
+control-description:This parameter sets SFP port for RPC control.
+control-indexes:This control API has indexes: .[0..1]
+control-varid:9915
+control-name:Control Multicast IP
+control-description:This parameter sets receive multicast IP address.
+control-indexes:This control API has indexes: .[0..1]
+control-varid:9916
+control-name:Tally Multicast IP
+control-description:This parameter sets tally multicast IP address.
+control-indexes:This control API has indexes: .[0..1]
+
+table-mame:Product General
+control-varid:1
+control-name:Product Name
+control-description:This parameter is used to specify the combination of board build and firmware.
+control-indexes:none
+control-varid:2
+control-name:Creation Date
+control-description:This parameter indicates the date and time the firmware was built.
+control-indexes:none
+control-varid:3
+control-name:Revision Major
+control-description:This parameter indicates the firmware major revision number. For example, if the firmware version is 1.02.03 build 72, the major revision number is 1.
+control-indexes:none
+control-varid:4
+control-name:Revision Minor
+control-description:This parameter indicates the firmware minor revision number. For example, if the firmware version is 1.02.03 build 72, the minor revision number is 2.
+control-indexes:none
+control-varid:6
+control-name:Build Number
+control-description:This parameter indicates the firmware build number.  For example, if the firmware version is 1.02.03 build 72, the build number is 72.
+control-indexes:none
+control-varid:8
+control-name:Serial Number
+control-description:This is a unique identifier used to identify the board. All boards, regardless of whether they support the same product(s), have this unique identifier.
+control-indexes:none
+control-varid:9
+control-name:Name
+control-description:Name of the board where the firmware resides.  Note, that a board can support many products.
+control-indexes:none
+control-varid:10
+control-name:Revision
+control-description:This parameter indicates the revision of the board where the firmware resides.  The board revision increases are usually a result of enhancements or fixes to the current board revision.  It is typically represented by a letter, for example 'C'.
+control-indexes:none
+control-varid:11
+control-name:Build Number
+control-description:The firmware may support multiple board stuff options. If this is the case, and the stuff option cannot be detected by the firmware, the build number is used to represent the stuff option.  For example, if an I2C device is optionally stuff, firmware can detect the presence of the device, and a new hardware build number is not needed. But, if for example, the values of some resistors and capacitors are changed, and the firmware needs to be aware of this, a new hardware build number is needed.
+control-indexes:none
+control-varid:14
+control-name:Enable
+control-description:This parameter is used to diable or enable log streaming.
+control-indexes:This control API has indexes: .[0..2]
+control-varid:15
+control-name:Destination IP Address
+control-description:This parameter sets the destination IP address.
+control-indexes:This control API has indexes: .[0..2]
+control-varid:16
+control-name:Destination Port
+control-description:This parameter sets the UDP port number.
+control-indexes:This control API has indexes: .[0..2]
+control-varid:13
+control-name:Physical Port(1 for Ctrl Port 1; 2 for Ctrl Port 2; 3..65535 for Data Port)
+control-description:This parameter sets the physical interface to streaming out log.
+control-indexes:This control API has indexes: .[0..2]
+control-varid:17
+control-name:Level
+control-description:This parameter sets the level to streaming log.
+control-indexes:This control API has indexes: .[0..2]
+control-varid:20
+control-name:Set Operation ID
+control-description:This parameter sets the Operation ID, which will be in the sysLog.
+control-indexes:none
+control-varid:70
+control-name:Restart Syslog Stream
+control-description:Restart the syslog streaming process. 
+control-indexes:This control API has indexes: .[0..2]
+
+table-mame:Trunk Port
+control-varid:6000
+control-name:Data Port IP
+control-description:This parameter allows user to set data port IP, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6001
+control-name:Data Port Net Mask
+control-description:This parameter allows user to set data port netmask, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6002
+control-name:Data Port Gateway IP
+control-description:This parameter allows user to set data port gateway IP, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6003
+control-name:Link Status
+control-description:This parameter returns data port link status, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6004
+control-name:Rx Data Rate
+control-description:This parameter returns data port receive data rate in Kbps, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6005
+control-name:Rx Good Frames
+control-description:This parameter returns data port receive data good frames counters, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6006
+control-name:Rx Short Frames
+control-description:This parameter returns data port receive data short frames counters, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6007
+control-name:Rx Error Frames
+control-description:This parameter returns data port receive data error frames counters, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6008
+control-name:Rx Broadcast Frames
+control-description:This parameter returns data port receive data broadcast frames counters, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6009
+control-name:Rx MultiCast Frames
+control-description:This parameter returns data port receive data multicast frames counters, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6010
+control-name:Rx VLAN Frames
+control-description:This parameter returns data port receive data VLAN frames counters, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6011
+control-name:Tx Data Rate
+control-description:This parameter returns data port transmit data rate in Kbps, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6012
+control-name:Tx Good Frames
+control-description:This parameter returns data port transmit data good frames counters, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6013
+control-name:Tx Broadcast Frames
+control-description:This parameter returns data port transmit data broadcast frames counters, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6014
+control-name:Tx MultiCast Frames
+control-description:This parameter returns data port transmit data multicast frames counters, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6015
+control-name:Tx VLAN Frames
+control-description:This parameter returns data port transmit data VLAN frames counters, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6016
+control-name:Stats Clear
+control-description:This parameter allows user to clear data port statistic counters, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6018
+control-name:Data Rate
+control-description:This parameter allows user to select data port rate, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6019
+control-name:VLAN Enable
+control-description:This parameter allows user to enable VLAN tagging on data port, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6020
+control-name:VLAN ID
+control-description:This parameter allows user to config VLAN ID on data port, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6021
+control-name:PHY Mode
+control-description:This parameter allows user to select the trunk port phy mode, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6022
+control-name:DHCP
+control-description:This parameter allows user to enable the trunk port DHCP, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6023
+control-name:Data Port IP
+control-description:This parameter allows user to set data port IP, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6024
+control-name:Data Port Net Mask
+control-description:This parameter allows user to set data port netmask, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:6025
+control-name:Data Port Gateway IP
+control-description:This parameter allows user to set data port gateway IP, only available with NETADP option.
+control-indexes:This control API has indexes: .[0..7]
+
+table-mame:SFP
+control-varid:1000
+control-name:SFP Presence
+control-description:This parameter returns SFP present status.
+control-indexes:This control API has indexes: .[0..17]
+control-varid:1001
+control-name:SFP Connector
+control-description:This parameter returns SFP connector.
+control-indexes:This control API has indexes: .[0..17]
+control-varid:1002
+control-name:SFP Name
+control-description:This parameter returns SFP name.
+control-indexes:This control API has indexes: .[0..17]
+control-varid:1003
+control-name:SFP Serial Number
+control-description:This parameter returns SFP serial number.
+control-indexes:This control API has indexes: .[0..17]
+control-varid:1004
+control-name:SFP Firmware Version
+control-description:This parameter returns SFP firmware versionr.
+control-indexes:This control API has indexes: .[0..17]
+control-varid:1005
+control-name:SFP Laser Wave Length
+control-description:This parameter returns SFP laser wavelength, only available if SFP connector type is fibe.
+control-indexes:This control API has indexes: .[0..17]
+control-varid:1006
+control-name:SFP Temperature
+control-description:This parameter returns SFP temperature.
+control-indexes:This control API has indexes: .[0..17]
+control-varid:1007
+control-name:SFP Supply Voltage
+control-description:This parameter returns SFP supply voltage.
+control-indexes:This control API has indexes: .[0..17]
+control-varid:1008
+control-name:IO Direction
+control-description:This parameter returns SFP channel direction.
+control-indexes:This control API has indexes: .[0..17].[0..1]
+control-varid:1009
+control-name:Optical Power
+control-description:This parameter returns SFP channel receive optical power, only available if SFP connector is fiber.
+control-indexes:This control API has indexes: .[0..17].[0..1]
+control-varid:1010
+control-name:Optical Power Threshold
+control-description:This parameter allows user to set SFP channel receive power threshold for alarm, only available if SFP connector is fiber.
+control-indexes:This control API has indexes: .[0..17].[0..1]
+control-varid:1011
+control-name:Input Signal Presence
+control-description:This parameter returns SFP channel optical input signal present status, only available if SFP connector is fiber.
+control-indexes:This control API has indexes: .[0..17].[0..1]
+control-varid:1012
+control-name:Video Presence
+control-description:This parameter returns SFP channel video signal present status, only available if SFP connector is DIN.
+control-indexes:This control API has indexes: .[0..17].[0..1]
+control-varid:1013
+control-name:Video Rate
+control-description:This parameter returns SFP channel video signal rate, only available if SFP connector is DIN.
+control-indexes:This control API has indexes: .[0..17].[0..1]
+
+table-mame:System
+control-varid:50
+control-name:System Reboot
+control-description:This parameter allows user  to reboot the system.
+control-indexes:none
+control-varid:51
+control-name:Factory Reset
+control-description:This parameter allows user to do factory reset.
+control-indexes:none
+control-varid:52
+control-name:Product Name
+control-description:This parameter returns product name.
+control-indexes:none
+control-varid:53
+control-name:Firmware Version
+control-description:This parameter returns firmware version.
+control-indexes:none
+control-varid:54
+control-name:Serial Number
+control-description:This parameter returns product Serial Number.
+control-indexes:none
+control-varid:55
+control-name:Alias Name
+control-description:This parameter allows user to set alias name for this product.
+control-indexes:none
+control-varid:93
+control-name:Import Preset
+control-description:This parameter allows user to Import preset from file.
+control-indexes:none
+control-varid:94
+control-name:Export Preset
+control-description:This parameter allows user to export preset to file.
+control-indexes:none
+control-varid:57
+control-name:Export Syslog
+control-description:This parameter allows user to export system log to file.
+control-indexes:none
+control-varid:58
+control-name:FPGA Status
+control-description:This parameter returns current FPGA name.
+control-indexes:none
+control-varid:59
+control-name:FPGA Select
+control-description:This parameter allows user to select FPGA.
+control-indexes:none
+
+table-mame:IP Output 2110-20
+control-varid:6500
+control-name:IP Output Enable
+control-description:This parameter allows user to enable/disable transmit video IP stream , only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6501
+control-name:IP Output IP
+control-description:This parameter allows user to set transmit video IP stream IP address, only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6502
+control-name:IP Output UDP
+control-description:This parameter allows user to set transmit video IP stream UDP, only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6503
+control-name:IP Output Source UDP
+control-description:This parameter allows user t0 set transmit video IP stream source UDP, only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6504
+control-name:IP Output Stream Data Rate
+control-description:This parameter returns transmit vdieo IP stream data rate, only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6505
+control-name:IP Output VLAN Tagging
+control-description:This parameter allows user to enable/disable VLAN tagging on the video output. Only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6506
+control-name:IP Output VLAN Tag ID
+control-description:This parameter allows user to set VLAN tag ID on the video output. Only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6651
+control-name:Video Present
+control-description:This parameter returns transmit video present status to the transmit IP stream, only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6652
+control-name:Video Rate
+control-description:This parameter returns transmit video rate to the transmit IP stream, only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6655
+control-name:Video Locked
+control-description:This parameter returns transmit video PTP lock status, only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6656
+control-name:Video Standard
+control-description:This parameter returns transmit video standard, only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6658
+control-name:Video UHD Single Essence Mode
+control-description:This parameter allows user to set transmit video UHD link format, only available with video sender support UHD and with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6702
+control-name:IP Output FEC Mode
+control-description:This parameter allows user to set transmit video IP stream FEC mode, only available with ST2110TX and FEC option. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6703
+control-name:IP Output FEC Column
+control-description:This parameter allows user to set transmit video IP stream FEC column, only available with ST2110TX and FEC option. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6704
+control-name:IP Output FEC Row
+control-description:This parameter allows user to set transmit video IP stream FEC row, only available with ST2110TX and FEC option. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..15]
+
+table-mame:Frame Status
+control-varid:110
+control-name:PSU Status
+control-description:This parameter returns power supply status.
+control-indexes:This control API has indexes: .[0..1]
+control-varid:111
+control-name:FPGA Temperature
+control-description:This parameter returns FPGA temperature (not used for now).
+control-indexes:none
+control-varid:113
+control-name:FPGA Temperature Threshold
+control-description:This parameter allows user to set FPGA temperature alarm threshold.
+control-indexes:none
+control-varid:160
+control-name:Genlock Input Status
+control-description:This parameter returns genlock input status of the frame.
+control-indexes:none
+control-varid:161
+control-name:Genlock Input Locked
+control-description:This parameter returns genlock input locked status.
+control-indexes:none
+control-varid:162
+control-name:Genlock Input Standard
+control-description:This parameter returns genlock input standard.
+control-indexes:none
+control-varid:163
+control-name:Genlock VITC Status
+control-description:This parameter returns current VITC time (and drop-frame flag).
+control-indexes:none
+control-varid:164
+control-name:Frequency and Time Reference Source
+control-description:This parameter allows user to select the reference source(s) for frame distribution.
+control-indexes:none
+control-varid:165
+control-name:Sync Reference Source
+control-description:This parameter allows user to select the source of the video sync signal to distribute to the modules.
+control-indexes:none
+control-varid:166
+control-name:Generated Sync Standard
+control-description:This parameter allows user to choose the video standard for the generated sync.
+control-indexes:none
+control-varid:115
+control-name:Fan Status
+control-description:This parameter returns fan status. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..6]
+control-varid:116
+control-name:Fan Speed
+control-description:This parameter allows user to set fan speed. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..6]
+control-varid:117
+control-name:Fan Rpm Status
+control-description:This parameter retruns fan speed status in rpm. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..6]
+
+table-mame:IP Output ST2110 Metadata
+control-varid:6921
+control-name:SDP Status
+control-description:This parameter returns the SDP present status, only available with ST2110TX options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6922
+control-name:Transferred by
+control-description:This parameter returns the way the SDP transferred, only available with ST2110TX options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6923
+control-name:Content
+control-description:This parameter returns the content of SDP, only available with ST2110TX options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6924
+control-name:VPID Status
+control-description:This parameter returns the VPID present status, only available with ST2110TX options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6925
+control-name:Byte 1
+control-description:This parameter returns the first byte of VPID, only available with ST2110TX options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6926
+control-name:Byte 2
+control-description:This parameter returns the second byte of VPID, only available with ST2110TX options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6927
+control-name:Byte 3
+control-description:This parameter returns the third byte of VPID, only available with ST2110TX options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6928
+control-name:Byte 4
+control-description:This parameter returns the fourth byte of VPID, only available with ST2110TX options. 
+control-indexes:This control API has indexes: .[0..15]
+
+table-mame:TopLevelCrosspoint
+control-varid:30001
+control-name:Top Level Crosspoint
+control-description:This parameter is reseved for internal use.
+control-indexes:none
+
+table-mame:IP Input Ethernet
+control-varid:6300
+control-name:IP Input Enable
+control-description:This parameter allows user to enable/disable receive Ethernet IP stream, only available with IPETHRXEN option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6301
+control-name:IP Input MultiCast
+control-description:This parameter allows user to set receive Ethernet IP stream to use unicast or multicast, only available with IPETHRXEN option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6302
+control-name:IP Input MultiCast IP
+control-description:This parameter allows user to set receive Ethernet IP stream IP address, only available if IP stream is set to multicasst and with IPETHRXEN option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6303
+control-name:IP Input UDP
+control-description:This parameter allows user to set receive Ethernet IP stream UDP, only available with IPETHRXEN option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6304
+control-name:IP Input Stream Present
+control-description:This parameter returns receive Ethernet IP stream present status, only available with IPETHRXEN option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6305
+control-name:IP Input Stream Data Rate
+control-description:This parameter returns receive Ethernet IP stream data rate, only available with IPETHRXEN option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6306
+control-name:IP Input SSM Enable
+control-description:This parameter allows user to set receive Ethernet IP stream IGMP mode, only available with IPETHRXEN option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6307
+control-name:IP Input SSM Filter Mode
+control-description:This parameter allows user to set receive Ethernet IP stream IGMPv3 Source filter mode, only available with IPETHRXEN option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6308
+control-name:IP Input SSM Source 1
+control-description:This parameter allows user to set receive Ethernet IP stream IGMPv3 Source filter IP address 1, only available with IPETHRXEN option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6309
+control-name:IP Input SSM Source 2
+control-description:This parameter allows user to set receive Ethernet IP stream IGMPv3 Source filter IP address 2, only available with IPETHRXEN option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6310
+control-name:IP Input SSM Source 3
+control-description:This parameter allows user to set receive Ethernet IP stream IGMPv3 Source filter IP address 3, only available with IPETHRXEN option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6320
+control-name:Eth Decap Mode
+control-description:This parameter allows user to set Ethernet Decap mode, only available with IPETHRXEN option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6321
+control-name:Eth Output Bandwidth Limit
+control-description:This parameter allows user to set Ethernet data received bandwidth limit, only available with IPETHRXEN option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6322
+control-name:Eth Output Data Rate
+control-description:This parameter returns received Ethernet data rate, only available with IPETHRXEN option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6323
+control-name:Eth Output Packet Received
+control-description:This parameter returns received Ethernet data packet count, only available with IPETHRXEN option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6324
+control-name:Eth Output Packet Dropped
+control-description:This parameter returns dropped Ethernet data packet count, only available with IPETHRXEN option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6325
+control-name:Eth Output Stats Clear
+control-description:This parameter allows user to clear Ethernet data packet counters, only available with IPETHRXEN option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6326
+control-name:Eth Output Passthrough Vlan
+control-description:This parameter allows user to set Ethernet pass-through VLAN filter, Disable by setting value 0, only available with IPETHRXEN option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6327
+control-name:Eth Output Passthrough Trunk
+control-description:This parameter allows user to set Ethernet pass-through trunk port, only available with IPETHRXEN option.
+control-indexes:This control API has indexes: .[0..15]
+
+table-mame:IP Input 2110-40
+control-varid:6150
+control-name:IP Input Enable
+control-description:This parameter allows user to enable/disable receive ANC IP stream, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6151
+control-name:IP Input MultiCast
+control-description:This parameter allows user to set receive ANC IP stream to use unicast or multicast, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6152
+control-name:IP Input MultiCast IP
+control-description:This parameter allows user to set receive ANC IP stream IP address, only available if IP stream is set to multicasst, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6153
+control-name:IP Input UDP
+control-description:This parameter allows user to set receive ANC IP stream UDP, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6154
+control-name:IP Input Stream Present
+control-description:This parameter returns receive ANC IP stream present status, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6155
+control-name:IP Input Stream Data Rate
+control-description:This parameter returns receive ANC IP stream data rate, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6156
+control-name:IP Input SSM Enable
+control-description:This parameter allows user to set receive ANC IP stream IGMP mode, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6157
+control-name:IP Input SSM Filter Mode
+control-description:This parameter allows user to set receive ANC IP stream IGMPv3 Source filter mode, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6158
+control-name:IP Input SSM Source 1
+control-description:This parameter allows user to set receive ANC IP stream IGMPv3 Source filter IP address 1, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6159
+control-name:IP Input SSM Source 2
+control-description:This parameter allows user to set receive ANC IP stream IGMPv3 Source filter IP address 2, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6160
+control-name:IP Input SSM Source 3
+control-description:This parameter allows user to set receive ANC IP stream IGMPv3 Source filter IP address 3, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6161
+control-name:IP Input Stream RTP Seq Errors
+control-description:This parameter returns receive ANC IP stream RTP sequence erros counter, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6162
+control-name:RTP Seq Err Clear
+control-description:This parameter allows user to clear receive ANC IP stream RTP sequence errors counter, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6258
+control-name:ANC Present
+control-description:This parameter returns receive ANC present status, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6260
+control-name:VPID
+control-description:This parameter returns receive ANC VPID, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6261
+control-name:ANC Redundancy Mode
+control-description:This parameter allows user to set the receive ANC redundancy mode, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6262
+control-name:ANC Protection Status
+control-description:This parameter returns receive ANC proection mode, protected status indicates stream data is present on more than 1 trunk, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6263
+control-name:ANC Active Datapath
+control-description:This parameter returns receive ANC active data path, indicates the current active trunk path in non-revertive mode, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15]
+
+table-mame:NMOS
+control-varid:5200
+control-name:NMOS Support Toggle
+control-description:This parameter turns on/off NMOS control support.
+control-indexes:none
+control-varid:5201
+control-name:NMOS DNS Mode
+control-description:This parameter sets the DNS mode used for NMOS discovery.
+control-indexes:none
+control-varid:5202
+control-name:Unicast Domain
+control-description:This parameter sets the domain for unicast DNS discovery.
+control-indexes:none
+control-varid:5203
+control-name:Unicast Name Server
+control-description:This parameter sets the name server for unicast DNS discovery.
+control-indexes:none
+control-varid:5204
+control-name:NMOS Device Name
+control-description:This parameter sets the device name to be discovered by NMOS registry.
+control-indexes:none
+control-varid:5206
+control-name:NMOS Endpoint
+control-description:This parameter selects NMOS endpoint.
+control-indexes:none
+
+table-mame:Notify
+control-varid:10000
+control-name:Frame Send Trap
+control-description:
+control-indexes:This control API has indexes: .[0..1]
+control-varid:10001
+control-name:Frame Fault Present
+control-description:
+control-indexes:This control API has indexes: .[0..1]
+control-varid:10002
+control-name:SFP Send Trap
+control-description:
+control-indexes:This control API has indexes: .[0..17].[0..6]
+control-varid:10003
+control-name:SFP Fault Present
+control-description:
+control-indexes:This control API has indexes: .[0..17].[0..6]
+control-varid:10004
+control-name:Module Send Trap
+control-description:
+control-indexes:This control API has indexes: .[0..17].[0..1]
+control-varid:10005
+control-name:Module Fault Present
+control-description:
+control-indexes:This control API has indexes: .[0..17].[0..1]
+control-varid:10006
+control-name:Trunk Port Send Trap
+control-description:
+control-indexes:This control API has indexes: .[0..1].[0..0]
+control-varid:10007
+control-name:Trunk Port Fault Present
+control-description:
+control-indexes:This control API has indexes: .[0..1].[0..0]
+control-varid:10008
+control-name:IP Input Send Trap
+control-description:
+control-indexes:This control API has indexes: .[0..15].[0..0]
+control-varid:10009
+control-name:IP Input Fault Present
+control-description:
+control-indexes:This control API has indexes: .[0..15].[0..0]
+control-varid:10010
+control-name:IP Output Send Trap
+control-description:
+control-indexes:This control API has indexes: .[0..15].[0..0]
+control-varid:10011
+control-name:IP Output Fault Present
+control-description:
+control-indexes:This control API has indexes: .[0..15].[0..0]
+control-varid:10012
+control-name:IP Input Send Trap
+control-description:
+control-indexes:This control API has indexes: .[0..15].[0..0]
+control-varid:10013
+control-name:IP Input Fault Present
+control-description:
+control-indexes:This control API has indexes: .[0..15].[0..0]
+control-varid:10014
+control-name:IP Output Send Trap
+control-description:
+control-indexes:This control API has indexes: .[0..15].[0..0]
+control-varid:10015
+control-name:IP Output Fault Present
+control-description:
+control-indexes:This control API has indexes: .[0..15].[0..0]
+control-varid:10016
+control-name:Frame Status Send Trap
+control-description:
+control-indexes:This control API has indexes: .[0..2]
+control-varid:10017
+control-name:Frame Status Fault Present
+control-description:
+control-indexes:This control API has indexes: .[0..2]
+
+table-mame:IP Input ST2110 Metadata
+control-varid:6900
+control-name:Source
+control-description:This parameter allows user to select the Metadata source, only available with ST2110RX options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6901
+control-name:SDP Status
+control-description:This parameter returns the SDP present status, only available with ST2110RX options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6902
+control-name:Transferred by
+control-description:This parameter returns the way the SDP transferred, only available with ST2110RX options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6903
+control-name:Content
+control-description:This parameter returns the content of SDP, only available with ST2110RX options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6904
+control-name:VPID Status
+control-description:This parameter returns the VPID present status, only available with ST2110RX options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6905
+control-name:Byte 1
+control-description:This parameter returns the first byte of VPID, only available with ST2110RX options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6906
+control-name:Byte 2
+control-description:This parameter returns the second byte of VPID, only available with ST2110RX options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6907
+control-name:Byte 3
+control-description:This parameter returns the third byte of VPID, only available with ST2110RX options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6908
+control-name:Byte 4
+control-description:This parameter returns the fourth byte of VPID, only available with ST2110RX options. 
+control-indexes:This control API has indexes: .[0..15]
+
+table-mame:IP Output 2110-30
+control-varid:6550
+control-name:IP Output Enable
+control-description:This parameter allows user to enable/disable transmit audio IP stream , only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..3].[0..7]
+control-varid:6551
+control-name:IP Output IP
+control-description:This parameter allows user to set transmit audio IP stream IP address, only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..3].[0..7]
+control-varid:6552
+control-name:IP Output UDP
+control-description:This parameter allows user to set transmit audio IP stream UDP, only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..3].[0..7]
+control-varid:6553
+control-name:IP Output Source UDP
+control-description:This parameter allows user to set transmit audio IP stream source UDP, only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..3].[0..7]
+control-varid:6554
+control-name:IP Output Stream Data Rate
+control-description:This parameter returns transmit audio IP stream data rate, only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..3].[0..7]
+control-varid:6555
+control-name:IP Output VLAN Tagging
+control-description:This parameter allows user to enable/disable VLAN tagging on the audio output. Only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..3].[0..7]
+control-varid:6556
+control-name:IP Output VLAN Tag ID
+control-description:This parameter allows user to set VLAN tag ID on the audio output. Only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..3].[0..7]
+control-varid:6659
+control-name:Audio Mapping
+control-description:This parameter allows user to set transmit audio channel mapping mode, only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6660
+control-name:Audio Packet Time
+control-description:This parameter allows user to set transmit audio channel packet time, only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6700
+control-name:Audio Active
+control-description:This paramter returns transmit audio channel active, only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..15]
+
+table-mame:Network Management
+control-varid:61
+control-name:TRAP Destination
+control-description:Set trap destinations for mini-agent.
+control-indexes:This control API has indexes: .[0..9]
+control-varid:100
+control-name:Control IP Address
+control-description:This parameter allows user to set IP address for control port.
+control-indexes:This control API has indexes: .[0..0]
+control-varid:101
+control-name:Control IP Netmask
+control-description:This parameter allows user to set IP netmask for control port.
+control-indexes:This control API has indexes: .[0..0]
+control-varid:102
+control-name:Control IP Gateway
+control-description:This parameter allows user to set IP gateway for control port.
+control-indexes:This control API has indexes: .[0..0]
+control-varid:103
+control-name:Network Restart
+control-description:This parameter allows user to restart control port, used to apply control port settings.
+control-indexes:This control API has indexes: .[0..0]
+control-varid:5000
+control-name:Magnum Receive IP
+control-description:This parameter allows user to set magnum recive ip, only available with NETADP option. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..1]
+control-varid:5001
+control-name:Magnum Tally IP
+control-description:This parameter allows user to set magnum tally ip, only available with NETADP option. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..1]
+control-varid:5002
+control-name:Magnum Data Port Number
+control-description:This parameter allows user to select which trunk to recive rpc on, only available with NETADP option. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..1]
+control-varid:5100
+control-name:PTP Domain Number
+control-description:This parameter allows user to set PTP domain number. Only available with NETADP option. This parameter is subject to product options. 
+control-indexes:none
+control-varid:5101
+control-name:PTP Lock Status
+control-description:This parameter returns PTP lock status. Only available with NETADP option. This parameter is subject to product options. 
+control-indexes:none
+control-varid:5102
+control-name:PTP Master ID
+control-description:This parameter returns PTP master clock ID. Only available with NETADP option. This parameter is subject to product options. 
+control-indexes:none
+control-varid:5103
+control-name:PTP Active Port
+control-description:This parameter returns PTP active port. Only available with NETADP option. This parameter is subject to product options. 
+control-indexes:none
+control-varid:62
+control-name:SNMP Restart
+control-description:Restart SNMP.
+control-indexes:none
+control-varid:5003
+control-name:MAGNUM Tally Mode
+control-description:This parameter allows user to select the Tally mode. This parameter is subject to product options. 
+control-indexes:none
+
+table-mame:Time Management
+control-varid:120
+control-name:Time Source
+control-description:This parameter allows user to select different time source.
+control-indexes:none
+control-varid:121
+control-name:UTC Time
+control-description:This parameter allows user to get and set the value of the real time clock. The format for setting the clock is mm/dd/yy hh:mm, the clock will not  set properly if this format is not followed.
+control-indexes:none
+control-varid:122
+control-name:Timezone Offset
+control-description:This parameter allows user to select different time zone.
+control-indexes:none
+control-varid:123
+control-name:Day Light Saving
+control-description:This parameter allows user to select Day Light Saving ON or OFF.
+control-indexes:none
+control-varid:124
+control-name:External Ntp Server
+control-description:This parameter allows user to select external NTP server.
+control-indexes:none
+control-varid:125
+control-name:NTP Restart
+control-description:This parameter allows user to restart time management to apply changes.
+control-indexes:none
+
+table-mame:Diagnostic
+control-varid:3000
+control-name:Input Name
+control-description:This parameter returns the name of the top level crosspoint input.
+control-indexes:This control API has indexes: .[0..119]
+control-varid:3001
+control-name:Input Availablility
+control-description:This parameter returns the availability of the top level crosspoint input.
+control-indexes:This control API has indexes: .[0..119]
+control-varid:3002
+control-name:Input Type
+control-description:This parameter returns the type of the top level crosspoint input.
+control-indexes:This control API has indexes: .[0..119]
+control-varid:3003
+control-name:Input Tag
+control-description:This parameter allows user to set the name tag for the top level crosspoint input.
+control-indexes:This control API has indexes: .[0..119]
+control-varid:3004
+control-name:Output Name
+control-description:This parameter returns the name of the top level crosspoint output.
+control-indexes:This control API has indexes: .[0..119]
+control-varid:3005
+control-name:Output Availability
+control-description:This parameter returns the availablility of the top level crosspoint output.
+control-indexes:This control API has indexes: .[0..119]
+control-varid:3006
+control-name:Output Type
+control-description:This parameter returns the type of the top level crosspoint output.
+control-indexes:This control API has indexes: .[0..119]
+control-varid:3007
+control-name:Output Mode
+control-description:This parameter allows user to set the routing mode for the top level crosspoint output. (Change the mode will disconnect current route on this output). 
+control-indexes:This control API has indexes: .[0..119]
+control-varid:3008
+control-name:Output Tag
+control-description:This parameter allows user to set the name tag for the top level crosspoint output.
+control-indexes:This control API has indexes: .[0..119]
+control-varid:3009
+control-name:Output Route Source
+control-description:This parameter allows user to set the route for the top level crosspoint. 0 means disconnect.
+control-indexes:This control API has indexes: .[0..119]
+control-varid:3010
+control-name:Output Route State
+control-description:This parameter returns the route state of the top level crosspoint,. 
+control-indexes:This control API has indexes: .[0..119]
+control-varid:3011
+control-name:Input Signal Forced
+control-description:This parameter allows user to set to force the signal type for the top level crosspoint input.
+control-indexes:This control API has indexes: .[0..119]
+control-varid:3012
+control-name:Output Signal Forced
+control-description:This parameter allows user to set to force the signal type for the top level crosspoint output.
+control-indexes:This control API has indexes: .[0..119]
+control-varid:3013
+control-name:Input Signal Type
+control-description:This parameter returns the signal type of the top level crosspoint input.
+control-indexes:This control API has indexes: .[0..119]
+control-varid:3014
+control-name:Output Signal Type
+control-description:This parameter returns the signal type of the top level crosspoint output.
+control-indexes:This control API has indexes: .[0..119]
+control-varid:30000
+control-name:FPGA Route Table
+control-description:This parameter is reseved for internal use.
+control-indexes:none
+control-varid:30006
+control-name:Trunk Port Rx Filter Table
+control-description:This parameter is reseved for internal use. This parameter is subject to product options. 
+control-indexes:none
+
+table-mame:IP Input 2110-20
+control-varid:6050
+control-name:IP Input Enable
+control-description:This parameter allows user to enable/disable receive video IP stream, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6051
+control-name:IP Input MultiCast
+control-description:This parameter allows user to set receive video IP stream to use unicast or multicast, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6052
+control-name:IP Input MultiCast IP
+control-description:This parameter allows user to set receive video IP stream IP address, only available if IP stream is set to multicasst, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6053
+control-name:IP Input UDP
+control-description:This parameter allows user to set receive video IP stream UDP, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6054
+control-name:IP Input Stream Present
+control-description:This parameter returns receive video IP stream present status, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6055
+control-name:IP Input Stream Data Rate
+control-description:This parameter returns receive vdeo IP stream data rate, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6056
+control-name:IP Input SSM Enable
+control-description:This parameter allows user to set receive video IP stream IGMP mode, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6057
+control-name:IP Input SSM Filter Mode
+control-description:This parameter allows user to set receive video IP stream IGMPv3 Source filter mode, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6058
+control-name:IP Input SSM Source 1
+control-description:This parameter allows user to set receive video IP stream IGMPv3 Source filter IP address 1, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6059
+control-name:IP Input SSM Source 2
+control-description:This parameter allows user to set receive video IP stream IGMPv3 Source filter IP address 2, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6060
+control-name:IP Input SSM Source 3
+control-description:This parameter allows user to set receive video IP stream IGMPv3 Source filter IP address 3, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6061
+control-name:IP Input Stream RTP Seq Errors
+control-description:This parameter returns receive video IP stream RTP sequence erros counter, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6062
+control-name:RTP Seq Err Clear
+control-description:This parameter allows user to clear receive video IP stream RTP sequence errors counter, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6201
+control-name:Video Present
+control-description:This parameter returns receive video present status from the receive IP stream, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6202
+control-name:Video Rate
+control-description:This parameter returns receive video rate from the receive IP stream, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6206
+control-name:Video Stream Locked
+control-description:This parameter returns receive video PTP lock status, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6207
+control-name:Video Standard
+control-description:This parameter returns receive video standard, only available with ST2110RX.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6210
+control-name:Video UHD Link Format
+control-description:This parameter allows user to set receive video UHD SDI link format, only available if video receiver supports UDH and with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6211
+control-name:Video Output on Loss
+control-description:This parameter allows user to select video output behaviour on loss of video, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6212
+control-name:Video Playout Synchronization
+control-description:This parameter allows user to select receive video signal is reconstructed from the IP input rate or from PTP/Genlock, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6213
+control-name:Video Redundancy Mode
+control-description:This parameter allows user to set the receive video redundancy mode. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6214
+control-name:Video Protection Status
+control-description:This parameter returns receive video proection mode, protected status indicates stream data is present on more than 1 trunk, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6215
+control-name:Video Active Datapath
+control-description:This parameter returns receive video active data path, indicates the current active trunk path in non-revertive mode, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6216
+control-name:Video UHD Enable
+control-description:This parameter allows user to enable/disable receive video UHD,. only available if video receiver supports UDH and  with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6218
+control-name:Video Playout Control Mode
+control-description:This parameter allows user to slect input video playout control mode (Auto mode, follow SDP or follow VPID).
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6219
+control-name:Custom VPID
+control-description:This parameter allows user to input a customized VPID value.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6264
+control-name:IP Input FEC Status
+control-description:This parameter returns receive video IP stream FEC status, only available with ST2110RX and FEC option. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6265
+control-name:IP Input FEC Column
+control-description:This parameter returns receive video IP stream FEC column status, only available with ST2110RX and FEC option. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6266
+control-name:IP Input FEC Row
+control-description:This parameter returns receive video IP stream FEC row status, only available with ST2110RX and FEC option. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..15]
+
+table-mame:IP Input ST2022
+control-varid:6350
+control-name:IP Input Enable
+control-description:This parameter allows user to enable/disable ST2022 receive IP  stream, only available with ST2022RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6351
+control-name:IP Input MultiCast
+control-description:This parameter allows use to set ST2022 receive IP stream to use unicast or multicast, only available with ST2022RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6352
+control-name:IP Input MultiCast IP
+control-description:This parameter allows user to set ST2022 receive IP stream IP address, only available if IP Input Multicast set to multicast, only available with ST2022RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6353
+control-name:IP Input UDP
+control-description:This parameter allows user to set ST2022 receive IP stream UDP, only available with ST2022RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6354
+control-name:IP Input Stream Present
+control-description:This parameter returns ST2022 receive IP stream present status, only available with ST2022RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6355
+control-name:IP Input Stream Data Rate
+control-description:This parameter returns ST2022 receive IP stream data rate, only available with ST2022RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6356
+control-name:IP Input SSM Enable
+control-description:This parameter allows user to set ST2022 receive IP stream IGMP mode, only available with ST2022RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6357
+control-name:IP Input SSM Filter Mode
+control-description:This parameter allows user to set ST2022 receive IP stream IGMPv3 Source filter mode, only available with ST2022RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6358
+control-name:IP Input SSM Source 1
+control-description:This parameter allows user to set ST2022 receive IP stream IGMPv3 Source filter IP address 1, only available with ST2022RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6359
+control-name:IP Input SSM Source 2
+control-description:This parameter allows user to set ST2022 receive IP stream IGMPv3 Source filter IP address 2, only available with ST2022RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6360
+control-name:IP Input SSM Source 3
+control-description:This parameter allows user to set ST2022 receive IP stream IGMPv3 Source filter IP address 3, only available with ST2022RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6361
+control-name:IP Input Stream RTP Seq Errors
+control-description:This parameter returns ST2022 receive IP stream RTP sequence errors counter, only available with ST2022RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6362
+control-name:RTP Seq Err Clear
+control-description:This parameter allows user to clear ST2022 receive IP stream RTP sequence errors counter, only available with ST2022RX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6400
+control-name:Video Present
+control-description:This parameter returns video  present status from the ST2022 receive IP stream, only available with ST2022RX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6401
+control-name:Video Rate
+control-description:This parameter returns video rate(type) from the ST2022 receive IP stream, only available with ST2022RX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6402
+control-name:Video ASI Rate
+control-description:This parameter returns ASI rate from the ST2022 receive IP stream, only available with video rate is ASI and with ST2022RX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6403
+control-name:Video ASI Packet Type
+control-description:This parameter returns ASI packet type from the ST2022 receive IP stream, only available with video rate is ASI and with ST2022RX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6404
+control-name:Video ASI Per IP
+control-description:This parameter returns ASI count per IP packet frome the ST2022 receive IP stream, only available with video rate is ASI  and with ST2022RX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6405
+control-name:Video Standard
+control-description:This parameter returns video standard from the ST2022 receive IP stream, only available with ST2022RX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6406
+control-name:IP Input FEC Status
+control-description:This parameter returns ST2022 receive IP stream FEC status, only available with ST2022RX and FEC option. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6407
+control-name:IP Input FEC Column
+control-description:This parameter returns ST2022 receive IP stream FEC column status, only available with ST2022RX and FEC option. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6408
+control-name:IP Input FEC Row
+control-description:This parameter returns ST2022 receive IP stream FEC row status, only available with ST2022RX and FEC option. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6409
+control-name:Video UHD Link Format
+control-description:This parameter allows user to set receive video UHD SDI link format, only available if video receiver supports UDH and with ST2022RX option. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6410
+control-name:Video UHD Enable
+control-description:This parameter allows user to enable/disable receive video UHD,. only available if video receiver supports UDH and  with ST2022RX option. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6411
+control-name:FEC Correct Counter
+control-description:This parameter returns ST2022 receive stream FEC correct counters,only available with ST2022RX and FEC option. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6412
+control-name:FEC Uncorrect Counter
+control-description:This parameter returns ST2022 receive stream FEC uncorrect counters, only available with ST2022RX and FEC option. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6413
+control-name:FEC Counter Clear
+control-description:This parameter allows user to clear ST2022 receive stream FEC counters, only available with ST2022RX and FEC option. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6414
+control-name:Output On Loss of Video
+control-description:This parameter allows user to select output on loss of video. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..15]
+
+table-mame:IP Output 2110-40
+control-varid:6600
+control-name:IP Output Enable
+control-description:This parameter allows user to enable/disable transmit ANC IP stream , only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6601
+control-name:IP Output IP
+control-description:This parameter allows user to set transmit ANC IP stream IP address, only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6602
+control-name:IP Output UDP
+control-description:This parameter allows user to set transmit ANC IP stream UDP, only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6603
+control-name:IP Output Source UDP
+control-description:This parameter allows user t0 set transmit ANC IP stream source UDP, only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6604
+control-name:IP Output Stream Data Rate
+control-description:This parameter returns transmit ANC IP stream data rate, only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6605
+control-name:IP Output VLAN Tagging
+control-description:This parameter allows user to enable/disable VLAN tagging on the ANC output. Only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6606
+control-name:IP Output VLAN Tag ID
+control-description:This parameter allows user to set VLAN tag ID on the ANC output. Only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6701
+control-name:VPID
+control-description:This parameter returns transmit ANC VPID, only available with ST2110TX option.
+control-indexes:This control API has indexes: .[0..15]
+
+table-mame:Module Configuration
+control-varid:30002
+control-name:Module View Setup
+control-description:This parameter is reseved for internal use.
+control-indexes:none
+control-varid:30003
+control-name:Module View Update
+control-description:This parameter is reseved for internal use.
+control-indexes:none
+
+table-mame:IP Output Ethernet
+control-varid:6750
+control-name:IP Output Enable
+control-description:This parameter allows user to enable/disable Ethernet transmit IP stream, only available with IPETHTXEN option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6751
+control-name:IP Output IP
+control-description:This parameter allows user to set Ethernet transmit IP stream IP address, only available with IPETHTXEN option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6752
+control-name:IP Output UDP
+control-description:This parameter allows user to set Ethernet transmit IP stream UDP, only available with IPETHTXEN option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6753
+control-name:IP Output Source UDP
+control-description:This parameter allows user to set Ethernet transmit IP stream source UDP, only available with IPETHTXEN option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6754
+control-name:IP Output Stream Data Rate
+control-description:This parameter returns Ethernet transmit IP stream data rate, only available with IPETHTXEN option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6755
+control-name:IP Output VLAN Tagging
+control-description:This parameter allows user to enable/disable VLAN tagging on the Ethernet output. Only available with IPETHTXEN option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6756
+control-name:IP Output VLAN Tag ID
+control-description:This parameter allows user to set VLAN tag ID on the Ethernet output. Only available with IPETHTXEN option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6770
+control-name:Eth Encap Mode
+control-description:This parameter allows user to set Ethernet Encap mode, only available with IPETHTXEN option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6771
+control-name:Eth Input Bandwidth Limit
+control-description:This parameter allows user to set Ethernet data tramitted bandwidth limit, only available with IPETHTXEN option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6772
+control-name:Eth Input Data Rate
+control-description:This parameter returns received Ethernet data rate, only available with IPETHTXEN option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6773
+control-name:Eth Input Packet Received
+control-description:This parameter returns received  Ethernet data packet count, only available with IPETHTXEN option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6774
+control-name:Eth Input Packet Dropped
+control-description:This parameter returns dropped Ethernet data packet count, only available with IPETHTXEN option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6775
+control-name:Eth Input Packet Error
+control-description:This parameter returns FCS error Ethernet data packet count, only available with IPETHTXEN option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6776
+control-name:Eth Input Stats Clear
+control-description:This parameter allows user to clear Ethernet data packet counters, only available with IPETHTXEN option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6777
+control-name:Eth Output Passthrough Trunk
+control-description:This parameter allows user to set Ethernet pass-through trunk port, only available with IPETHTXEN option.
+control-indexes:This control API has indexes: .[0..15]
+
+table-mame:Test Analysis
+control-varid:4002
+control-name:Moving Box Enable
+control-description:This parameter allows user to enable/disable the moving box on the test video generated.
+control-indexes:none
+control-varid:4003
+control-name:Reference Lock
+control-description:This parameter allows user to select Reference Lock. 
+control-indexes:none
+control-varid:4004
+control-name:Emb. Audio Enable
+control-description:This parameter allows user to enable/disable the embedded audio channel of test generator.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:4005
+control-name:Emb. Audio Frequency
+control-description:This parameter allows user to set the embedded audio frequency of test generator.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:4006
+control-name:Emb. Audio Level (d BF S)
+control-description:This parameter allows user to set the embedded audio level of test generator.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:4100
+control-name:Clear
+control-description:This parameter allows user to clear video statistics of analyzer.
+control-indexes:none
+control-varid:4101
+control-name:Signal Mode
+control-description:This parameter returns signal mode detected by analyzer.
+control-indexes:none
+control-varid:4102
+control-name:ASI Type
+control-description:This parameter returns ASI type detected by analyzer (188 bytes or 204 bytes type), only available if signal mode is ASI.
+control-indexes:none
+control-varid:4103
+control-name:ASI Bandwidth
+control-description:This parameter returns ASI bandwidth detected by analyzer, only available if signal mode is ASI.
+control-indexes:none
+control-varid:4104
+control-name:Video Mode
+control-description:This parameter returns SDI signal mode detected by analyzer, only available if signal mode is SDI.
+control-indexes:none
+control-varid:4105
+control-name:Video Standard
+control-description:This parameter returns SDI video standard detected by analyzer, only available if signal mode is SDI.
+control-indexes:none
+control-varid:4106
+control-name:Video Loss Count
+control-description:This parameter returns SDI video loss counter detected by analyzer, only available if signal mode is SDI.
+control-indexes:none
+control-varid:4107
+control-name:Video Error Count
+control-description:This parameter returns SDI video CRC error counter detected by analyzer, only available if signal mode is SDI.
+control-indexes:none
+control-varid:4108
+control-name:Video Payload ID
+control-description:This parameter returns SDI video payload ID detected by analyzer, only available if signal mode is SDI.
+control-indexes:none
+control-varid:4109
+control-name:ANC Error Count
+control-description:This parameter returns SDI ANC error counter detected by analyzer, only available if signal mode is SDI.
+control-indexes:none
+control-varid:4110
+control-name:Audio Presence
+control-description:This parameter returns SDI audio present status detected by analyzer, only available if signal mode is SDI.
+control-indexes:This control API has indexes: .[0..7]
+control-varid:30004
+control-name:Video Standard
+control-description:This parameter is reseved for internal use. (Dynamic-ComboBox)
+control-indexes:none
+control-varid:30005
+control-name:Video Pattern
+control-description:This parameter is reseved for internal use. (Dynamic-ComboBox)
+control-indexes:none
+
+table-mame:IP Output ST2022
+control-varid:6800
+control-name:IP Output Enable
+control-description:This parameer allows user to enable/disable ST2022 IP stream enable, only available with ST2022TX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6801
+control-name:IP Output IP
+control-description:This parameter allows user to set ST2022 transmit IP stream IP address, only available with ST2022TX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6802
+control-name:IP Output UDP
+control-description:This parameter allows user ot set ST2022 transmit  IP stream UDP, only available with ST2022TX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6803
+control-name:IP Output Source UDP
+control-description:This parameter allows user to set ST2022 transmit IP stream source UDP, only available with ST2022TX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6804
+control-name:IP Output Stream Data Rate
+control-description:This parameter returns ST2022 transmit IP stream data rate, only available with ST2022TX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6805
+control-name:IP Output VLAN Tagging
+control-description:This parameter allows user to enable/disable VLAN tagging on the ST2022 output. Only available with ST2022TX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6806
+control-name:IP Output VLAN Tag ID
+control-description:This parameter allows user to set VLAN tag ID on the ST2022 output. Only available with ST2022TX option.
+control-indexes:This control API has indexes: .[0..15].[0..7]
+control-varid:6850
+control-name:Video Present
+control-description:This parameter returns ST2022 transmit video present status to the transmit IP stream, only available with ST2022TX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6851
+control-name:Video Rate
+control-description:This parameter returns ST2022 transmit video rate to the transmit IP stream, only available with ST2022TX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6852
+control-name:Video SDI Rate Limit
+control-description:This parameter allows user to set video SDI output rate limit, only available with ST2022TX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6853
+control-name:Video ASI Rate
+control-description:This parameter returns ST2022 transmit video ASI rate to the transmit IP stream, only available with ST2022TX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6854
+control-name:Video Standard
+control-description:This parameter returns ST2022 transmit video standard, only available with ST2022TX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6855
+control-name:IP Output FEC Mode
+control-description:This parameter allows user to set ST2022 transmit IP stream FEC mode, only available with ST2022TX and FEC option. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6856
+control-name:IP Output FEC Column
+control-description:This parameter allows user to set ST2022 transmit IP stream FEC column, only available with ST2022TX and FEC option. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6857
+control-name:IP Output FEC Row
+control-description:This parameter allows user to set ST2022 transmit IP stream FEC row, only available with ST2022TX and FEC option. This parameter is subject to product options. 
+control-indexes:This control API has indexes: .[0..15]
+
+table-mame:IP Input 2110-30
+control-varid:6100
+control-name:IP Input Enable
+control-description:This parameter allows user to enable/disable receive audio IP stream, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..3].[0..7]
+control-varid:6101
+control-name:IP Input MultiCast
+control-description:This parameter allows user to set receive audio IP stream to use unicast or multicast, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..3].[0..7]
+control-varid:6102
+control-name:IP Input MultiCast IP
+control-description:This parameter allows user to set receive audio IP stream IP address, only available if IP stream is set to multicasst, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..3].[0..7]
+control-varid:6103
+control-name:IP Input UDP
+control-description:This parameter allows user to set receive audio IP stream UDP, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..3].[0..7]
+control-varid:6104
+control-name:IP Input Stream Present
+control-description:This parameter returns receive audio IP stream present status, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..3].[0..7]
+control-varid:6105
+control-name:IP Input Stream Data Rate
+control-description:This parameter returns receive audio IP stream data rate, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..3].[0..7]
+control-varid:6106
+control-name:IP Input SSM Enable
+control-description:This parameter allows user to set receive audio IP stream IGMP mode, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..3].[0..7]
+control-varid:6107
+control-name:IP Input SSM Filter Mode
+control-description:This parameter allows user to set receive audio IP stream IGMPv3 Source filter mode, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..3].[0..7]
+control-varid:6108
+control-name:IP Input SSM Source 1
+control-description:This parameter allows user to set receive audio IP stream IGMPv3 Source filter IP address 1, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..3].[0..7]
+control-varid:6109
+control-name:IP Input SSM Source 2
+control-description:This parameter allows user to set receive audio IP stream IGMPv3 Source filter IP address 2, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..3].[0..7]
+control-varid:6110
+control-name:IP Input SSM Source 3
+control-description:This parameter allows user to set receive audio IP stream IGMPv3 Source filter IP address 3, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..3].[0..7]
+control-varid:6111
+control-name:IP Input Stream RTP Seq Errors
+control-description:This parameter returns receive audio IP stream RTP sequence erros counter, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..3].[0..7]
+control-varid:6112
+control-name:RTP Seq Err Clear
+control-description:This parameter allows user to clear receive audio IP stream RTP sequence errors counter, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..3].[0..7]
+control-varid:6217
+control-name:Audio Mapping
+control-description:This parameter allows user to set receive audio channel mapping mode, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15]
+control-varid:6250
+control-name:Audio Present
+control-description:This parameter returns receive audio stream present status, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..3]
+control-varid:6251
+control-name:Audio Locked
+control-description:This parameter returns receive audio stream PTP lock status, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..3]
+control-varid:6252
+control-name:Audio Channel
+control-description:This parameter returns receive audio stream number of channel, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..3]
+control-varid:6253
+control-name:Audio Packet Time
+control-description:This parameter returns receive audo packet time, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..3]
+control-varid:6255
+control-name:Audio Redundancy Mode
+control-description:This parameter allows user to set the receive audio redundancy mode, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..3]
+control-varid:6256
+control-name:Audio Protection Status
+control-description:This parameter returns receive audio proection mode, protected status indicates stream data is present on more than 1 trunk, only available with ST2110RX option.
+control-indexes:This control API has indexes: .[0..15].[0..3]
+control-varid:6257
+control-name:Audio Active Datapath
+control-description:This parameter returns receive audio active data path, indicates the current active trunk path in non-revertive mode, only available with ST2110RXoption.
+control-indexes:This control API has indexes: .[0..15].[0..3]
+
+table-mame:System Macro
+control-varid:200
+control-name:Macro Select
+control-description:This parameter allows user to select a macro file. (Dynamic-ComboBox)
+control-indexes:none
+control-varid:201
+control-name:Macro Argument 1
+control-description:This parameter allows user to input argument for macro execution.
+control-indexes:none
+control-varid:202
+control-name:Macro Argument 2
+control-description:This parameter allows user to input argument for macro execution.
+control-indexes:none
+control-varid:203
+control-name:Macro Argument 3
+control-description:This parameter allows user to input argument for macro execution.
+control-indexes:none
+control-varid:204
+control-name:Macro Argument 4
+control-description:This parameter allows user to input argument for macro execution.
+control-indexes:none
+control-varid:205
+control-name:Macro Argument 5
+control-description:This parameter allows user to input argument for macro execution.
+control-indexes:none
+control-varid:206
+control-name:Execute
+control-description:This parameter allows user to execute a macro file selected.
+control-indexes:none
+control-varid:207
+control-name:Macro file
+control-description:This parameter allows user to upload macro file.
+control-indexes:none
+control-varid:212
+control-name:Macro Name
+control-description:This parameter allows user to input name for macro uploaded.
+control-indexes:none
+control-varid:213
+control-name:Macro Description
+control-description:This parameter allows user to input description for macro uploaded.
+control-indexes:none
+control-varid:208
+control-name:Macro File Name
+control-description:This parameter displays the macro file name.
+control-indexes:This control API has indexes: .[0..19]
+control-varid:209
+control-name:Description
+control-description:This parameter displays the macro file descriptions.
+control-indexes:This control API has indexes: .[0..19]
+control-varid:211
+control-name:Remove
+control-description:This parameter allows user to remove the macro file.
+control-indexes:This control API has indexes: .[0..19]
+
+table-mame:Certificate Management
+control-varid:900
+control-name:Download CSR
+control-description:Control to download certificate sign request (CSR). 
+control-indexes:none
+control-varid:901
+control-name:Upload Certificate
+control-description:Control to upload the signed certificate. 
+control-indexes:none
+control-varid:902
+control-name:Upload LDAPS CA Certificate
+control-description:Control to upload the CA certificate. 
+control-indexes:none
+
+table-mame:Module
+control-varid:2000
+control-name:Module Status
+control-description:This parameter returns the MIO module present status.
+control-indexes:This control API has indexes: .[0..17]
+control-varid:2001
+control-name:Module Name
+control-description:This parameter returns the MIO module name. 
+control-indexes:This control API has indexes: .[0..17]
+control-varid:2002
+control-name:Module Serial Number
+control-description:This parameter returns the MIO module serial number. 
+control-indexes:This control API has indexes: .[0..17]
+control-varid:2003
+control-name:Module FW Version
+control-description:This parameter returns the MIO module firmware version. 
+control-indexes:This control API has indexes: .[0..17]
+control-varid:2004
+control-name:Module Temperature
+control-description:This parameter returns the MIO module temperature in degrees.
+control-indexes:This control API has indexes: .[0..17]
+control-varid:2005
+control-name:Module Reset
+control-description:This parameter allows user to reset the MIO module.
+control-indexes:This control API has indexes: .[0..17]
+control-varid:2006
+control-name:Module Export Config
+control-description:This parameter allows user to export the MIO module configuration.
+control-indexes:This control API has indexes: .[0..17]
+control-varid:2007
+control-name:Module Import Config
+control-description:This parameter allows user to Import the MIO module configuration.
+control-indexes:This control API has indexes: .[0..17]
+control-varid:2008
+control-name:Control Network IP
+control-description:This parameter allows user to set the MIO module IP address for control port network if control port is available.
+control-indexes:This control API has indexes: .[0..17]
+control-varid:2009
+control-name:Control Network Netmask
+control-description:This parameter allows user to set the MIO module IP netmask for control port network if control port is available.
+control-indexes:This control API has indexes: .[0..17]
+control-varid:2010
+control-name:Control Network Gateway
+control-description:This parameter allows user to set the MIO module IP gateway for control port network if control port is available.
+control-indexes:This control API has indexes: .[0..17]
