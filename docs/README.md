@@ -5,7 +5,7 @@ Template Setup
 Replacements
 
 -   ct-flows : repo name in snake case
--   ((CLI_NAME)) : Cli command name for entry point
+-   flows : Cli command name for entry point
 
 ## Install
 

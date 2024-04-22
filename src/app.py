@@ -1,21 +1,30 @@
 import json
 import os
+from ipaddress import IPv4Network
 from time import sleep
 
 import streamlit as st
 from netaddr import IPAddress
 from streamlit_js_eval import get_page_location
 
-from net.adaptor import Address
+from src.net.adaptor import Address
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
+def get_mask(mask_bit):
+    return IPv4Network(f"0.0.0.0/{mask_bit}").netmask
+
+
 def get_files():
-    return ["test","one", "two"]
+    return ["test", "one", "two"]
 
 
 def main():
+    adaptor = Address()
+    current_cidr = adaptor.config.get("static_ip")
+    current_ip = current_cidr.split("/")[0]
+    current_mask_bit = int(current_cidr.split("/")[1])
     st.set_page_config(
         initial_sidebar_state="collapsed",
         page_title="App",
