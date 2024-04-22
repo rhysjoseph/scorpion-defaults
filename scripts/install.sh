@@ -43,8 +43,6 @@ python -m pip install -e .
 
 # python streamlit app as service optional button and stats display for pi
 mkdir -p tmp
-
-
 sudo cp scripts/services/app.service tmp/app.service
 sed -i "s|{{HOME}}|$HOME|g" tmp/app.service
 sudo cp tmp/app.service /etc/systemd/system/app.service
@@ -55,7 +53,9 @@ sudo chmod +x scripts/app.sh
 
 sudo systemctl daemon-reload
 sudo systemctl enable app.service
-# sudo systemctl start app.service
+sudo systemctl start app.service
+sudo rm -r -d tmp
+
 
 # # app webserver
 sudo cp scripts/nginx/app /etc/nginx/sites-available
