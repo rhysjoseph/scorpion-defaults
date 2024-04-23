@@ -63,7 +63,7 @@ sudo rm /etc/nginx/sites-enabled/default
 sudo ln -s /etc/nginx/sites-available/app /etc/nginx/sites-enabled
 sudo systemctl restart nginx
 
-# # cli alias
-alias="flows"
-alias_target="$HOME/ct-flows/.venv/bin/flows"
-set_alias "$alias" "$alias_target"
+# # # cli alias
+# alias="flows"
+# alias_target="$HOME/ct-flows/.venv/bin/flows"
+# set_alias "$alias" "$alias_target"

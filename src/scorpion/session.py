@@ -14,7 +14,7 @@ load_dotenv(override=True)
 
 
 class Session(BaseModel):
-    """Creates a requests session to the UBS R2 api"""
+    """Creates a requests session to the Evertz Scorpion api"""
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
     scheme: str = "http"
@@ -221,8 +221,3 @@ class Session(BaseModel):
         )
 
         return red | blue
-
-
-print("start")
-session = Session(host="70.187.125.3")
-print(session.token)
