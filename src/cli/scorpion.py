@@ -52,7 +52,10 @@ def post(
     query = {}
     for parameter in parameters:
         param_split = parameter.split("=")
-        query.update({param_split[0] :param_split[1]})
+        if len(param_split) > 1:
+            query.update({param_split[0] :param_split[1]})
+        else:
+            query = param_split[0]
     print(call.post(query))
 
 if __name__ == "__main__":
