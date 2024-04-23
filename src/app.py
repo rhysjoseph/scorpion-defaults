@@ -5,6 +5,7 @@ from time import sleep
 import streamlit as st
 
 # from streamlit_js_eval import get_page_location
+from src.scorpion.default import set_defaults
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -21,6 +22,8 @@ def main():
     st.image(
         f"{dir_path}/assets/app/static/1. Super Landscape - Without Box - Colour With Black Text - PNG.png"
     )
+
+    st.button("Set Defaults", on_click=set_defaults)
 
 
 main()

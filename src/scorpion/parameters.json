@@ -1,191 +1,22 @@
 {
-    "1": {
-        "control-name": "product_name",
-        "control-description": "This parameter is used to specify the combination of board build and firmware.",
-        "control-indexes": "none"
-    },
-    "2": {
-        "control-name": "creation_date",
-        "control-description": "This parameter indicates the date and time the firmware was built.",
-        "control-indexes": "none"
-    },
-    "3": {
-        "control-name": "revision_major",
-        "control-description": "This parameter indicates the firmware major revision number. For example, if the firmware version is 1.02.03 build 72, the major revision number is 1.",
-        "control-indexes": "none"
-    },
-    "4": {
-        "control-name": "revision_minor",
-        "control-description": "This parameter indicates the firmware minor revision number. For example, if the firmware version is 1.02.03 build 72, the minor revision number is 2.",
-        "control-indexes": "none"
-    },
-    "6": {
-        "control-name": "build_number",
-        "control-description": "This parameter indicates the firmware build number.  For example, if the firmware version is 1.02.03 build 72, the build number is 72.",
-        "control-indexes": "none"
-    },
-    "8": {
-        "control-name": "serial_number",
-        "control-description": "This is a unique identifier used to identify the board. All boards, regardless of whether they support the same product(s), have this unique identifier.",
-        "control-indexes": "none"
-    },
-    "9": {
-        "control-name": "name",
-        "control-description": "Name of the board where the firmware resides.  Note, that a board can support many products.",
-        "control-indexes": "none"
-    },
-    "10": {
-        "control-name": "revision",
-        "control-description": "This parameter indicates the revision of the board where the firmware resides.  The board revision increases are usually a result of enhancements or fixes to the current board revision.  It is typically represented by a letter, for example 'C'.",
-        "control-indexes": "none"
-    },
-    "11": {
-        "control-name": "build_number",
-        "control-description": "The firmware may support multiple board stuff options. If this is the case, and the stuff option cannot be detected by the firmware, the build number is used to represent the stuff option.  For example, if an I2C device is optionally stuff, firmware can detect the presence of the device, and a new hardware build number is not needed. But, if for example, the values of some resistors and capacitors are changed, and the firmware needs to be aware of this, a new hardware build number is needed.",
-        "control-indexes": "none"
-    },
-    "13": {
-        "control-name": "physical_port(1_for_ctrl_port_1;_2_for_ctrl_port_2;_3..65535_for_data_port)",
-        "control-description": "This parameter sets the physical interface to streaming out log.",
-        "control-indexes": "This control API has indexes: .[0..2]"
-    },
     "14": {
         "control-name": "enable",
         "control-description": "This parameter is used to diable or enable log streaming.",
         "control-indexes": "This control API has indexes: .[0..2]"
     },
-    "15": {
-        "control-name": "destination_ip_address",
-        "control-description": "This parameter sets the destination IP address.",
-        "control-indexes": "This control API has indexes: .[0..2]"
-    },
-    "16": {
-        "control-name": "destination_port",
-        "control-description": "This parameter sets the UDP port number.",
-        "control-indexes": "This control API has indexes: .[0..2]"
-    },
-    "17": {
-        "control-name": "level",
-        "control-description": "This parameter sets the level to streaming log.",
-        "control-indexes": "This control API has indexes: .[0..2]"
-    },
-    "20": {
-        "control-name": "set_operation_id",
-        "control-description": "This parameter sets the Operation ID, which will be in the sysLog.",
-        "control-indexes": "none"
-    },
-    "50": {
-        "control-name": "system_reboot",
-        "control-description": "This parameter allows user  to reboot the system.",
-        "control-indexes": "none"
-    },
-    "51": {
-        "control-name": "factory_reset",
-        "control-description": "This parameter allows user to do factory reset.",
-        "control-indexes": "none"
-    },
-    "52": {
-        "control-name": "product_name",
-        "control-description": "This parameter returns product name.",
-        "control-indexes": "none"
-    },
-    "53": {
-        "control-name": "firmware_version",
-        "control-description": "This parameter returns firmware version.",
-        "control-indexes": "none"
-    },
-    "54": {
-        "control-name": "serial_number",
-        "control-description": "This parameter returns product Serial Number.",
-        "control-indexes": "none"
-    },
-    "55": {
-        "control-name": "alias_name",
-        "control-description": "This parameter allows user to set alias name for this product.",
-        "control-indexes": "none"
-    },
-    "57": {
-        "control-name": "export_syslog",
-        "control-description": "This parameter allows user to export system log to file.",
-        "control-indexes": "none"
-    },
-    "58": {
-        "control-name": "fpga_status",
-        "control-description": "This parameter returns current FPGA name.",
-        "control-indexes": "none"
-    },
-    "59": {
-        "control-name": "fpga_select",
-        "control-description": "This parameter allows user to select FPGA.",
-        "control-indexes": "none",
-        "table-mame": "IP Output 2110-20"
-    },
+
     "61": {
         "control-name": "trap_destination",
         "control-description": "Set trap destinations for mini-agent.",
         "control-indexes": "This control API has indexes: .[0..9]"
     },
-    "62": {
-        "control-name": "snmp_restart",
-        "control-description": "Restart SNMP.",
-        "control-indexes": "none"
-    },
-    "70": {
-        "control-name": "restart_syslog_stream",
-        "control-description": "Restart the syslog streaming process.",
-        "control-indexes": "This control API has indexes: .[0..2]",
-        "table-mame": "Trunk Port"
-    },
-    "93": {
-        "control-name": "import_preset",
-        "control-description": "This parameter allows user to Import preset from file.",
-        "control-indexes": "none"
-    },
-    "94": {
-        "control-name": "export_preset",
-        "control-description": "This parameter allows user to export preset to file.",
-        "control-indexes": "none"
-    },
-    "100": {
-        "control-name": "control_ip_address",
-        "control-description": "This parameter allows user to set IP address for control port.",
-        "control-indexes": "This control API has indexes: .[0..0]"
-    },
-    "101": {
-        "control-name": "control_ip_netmask",
-        "control-description": "This parameter allows user to set IP netmask for control port.",
-        "control-indexes": "This control API has indexes: .[0..0]"
-    },
-    "102": {
-        "control-name": "control_ip_gateway",
-        "control-description": "This parameter allows user to set IP gateway for control port.",
-        "control-indexes": "This control API has indexes: .[0..0]"
-    },
-    "103": {
-        "control-name": "network_restart",
-        "control-description": "This parameter allows user to restart control port, used to apply control port settings.",
-        "control-indexes": "This control API has indexes: .[0..0]"
-    },
-    "110": {
-        "control-name": "psu_status",
-        "control-description": "This parameter returns power supply status.",
-        "control-indexes": "This control API has indexes: .[0..1]"
-    },
-    "111": {
-        "control-name": "fpga_temperature",
-        "control-description": "This parameter returns FPGA temperature (not used for now).",
-        "control-indexes": "none"
-    },
+
     "113": {
         "control-name": "fpga_temperature_threshold",
         "control-description": "This parameter allows user to set FPGA temperature alarm threshold.",
         "control-indexes": "none"
     },
-    "115": {
-        "control-name": "fan_status",
-        "control-description": "This parameter returns fan status. This parameter is subject to product options.",
-        "control-indexes": "This control API has indexes: .[0..6]"
-    },
+
     "116": {
         "control-name": "fan_speed",
         "control-description": "This parameter allows user to set fan speed. This parameter is subject to product options.",
@@ -228,26 +59,7 @@
         "control-indexes": "none",
         "table-mame": "Diagnostic"
     },
-    "160": {
-        "control-name": "genlock_input_status",
-        "control-description": "This parameter returns genlock input status of the frame.",
-        "control-indexes": "none"
-    },
-    "161": {
-        "control-name": "genlock_input_locked",
-        "control-description": "This parameter returns genlock input locked status.",
-        "control-indexes": "none"
-    },
-    "162": {
-        "control-name": "genlock_input_standard",
-        "control-description": "This parameter returns genlock input standard.",
-        "control-indexes": "none"
-    },
-    "163": {
-        "control-name": "genlock_vitc_status",
-        "control-description": "This parameter returns current VITC time (and drop-frame flag).",
-        "control-indexes": "none"
-    },
+
     "164": {
         "control-name": "frequency_and_time_reference_source",
         "control-description": "This parameter allows user to select the reference source(s) for frame distribution.",
@@ -263,249 +75,19 @@
         "control-description": "This parameter allows user to choose the video standard for the generated sync.",
         "control-indexes": "none"
     },
-    "200": {
-        "control-name": "macro_select",
-        "control-description": "This parameter allows user to select a macro file. (Dynamic-ComboBox)",
-        "control-indexes": "none"
-    },
-    "201": {
-        "control-name": "macro_argument_1",
-        "control-description": "This parameter allows user to input argument for macro execution.",
-        "control-indexes": "none"
-    },
-    "202": {
-        "control-name": "macro_argument_2",
-        "control-description": "This parameter allows user to input argument for macro execution.",
-        "control-indexes": "none"
-    },
-    "203": {
-        "control-name": "macro_argument_3",
-        "control-description": "This parameter allows user to input argument for macro execution.",
-        "control-indexes": "none"
-    },
-    "204": {
-        "control-name": "macro_argument_4",
-        "control-description": "This parameter allows user to input argument for macro execution.",
-        "control-indexes": "none"
-    },
-    "205": {
-        "control-name": "macro_argument_5",
-        "control-description": "This parameter allows user to input argument for macro execution.",
-        "control-indexes": "none"
-    },
-    "206": {
-        "control-name": "execute",
-        "control-description": "This parameter allows user to execute a macro file selected.",
-        "control-indexes": "none"
-    },
-    "207": {
-        "control-name": "macro_file",
-        "control-description": "This parameter allows user to upload macro file.",
-        "control-indexes": "none"
-    },
-    "208": {
-        "control-name": "macro_file_name",
-        "control-description": "This parameter displays the macro file name.",
-        "control-indexes": "This control API has indexes: .[0..19]"
-    },
-    "209": {
-        "control-name": "description",
-        "control-description": "This parameter displays the macro file descriptions.",
-        "control-indexes": "This control API has indexes: .[0..19]"
-    },
-    "211": {
-        "control-name": "remove",
-        "control-description": "This parameter allows user to remove the macro file.",
-        "control-indexes": "This control API has indexes: .[0..19]",
-        "table-mame": "Certificate Management"
-    },
-    "212": {
-        "control-name": "macro_name",
-        "control-description": "This parameter allows user to input name for macro uploaded.",
-        "control-indexes": "none"
-    },
-    "213": {
-        "control-name": "macro_description",
-        "control-description": "This parameter allows user to input description for macro uploaded.",
-        "control-indexes": "none"
-    },
-    "900": {
-        "control-name": "download_csr",
-        "control-description": "Control to download certificate sign request (CSR).",
-        "control-indexes": "none"
-    },
-    "901": {
-        "control-name": "upload_certificate",
-        "control-description": "Control to upload the signed certificate.",
-        "control-indexes": "none"
-    },
-    "902": {
-        "control-name": "upload_ldaps_ca_certificate",
-        "control-description": "Control to upload the CA certificate.",
-        "control-indexes": "none",
-        "table-mame": "Module"
-    },
-    "1000": {
-        "control-name": "sfp_presence",
-        "control-description": "This parameter returns SFP present status.",
-        "control-indexes": "This control API has indexes: .[0..17]"
-    },
-    "1001": {
-        "control-name": "sfp_connector",
-        "control-description": "This parameter returns SFP connector.",
-        "control-indexes": "This control API has indexes: .[0..17]"
-    },
-    "1002": {
-        "control-name": "sfp_name",
-        "control-description": "This parameter returns SFP name.",
-        "control-indexes": "This control API has indexes: .[0..17]"
-    },
-    "1003": {
-        "control-name": "sfp_serial_number",
-        "control-description": "This parameter returns SFP serial number.",
-        "control-indexes": "This control API has indexes: .[0..17]"
-    },
-    "1004": {
-        "control-name": "sfp_firmware_version",
-        "control-description": "This parameter returns SFP firmware versionr.",
-        "control-indexes": "This control API has indexes: .[0..17]"
-    },
-    "1005": {
-        "control-name": "sfp_laser_wave_length",
-        "control-description": "This parameter returns SFP laser wavelength, only available if SFP connector type is fibe.",
-        "control-indexes": "This control API has indexes: .[0..17]"
-    },
-    "1006": {
-        "control-name": "sfp_temperature",
-        "control-description": "This parameter returns SFP temperature.",
-        "control-indexes": "This control API has indexes: .[0..17]"
-    },
-    "1007": {
-        "control-name": "sfp_supply_voltage",
-        "control-description": "This parameter returns SFP supply voltage.",
-        "control-indexes": "This control API has indexes: .[0..17]"
-    },
-    "1008": {
-        "control-name": "io_direction",
-        "control-description": "This parameter returns SFP channel direction.",
-        "control-indexes": "This control API has indexes: .[0..17].[0..1]"
-    },
-    "1009": {
-        "control-name": "optical_power",
-        "control-description": "This parameter returns SFP channel receive optical power, only available if SFP connector is fiber.",
-        "control-indexes": "This control API has indexes: .[0..17].[0..1]"
-    },
+
     "1010": {
         "control-name": "optical_power_threshold",
         "control-description": "This parameter allows user to set SFP channel receive power threshold for alarm, only available if SFP connector is fiber.",
         "control-indexes": "This control API has indexes: .[0..17].[0..1]"
     },
-    "1011": {
-        "control-name": "input_signal_presence",
-        "control-description": "This parameter returns SFP channel optical input signal present status, only available if SFP connector is fiber.",
-        "control-indexes": "This control API has indexes: .[0..17].[0..1]"
-    },
-    "1012": {
-        "control-name": "video_presence",
-        "control-description": "This parameter returns SFP channel video signal present status, only available if SFP connector is DIN.",
-        "control-indexes": "This control API has indexes: .[0..17].[0..1]"
-    },
-    "1013": {
-        "control-name": "video_rate",
-        "control-description": "This parameter returns SFP channel video signal rate, only available if SFP connector is DIN.",
-        "control-indexes": "This control API has indexes: .[0..17].[0..1]",
-        "table-mame": "System"
-    },
-    "2000": {
-        "control-name": "module_status",
-        "control-description": "This parameter returns the MIO module present status.",
-        "control-indexes": "This control API has indexes: .[0..17]"
-    },
-    "2001": {
-        "control-name": "module_name",
-        "control-description": "This parameter returns the MIO module name.",
-        "control-indexes": "This control API has indexes: .[0..17]"
-    },
-    "2002": {
-        "control-name": "module_serial_number",
-        "control-description": "This parameter returns the MIO module serial number.",
-        "control-indexes": "This control API has indexes: .[0..17]"
-    },
-    "2003": {
-        "control-name": "module_fw_version",
-        "control-description": "This parameter returns the MIO module firmware version.",
-        "control-indexes": "This control API has indexes: .[0..17]"
-    },
-    "2004": {
-        "control-name": "module_temperature",
-        "control-description": "This parameter returns the MIO module temperature in degrees.",
-        "control-indexes": "This control API has indexes: .[0..17]"
-    },
-    "2005": {
-        "control-name": "module_reset",
-        "control-description": "This parameter allows user to reset the MIO module.",
-        "control-indexes": "This control API has indexes: .[0..17]"
-    },
-    "2006": {
-        "control-name": "module_export_config",
-        "control-description": "This parameter allows user to export the MIO module configuration.",
-        "control-indexes": "This control API has indexes: .[0..17]"
-    },
-    "2007": {
-        "control-name": "module_import_config",
-        "control-description": "This parameter allows user to Import the MIO module configuration.",
-        "control-indexes": "This control API has indexes: .[0..17]"
-    },
-    "2008": {
-        "control-name": "control_network_ip",
-        "control-description": "This parameter allows user to set the MIO module IP address for control port network if control port is available.",
-        "control-indexes": "This control API has indexes: .[0..17]"
-    },
-    "2009": {
-        "control-name": "control_network_netmask",
-        "control-description": "This parameter allows user to set the MIO module IP netmask for control port network if control port is available.",
-        "control-indexes": "This control API has indexes: .[0..17]"
-    },
-    "2010": {
-        "control-name": "control_network_gateway",
-        "control-description": "This parameter allows user to set the MIO module IP gateway for control port network if control port is available.",
-        "control-indexes": "This control API has indexes: .[0..17]"
-    },
-    "3000": {
-        "control-name": "input_name",
-        "control-description": "This parameter returns the name of the top level crosspoint input.",
-        "control-indexes": "This control API has indexes: .[0..119]"
-    },
-    "3001": {
-        "control-name": "input_availablility",
-        "control-description": "This parameter returns the availability of the top level crosspoint input.",
-        "control-indexes": "This control API has indexes: .[0..119]"
-    },
-    "3002": {
-        "control-name": "input_type",
-        "control-description": "This parameter returns the type of the top level crosspoint input.",
-        "control-indexes": "This control API has indexes: .[0..119]"
-    },
+
     "3003": {
         "control-name": "input_tag",
         "control-description": "This parameter allows user to set the name tag for the top level crosspoint input.",
         "control-indexes": "This control API has indexes: .[0..119]"
     },
-    "3004": {
-        "control-name": "output_name",
-        "control-description": "This parameter returns the name of the top level crosspoint output.",
-        "control-indexes": "This control API has indexes: .[0..119]"
-    },
-    "3005": {
-        "control-name": "output_availability",
-        "control-description": "This parameter returns the availablility of the top level crosspoint output.",
-        "control-indexes": "This control API has indexes: .[0..119]"
-    },
-    "3006": {
-        "control-name": "output_type",
-        "control-description": "This parameter returns the type of the top level crosspoint output.",
-        "control-indexes": "This control API has indexes: .[0..119]"
-    },
+
     "3007": {
         "control-name": "output_mode",
         "control-description": "This parameter allows user to set the routing mode for the top level crosspoint output. (Change the mode will disconnect current route on this output).",
@@ -521,11 +103,7 @@
         "control-description": "This parameter allows user to set the route for the top level crosspoint. 0 means disconnect.",
         "control-indexes": "This control API has indexes: .[0..119]"
     },
-    "3010": {
-        "control-name": "output_route_state",
-        "control-description": "This parameter returns the route state of the top level crosspoint,.",
-        "control-indexes": "This control API has indexes: .[0..119]"
-    },
+
     "3011": {
         "control-name": "input_signal_forced",
         "control-description": "This parameter allows user to set to force the signal type for the top level crosspoint input.",
@@ -536,16 +114,7 @@
         "control-description": "This parameter allows user to set to force the signal type for the top level crosspoint output.",
         "control-indexes": "This control API has indexes: .[0..119]"
     },
-    "3013": {
-        "control-name": "input_signal_type",
-        "control-description": "This parameter returns the signal type of the top level crosspoint input.",
-        "control-indexes": "This control API has indexes: .[0..119]"
-    },
-    "3014": {
-        "control-name": "output_signal_type",
-        "control-description": "This parameter returns the signal type of the top level crosspoint output.",
-        "control-indexes": "This control API has indexes: .[0..119]"
-    },
+
     "4002": {
         "control-name": "moving_box_enable",
         "control-description": "This parameter allows user to enable/disable the moving box on the test video generated.",
@@ -576,56 +145,7 @@
         "control-description": "This parameter allows user to clear video statistics of analyzer.",
         "control-indexes": "none"
     },
-    "4101": {
-        "control-name": "signal_mode",
-        "control-description": "This parameter returns signal mode detected by analyzer.",
-        "control-indexes": "none"
-    },
-    "4102": {
-        "control-name": "asi_type",
-        "control-description": "This parameter returns ASI type detected by analyzer (188 bytes or 204 bytes type), only available if signal mode is ASI.",
-        "control-indexes": "none"
-    },
-    "4103": {
-        "control-name": "asi_bandwidth",
-        "control-description": "This parameter returns ASI bandwidth detected by analyzer, only available if signal mode is ASI.",
-        "control-indexes": "none"
-    },
-    "4104": {
-        "control-name": "video_mode",
-        "control-description": "This parameter returns SDI signal mode detected by analyzer, only available if signal mode is SDI.",
-        "control-indexes": "none"
-    },
-    "4105": {
-        "control-name": "video_standard",
-        "control-description": "This parameter returns SDI video standard detected by analyzer, only available if signal mode is SDI.",
-        "control-indexes": "none"
-    },
-    "4106": {
-        "control-name": "video_loss_count",
-        "control-description": "This parameter returns SDI video loss counter detected by analyzer, only available if signal mode is SDI.",
-        "control-indexes": "none"
-    },
-    "4107": {
-        "control-name": "video_error_count",
-        "control-description": "This parameter returns SDI video CRC error counter detected by analyzer, only available if signal mode is SDI.",
-        "control-indexes": "none"
-    },
-    "4108": {
-        "control-name": "video_payload_id",
-        "control-description": "This parameter returns SDI video payload ID detected by analyzer, only available if signal mode is SDI.",
-        "control-indexes": "none"
-    },
-    "4109": {
-        "control-name": "anc_error_count",
-        "control-description": "This parameter returns SDI ANC error counter detected by analyzer, only available if signal mode is SDI.",
-        "control-indexes": "none"
-    },
-    "4110": {
-        "control-name": "audio_presence",
-        "control-description": "This parameter returns SDI audio present status detected by analyzer, only available if signal mode is SDI.",
-        "control-indexes": "This control API has indexes: .[0..7]"
-    },
+
     "5000": {
         "control-name": "magnum_receive_ip",
         "control-description": "This parameter allows user to set magnum recive ip, only available with NETADP option. This parameter is subject to product options.",
@@ -652,21 +172,7 @@
         "control-description": "This parameter allows user to set PTP domain number. Only available with NETADP option. This parameter is subject to product options.",
         "control-indexes": "none"
     },
-    "5101": {
-        "control-name": "ptp_lock_status",
-        "control-description": "This parameter returns PTP lock status. Only available with NETADP option. This parameter is subject to product options.",
-        "control-indexes": "none"
-    },
-    "5102": {
-        "control-name": "ptp_master_id",
-        "control-description": "This parameter returns PTP master clock ID. Only available with NETADP option. This parameter is subject to product options.",
-        "control-indexes": "none"
-    },
-    "5103": {
-        "control-name": "ptp_active_port",
-        "control-description": "This parameter returns PTP active port. Only available with NETADP option. This parameter is subject to product options.",
-        "control-indexes": "none"
-    },
+
     "5200": {
         "control-name": "nmos_support_toggle",
         "control-description": "This parameter turns on/off NMOS control support.",
@@ -713,71 +219,7 @@
         "control-description": "This parameter allows user to set data port gateway IP, only available with NETADP option.",
         "control-indexes": "This control API has indexes: .[0..7]"
     },
-    "6003": {
-        "control-name": "link_status",
-        "control-description": "This parameter returns data port link status, only available with NETADP option.",
-        "control-indexes": "This control API has indexes: .[0..7]"
-    },
-    "6004": {
-        "control-name": "rx_data_rate",
-        "control-description": "This parameter returns data port receive data rate in Kbps, only available with NETADP option.",
-        "control-indexes": "This control API has indexes: .[0..7]"
-    },
-    "6005": {
-        "control-name": "rx_good_frames",
-        "control-description": "This parameter returns data port receive data good frames counters, only available with NETADP option.",
-        "control-indexes": "This control API has indexes: .[0..7]"
-    },
-    "6006": {
-        "control-name": "rx_short_frames",
-        "control-description": "This parameter returns data port receive data short frames counters, only available with NETADP option.",
-        "control-indexes": "This control API has indexes: .[0..7]"
-    },
-    "6007": {
-        "control-name": "rx_error_frames",
-        "control-description": "This parameter returns data port receive data error frames counters, only available with NETADP option.",
-        "control-indexes": "This control API has indexes: .[0..7]"
-    },
-    "6008": {
-        "control-name": "rx_broadcast_frames",
-        "control-description": "This parameter returns data port receive data broadcast frames counters, only available with NETADP option.",
-        "control-indexes": "This control API has indexes: .[0..7]"
-    },
-    "6009": {
-        "control-name": "rx_multicast_frames",
-        "control-description": "This parameter returns data port receive data multicast frames counters, only available with NETADP option.",
-        "control-indexes": "This control API has indexes: .[0..7]"
-    },
-    "6010": {
-        "control-name": "rx_vlan_frames",
-        "control-description": "This parameter returns data port receive data VLAN frames counters, only available with NETADP option.",
-        "control-indexes": "This control API has indexes: .[0..7]"
-    },
-    "6011": {
-        "control-name": "tx_data_rate",
-        "control-description": "This parameter returns data port transmit data rate in Kbps, only available with NETADP option.",
-        "control-indexes": "This control API has indexes: .[0..7]"
-    },
-    "6012": {
-        "control-name": "tx_good_frames",
-        "control-description": "This parameter returns data port transmit data good frames counters, only available with NETADP option.",
-        "control-indexes": "This control API has indexes: .[0..7]"
-    },
-    "6013": {
-        "control-name": "tx_broadcast_frames",
-        "control-description": "This parameter returns data port transmit data broadcast frames counters, only available with NETADP option.",
-        "control-indexes": "This control API has indexes: .[0..7]"
-    },
-    "6014": {
-        "control-name": "tx_multicast_frames",
-        "control-description": "This parameter returns data port transmit data multicast frames counters, only available with NETADP option.",
-        "control-indexes": "This control API has indexes: .[0..7]"
-    },
-    "6015": {
-        "control-name": "tx_vlan_frames",
-        "control-description": "This parameter returns data port transmit data VLAN frames counters, only available with NETADP option.",
-        "control-indexes": "This control API has indexes: .[0..7]"
-    },
+
     "6016": {
         "control-name": "stats_clear",
         "control-description": "This parameter allows user to clear data port statistic counters, only available with NETADP option.",
@@ -844,16 +286,7 @@
         "control-description": "This parameter allows user to set receive video IP stream UDP, only available with ST2110RX option.",
         "control-indexes": "This control API has indexes: .[0..15].[0..7]"
     },
-    "6054": {
-        "control-name": "ip_input_stream_present",
-        "control-description": "This parameter returns receive video IP stream present status, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..7]"
-    },
-    "6055": {
-        "control-name": "ip_input_stream_data_rate",
-        "control-description": "This parameter returns receive vdeo IP stream data rate, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..7]"
-    },
+
     "6056": {
         "control-name": "ip_input_ssm_enable",
         "control-description": "This parameter allows user to set receive video IP stream IGMP mode, only available with ST2110RX option.",
@@ -879,11 +312,7 @@
         "control-description": "This parameter allows user to set receive video IP stream IGMPv3 Source filter IP address 3, only available with ST2110RX option.",
         "control-indexes": "This control API has indexes: .[0..15].[0..7]"
     },
-    "6061": {
-        "control-name": "ip_input_stream_rtp_seq_errors",
-        "control-description": "This parameter returns receive video IP stream RTP sequence erros counter, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..7]"
-    },
+
     "6062": {
         "control-name": "rtp_seq_err_clear",
         "control-description": "This parameter allows user to clear receive video IP stream RTP sequence errors counter, only available with ST2110RX option.",
@@ -909,16 +338,7 @@
         "control-description": "This parameter allows user to set receive audio IP stream UDP, only available with ST2110RX option.",
         "control-indexes": "This control API has indexes: .[0..15].[0..3].[0..7]"
     },
-    "6104": {
-        "control-name": "ip_input_stream_present",
-        "control-description": "This parameter returns receive audio IP stream present status, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..3].[0..7]"
-    },
-    "6105": {
-        "control-name": "ip_input_stream_data_rate",
-        "control-description": "This parameter returns receive audio IP stream data rate, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..3].[0..7]"
-    },
+
     "6106": {
         "control-name": "ip_input_ssm_enable",
         "control-description": "This parameter allows user to set receive audio IP stream IGMP mode, only available with ST2110RX option.",
@@ -944,11 +364,7 @@
         "control-description": "This parameter allows user to set receive audio IP stream IGMPv3 Source filter IP address 3, only available with ST2110RX option.",
         "control-indexes": "This control API has indexes: .[0..15].[0..3].[0..7]"
     },
-    "6111": {
-        "control-name": "ip_input_stream_rtp_seq_errors",
-        "control-description": "This parameter returns receive audio IP stream RTP sequence erros counter, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..3].[0..7]"
-    },
+
     "6112": {
         "control-name": "rtp_seq_err_clear",
         "control-description": "This parameter allows user to clear receive audio IP stream RTP sequence errors counter, only available with ST2110RX option.",
@@ -974,16 +390,7 @@
         "control-description": "This parameter allows user to set receive ANC IP stream UDP, only available with ST2110RX option.",
         "control-indexes": "This control API has indexes: .[0..15].[0..7]"
     },
-    "6154": {
-        "control-name": "ip_input_stream_present",
-        "control-description": "This parameter returns receive ANC IP stream present status, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..7]"
-    },
-    "6155": {
-        "control-name": "ip_input_stream_data_rate",
-        "control-description": "This parameter returns receive ANC IP stream data rate, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..7]"
-    },
+
     "6156": {
         "control-name": "ip_input_ssm_enable",
         "control-description": "This parameter allows user to set receive ANC IP stream IGMP mode, only available with ST2110RX option.",
@@ -1009,36 +416,13 @@
         "control-description": "This parameter allows user to set receive ANC IP stream IGMPv3 Source filter IP address 3, only available with ST2110RX option.",
         "control-indexes": "This control API has indexes: .[0..15].[0..7]"
     },
-    "6161": {
-        "control-name": "ip_input_stream_rtp_seq_errors",
-        "control-description": "This parameter returns receive ANC IP stream RTP sequence erros counter, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..7]"
-    },
+
     "6162": {
         "control-name": "rtp_seq_err_clear",
         "control-description": "This parameter allows user to clear receive ANC IP stream RTP sequence errors counter, only available with ST2110RX option.",
         "control-indexes": "This control API has indexes: .[0..15].[0..7]"
     },
-    "6201": {
-        "control-name": "video_present",
-        "control-description": "This parameter returns receive video present status from the receive IP stream, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6202": {
-        "control-name": "video_rate",
-        "control-description": "This parameter returns receive video rate from the receive IP stream, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6206": {
-        "control-name": "video_stream_locked",
-        "control-description": "This parameter returns receive video PTP lock status, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6207": {
-        "control-name": "video_standard",
-        "control-description": "This parameter returns receive video standard, only available with ST2110RX.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
+
     "6210": {
         "control-name": "video_uhd_link_format",
         "control-description": "This parameter allows user to set receive video UHD SDI link format, only available if video receiver supports UDH and with ST2110RX option.",
@@ -1059,16 +443,7 @@
         "control-description": "This parameter allows user to set the receive video redundancy mode.",
         "control-indexes": "This control API has indexes: .[0..15]"
     },
-    "6214": {
-        "control-name": "video_protection_status",
-        "control-description": "This parameter returns receive video proection mode, protected status indicates stream data is present on more than 1 trunk, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6215": {
-        "control-name": "video_active_datapath",
-        "control-description": "This parameter returns receive video active data path, indicates the current active trunk path in non-revertive mode, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
+
     "6216": {
         "control-name": "video_uhd_enable",
         "control-description": "This parameter allows user to enable/disable receive video UHD,. only available if video receiver supports UDH and  with ST2110RX option.",
@@ -1089,84 +464,19 @@
         "control-description": "This parameter allows user to input a customized VPID value.",
         "control-indexes": "This control API has indexes: .[0..15]"
     },
-    "6250": {
-        "control-name": "audio_present",
-        "control-description": "This parameter returns receive audio stream present status, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..3]"
-    },
-    "6251": {
-        "control-name": "audio_locked",
-        "control-description": "This parameter returns receive audio stream PTP lock status, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..3]"
-    },
-    "6252": {
-        "control-name": "audio_channel",
-        "control-description": "This parameter returns receive audio stream number of channel, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..3]"
-    },
-    "6253": {
-        "control-name": "audio_packet_time",
-        "control-description": "This parameter returns receive audo packet time, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..3]"
-    },
+
     "6255": {
         "control-name": "audio_redundancy_mode",
         "control-description": "This parameter allows user to set the receive audio redundancy mode, only available with ST2110RX option.",
         "control-indexes": "This control API has indexes: .[0..15].[0..3]"
     },
-    "6256": {
-        "control-name": "audio_protection_status",
-        "control-description": "This parameter returns receive audio proection mode, protected status indicates stream data is present on more than 1 trunk, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..3]"
-    },
-    "6257": {
-        "control-name": "audio_active_datapath",
-        "control-description": "This parameter returns receive audio active data path, indicates the current active trunk path in non-revertive mode, only available with ST2110RXoption.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..3]",
-        "table-mame": "System Macro"
-    },
-    "6258": {
-        "control-name": "anc_present",
-        "control-description": "This parameter returns receive ANC present status, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6260": {
-        "control-name": "vpid",
-        "control-description": "This parameter returns receive ANC VPID, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
+
     "6261": {
         "control-name": "anc_redundancy_mode",
         "control-description": "This parameter allows user to set the receive ANC redundancy mode, only available with ST2110RX option.",
         "control-indexes": "This control API has indexes: .[0..15]"
     },
-    "6262": {
-        "control-name": "anc_protection_status",
-        "control-description": "This parameter returns receive ANC proection mode, protected status indicates stream data is present on more than 1 trunk, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6263": {
-        "control-name": "anc_active_datapath",
-        "control-description": "This parameter returns receive ANC active data path, indicates the current active trunk path in non-revertive mode, only available with ST2110RX option.",
-        "control-indexes": "This control API has indexes: .[0..15]",
-        "table-mame": "NMOS"
-    },
-    "6264": {
-        "control-name": "ip_input_fec_status",
-        "control-description": "This parameter returns receive video IP stream FEC status, only available with ST2110RX and FEC option. This parameter is subject to product options.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6265": {
-        "control-name": "ip_input_fec_column",
-        "control-description": "This parameter returns receive video IP stream FEC column status, only available with ST2110RX and FEC option. This parameter is subject to product options.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6266": {
-        "control-name": "ip_input_fec_row",
-        "control-description": "This parameter returns receive video IP stream FEC row status, only available with ST2110RX and FEC option. This parameter is subject to product options.",
-        "control-indexes": "This control API has indexes: .[0..15]",
-        "table-mame": "IP Input ST2022"
-    },
+
     "6300": {
         "control-name": "ip_input_enable",
         "control-description": "This parameter allows user to enable/disable receive Ethernet IP stream, only available with IPETHRXEN option.",
@@ -1187,16 +497,7 @@
         "control-description": "This parameter allows user to set receive Ethernet IP stream UDP, only available with IPETHRXEN option.",
         "control-indexes": "This control API has indexes: .[0..15].[0..7]"
     },
-    "6304": {
-        "control-name": "ip_input_stream_present",
-        "control-description": "This parameter returns receive Ethernet IP stream present status, only available with IPETHRXEN option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..7]"
-    },
-    "6305": {
-        "control-name": "ip_input_stream_data_rate",
-        "control-description": "This parameter returns receive Ethernet IP stream data rate, only available with IPETHRXEN option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..7]"
-    },
+
     "6306": {
         "control-name": "ip_input_ssm_enable",
         "control-description": "This parameter allows user to set receive Ethernet IP stream IGMP mode, only available with IPETHRXEN option.",
@@ -1232,21 +533,7 @@
         "control-description": "This parameter allows user to set Ethernet data received bandwidth limit, only available with IPETHRXEN option.",
         "control-indexes": "This control API has indexes: .[0..15]"
     },
-    "6322": {
-        "control-name": "eth_output_data_rate",
-        "control-description": "This parameter returns received Ethernet data rate, only available with IPETHRXEN option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6323": {
-        "control-name": "eth_output_packet_received",
-        "control-description": "This parameter returns received Ethernet data packet count, only available with IPETHRXEN option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6324": {
-        "control-name": "eth_output_packet_dropped",
-        "control-description": "This parameter returns dropped Ethernet data packet count, only available with IPETHRXEN option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
+
     "6325": {
         "control-name": "eth_output_stats_clear",
         "control-description": "This parameter allows user to clear Ethernet data packet counters, only available with IPETHRXEN option.",
@@ -1283,16 +570,7 @@
         "control-description": "This parameter allows user to set ST2022 receive IP stream UDP, only available with ST2022RX option.",
         "control-indexes": "This control API has indexes: .[0..15].[0..7]"
     },
-    "6354": {
-        "control-name": "ip_input_stream_present",
-        "control-description": "This parameter returns ST2022 receive IP stream present status, only available with ST2022RX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..7]"
-    },
-    "6355": {
-        "control-name": "ip_input_stream_data_rate",
-        "control-description": "This parameter returns ST2022 receive IP stream data rate, only available with ST2022RX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..7]"
-    },
+
     "6356": {
         "control-name": "ip_input_ssm_enable",
         "control-description": "This parameter allows user to set ST2022 receive IP stream IGMP mode, only available with ST2022RX option.",
@@ -1318,61 +596,13 @@
         "control-description": "This parameter allows user to set ST2022 receive IP stream IGMPv3 Source filter IP address 3, only available with ST2022RX option.",
         "control-indexes": "This control API has indexes: .[0..15].[0..7]"
     },
-    "6361": {
-        "control-name": "ip_input_stream_rtp_seq_errors",
-        "control-description": "This parameter returns ST2022 receive IP stream RTP sequence errors counter, only available with ST2022RX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..7]"
-    },
+
     "6362": {
         "control-name": "rtp_seq_err_clear",
         "control-description": "This parameter allows user to clear ST2022 receive IP stream RTP sequence errors counter, only available with ST2022RX option.",
         "control-indexes": "This control API has indexes: .[0..15].[0..7]"
     },
-    "6400": {
-        "control-name": "video_present",
-        "control-description": "This parameter returns video  present status from the ST2022 receive IP stream, only available with ST2022RX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6401": {
-        "control-name": "video_rate",
-        "control-description": "This parameter returns video rate(type) from the ST2022 receive IP stream, only available with ST2022RX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6402": {
-        "control-name": "video_asi_rate",
-        "control-description": "This parameter returns ASI rate from the ST2022 receive IP stream, only available with video rate is ASI and with ST2022RX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6403": {
-        "control-name": "video_asi_packet_type",
-        "control-description": "This parameter returns ASI packet type from the ST2022 receive IP stream, only available with video rate is ASI and with ST2022RX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6404": {
-        "control-name": "video_asi_per_ip",
-        "control-description": "This parameter returns ASI count per IP packet frome the ST2022 receive IP stream, only available with video rate is ASI  and with ST2022RX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6405": {
-        "control-name": "video_standard",
-        "control-description": "This parameter returns video standard from the ST2022 receive IP stream, only available with ST2022RX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6406": {
-        "control-name": "ip_input_fec_status",
-        "control-description": "This parameter returns ST2022 receive IP stream FEC status, only available with ST2022RX and FEC option. This parameter is subject to product options.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6407": {
-        "control-name": "ip_input_fec_column",
-        "control-description": "This parameter returns ST2022 receive IP stream FEC column status, only available with ST2022RX and FEC option. This parameter is subject to product options.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6408": {
-        "control-name": "ip_input_fec_row",
-        "control-description": "This parameter returns ST2022 receive IP stream FEC row status, only available with ST2022RX and FEC option. This parameter is subject to product options.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
+
     "6409": {
         "control-name": "video_uhd_link_format",
         "control-description": "This parameter allows user to set receive video UHD SDI link format, only available if video receiver supports UDH and with ST2022RX option. This parameter is subject to product options.",
@@ -1383,16 +613,7 @@
         "control-description": "This parameter allows user to enable/disable receive video UHD,. only available if video receiver supports UDH and  with ST2022RX option. This parameter is subject to product options.",
         "control-indexes": "This control API has indexes: .[0..15]"
     },
-    "6411": {
-        "control-name": "fec_correct_counter",
-        "control-description": "This parameter returns ST2022 receive stream FEC correct counters,only available with ST2022RX and FEC option. This parameter is subject to product options.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6412": {
-        "control-name": "fec_uncorrect_counter",
-        "control-description": "This parameter returns ST2022 receive stream FEC uncorrect counters, only available with ST2022RX and FEC option. This parameter is subject to product options.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
+
     "6413": {
         "control-name": "fec_counter_clear",
         "control-description": "This parameter allows user to clear ST2022 receive stream FEC counters, only available with ST2022RX and FEC option. This parameter is subject to product options.",
@@ -1424,11 +645,7 @@
         "control-description": "This parameter allows user t0 set transmit video IP stream source UDP, only available with ST2110TX option.",
         "control-indexes": "This control API has indexes: .[0..15].[0..7]"
     },
-    "6504": {
-        "control-name": "ip_output_stream_data_rate",
-        "control-description": "This parameter returns transmit vdieo IP stream data rate, only available with ST2110TX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..7]"
-    },
+
     "6505": {
         "control-name": "ip_output_vlan_tagging",
         "control-description": "This parameter allows user to enable/disable VLAN tagging on the video output. Only available with ST2110TX option.",
@@ -1459,11 +676,7 @@
         "control-description": "This parameter allows user to set transmit audio IP stream source UDP, only available with ST2110TX option.",
         "control-indexes": "This control API has indexes: .[0..15].[0..3].[0..7]"
     },
-    "6554": {
-        "control-name": "ip_output_stream_data_rate",
-        "control-description": "This parameter returns transmit audio IP stream data rate, only available with ST2110TX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..3].[0..7]"
-    },
+
     "6555": {
         "control-name": "ip_output_vlan_tagging",
         "control-description": "This parameter allows user to enable/disable VLAN tagging on the audio output. Only available with ST2110TX option.",
@@ -1494,11 +707,7 @@
         "control-description": "This parameter allows user t0 set transmit ANC IP stream source UDP, only available with ST2110TX option.",
         "control-indexes": "This control API has indexes: .[0..15].[0..7]"
     },
-    "6604": {
-        "control-name": "ip_output_stream_data_rate",
-        "control-description": "This parameter returns transmit ANC IP stream data rate, only available with ST2110TX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..7]"
-    },
+
     "6605": {
         "control-name": "ip_output_vlan_tagging",
         "control-description": "This parameter allows user to enable/disable VLAN tagging on the ANC output. Only available with ST2110TX option.",
@@ -1509,26 +718,7 @@
         "control-description": "This parameter allows user to set VLAN tag ID on the ANC output. Only available with ST2110TX option.",
         "control-indexes": "This control API has indexes: .[0..15].[0..7]"
     },
-    "6651": {
-        "control-name": "video_present",
-        "control-description": "This parameter returns transmit video present status to the transmit IP stream, only available with ST2110TX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6652": {
-        "control-name": "video_rate",
-        "control-description": "This parameter returns transmit video rate to the transmit IP stream, only available with ST2110TX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6655": {
-        "control-name": "video_locked",
-        "control-description": "This parameter returns transmit video PTP lock status, only available with ST2110TX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6656": {
-        "control-name": "video_standard",
-        "control-description": "This parameter returns transmit video standard, only available with ST2110TX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
+
     "6658": {
         "control-name": "video_uhd_single_essence_mode",
         "control-description": "This parameter allows user to set transmit video UHD link format, only available with video sender support UHD and with ST2110TX option.",
@@ -1544,18 +734,7 @@
         "control-description": "This parameter allows user to set transmit audio channel packet time, only available with ST2110TX option.",
         "control-indexes": "This control API has indexes: .[0..15]"
     },
-    "6700": {
-        "control-name": "audio_active",
-        "control-description": "This paramter returns transmit audio channel active, only available with ST2110TX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..15]",
-        "table-mame": "Network Management"
-    },
-    "6701": {
-        "control-name": "vpid",
-        "control-description": "This parameter returns transmit ANC VPID, only available with ST2110TX option.",
-        "control-indexes": "This control API has indexes: .[0..15]",
-        "table-mame": "Module Configuration"
-    },
+
     "6702": {
         "control-name": "ip_output_fec_mode",
         "control-description": "This parameter allows user to set transmit video IP stream FEC mode, only available with ST2110TX and FEC option. This parameter is subject to product options.",
@@ -1592,11 +771,7 @@
         "control-description": "This parameter allows user to set Ethernet transmit IP stream source UDP, only available with IPETHTXEN option.",
         "control-indexes": "This control API has indexes: .[0..15].[0..7]"
     },
-    "6754": {
-        "control-name": "ip_output_stream_data_rate",
-        "control-description": "This parameter returns Ethernet transmit IP stream data rate, only available with IPETHTXEN option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..7]"
-    },
+
     "6755": {
         "control-name": "ip_output_vlan_tagging",
         "control-description": "This parameter allows user to enable/disable VLAN tagging on the Ethernet output. Only available with IPETHTXEN option.",
@@ -1617,26 +792,7 @@
         "control-description": "This parameter allows user to set Ethernet data tramitted bandwidth limit, only available with IPETHTXEN option.",
         "control-indexes": "This control API has indexes: .[0..15]"
     },
-    "6772": {
-        "control-name": "eth_input_data_rate",
-        "control-description": "This parameter returns received Ethernet data rate, only available with IPETHTXEN option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6773": {
-        "control-name": "eth_input_packet_received",
-        "control-description": "This parameter returns received  Ethernet data packet count, only available with IPETHTXEN option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6774": {
-        "control-name": "eth_input_packet_dropped",
-        "control-description": "This parameter returns dropped Ethernet data packet count, only available with IPETHTXEN option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6775": {
-        "control-name": "eth_input_packet_error",
-        "control-description": "This parameter returns FCS error Ethernet data packet count, only available with IPETHTXEN option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
+
     "6776": {
         "control-name": "eth_input_stats_clear",
         "control-description": "This parameter allows user to clear Ethernet data packet counters, only available with IPETHTXEN option.",
@@ -1668,11 +824,7 @@
         "control-description": "This parameter allows user to set ST2022 transmit IP stream source UDP, only available with ST2022TX option.",
         "control-indexes": "This control API has indexes: .[0..15].[0..7]"
     },
-    "6804": {
-        "control-name": "ip_output_stream_data_rate",
-        "control-description": "This parameter returns ST2022 transmit IP stream data rate, only available with ST2022TX option.",
-        "control-indexes": "This control API has indexes: .[0..15].[0..7]"
-    },
+
     "6805": {
         "control-name": "ip_output_vlan_tagging",
         "control-description": "This parameter allows user to enable/disable VLAN tagging on the ST2022 output. Only available with ST2022TX option.",
@@ -1683,31 +835,13 @@
         "control-description": "This parameter allows user to set VLAN tag ID on the ST2022 output. Only available with ST2022TX option.",
         "control-indexes": "This control API has indexes: .[0..15].[0..7]"
     },
-    "6850": {
-        "control-name": "video_present",
-        "control-description": "This parameter returns ST2022 transmit video present status to the transmit IP stream, only available with ST2022TX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6851": {
-        "control-name": "video_rate",
-        "control-description": "This parameter returns ST2022 transmit video rate to the transmit IP stream, only available with ST2022TX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
+
     "6852": {
         "control-name": "video_sdi_rate_limit",
         "control-description": "This parameter allows user to set video SDI output rate limit, only available with ST2022TX option.",
         "control-indexes": "This control API has indexes: .[0..15]"
     },
-    "6853": {
-        "control-name": "video_asi_rate",
-        "control-description": "This parameter returns ST2022 transmit video ASI rate to the transmit IP stream, only available with ST2022TX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6854": {
-        "control-name": "video_standard",
-        "control-description": "This parameter returns ST2022 transmit video standard, only available with ST2022TX option.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
+
     "6855": {
         "control-name": "ip_output_fec_mode",
         "control-description": "This parameter allows user to set ST2022 transmit IP stream FEC mode, only available with ST2022TX and FEC option. This parameter is subject to product options.",
@@ -1729,158 +863,7 @@
         "control-description": "This parameter allows user to select the Metadata source, only available with ST2110RX options.",
         "control-indexes": "This control API has indexes: .[0..15]"
     },
-    "6901": {
-        "control-name": "sdp_status",
-        "control-description": "This parameter returns the SDP present status, only available with ST2110RX options.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6902": {
-        "control-name": "transferred_by",
-        "control-description": "This parameter returns the way the SDP transferred, only available with ST2110RX options.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6903": {
-        "control-name": "content",
-        "control-description": "This parameter returns the content of SDP, only available with ST2110RX options.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6904": {
-        "control-name": "vpid_status",
-        "control-description": "This parameter returns the VPID present status, only available with ST2110RX options.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6905": {
-        "control-name": "byte_1",
-        "control-description": "This parameter returns the first byte of VPID, only available with ST2110RX options.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6906": {
-        "control-name": "byte_2",
-        "control-description": "This parameter returns the second byte of VPID, only available with ST2110RX options.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6907": {
-        "control-name": "byte_3",
-        "control-description": "This parameter returns the third byte of VPID, only available with ST2110RX options.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6908": {
-        "control-name": "byte_4",
-        "control-description": "This parameter returns the fourth byte of VPID, only available with ST2110RX options.",
-        "control-indexes": "This control API has indexes: .[0..15]",
-        "table-mame": "IP Output 2110-30"
-    },
-    "6921": {
-        "control-name": "sdp_status",
-        "control-description": "This parameter returns the SDP present status, only available with ST2110TX options.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6922": {
-        "control-name": "transferred_by",
-        "control-description": "This parameter returns the way the SDP transferred, only available with ST2110TX options.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6923": {
-        "control-name": "content",
-        "control-description": "This parameter returns the content of SDP, only available with ST2110TX options.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6924": {
-        "control-name": "vpid_status",
-        "control-description": "This parameter returns the VPID present status, only available with ST2110TX options.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6925": {
-        "control-name": "byte_1",
-        "control-description": "This parameter returns the first byte of VPID, only available with ST2110TX options.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6926": {
-        "control-name": "byte_2",
-        "control-description": "This parameter returns the second byte of VPID, only available with ST2110TX options.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6927": {
-        "control-name": "byte_3",
-        "control-description": "This parameter returns the third byte of VPID, only available with ST2110TX options.",
-        "control-indexes": "This control API has indexes: .[0..15]"
-    },
-    "6928": {
-        "control-name": "byte_4",
-        "control-description": "This parameter returns the fourth byte of VPID, only available with ST2110TX options.",
-        "control-indexes": "This control API has indexes: .[0..15]",
-        "table-mame": "TopLevelCrosspoint"
-    },
-    "9900": {
-        "control-name": "ip_address",
-        "control-description": "This parameter allows user to set IP Address for the control port.",
-        "control-indexes": "This control API has indexes: .[0..3]"
-    },
-    "9901": {
-        "control-name": "netmask",
-        "control-description": "This parameter allows user to set netmask for the control port.",
-        "control-indexes": "This control API has indexes: .[0..3]"
-    },
-    "9902": {
-        "control-name": "gateway",
-        "control-description": "This parameter allows user to set gateway for the control port.",
-        "control-indexes": "This control API has indexes: .[0..3]"
-    },
-    "9903": {
-        "control-name": "ip_address",
-        "control-description": "This parameter allows user to set IP Address for the data port.",
-        "control-indexes": "This control API has indexes: .[0..127]"
-    },
-    "9904": {
-        "control-name": "netmask",
-        "control-description": "This parameter allows user to set netmask for the data port.",
-        "control-indexes": "This control API has indexes: .[0..127]"
-    },
-    "9905": {
-        "control-name": "gateway",
-        "control-description": "This parameter allows user to set gateway for the data port.",
-        "control-indexes": "This control API has indexes: .[0..127]"
-    },
-    "9906": {
-        "control-name": "ethernet_link_status",
-        "control-description": "This parameter gets Ethernet port link status.",
-        "control-indexes": "This control API has indexes: .[0..127]"
-    },
-    "9907": {
-        "control-name": "ethernet_rx_bandwidth",
-        "control-description": "This parameter gets received Ethernet bandwidth - divided by 1000 and display as Mbps.",
-        "control-indexes": "This control API has indexes: .[0..127]"
-    },
-    "9908": {
-        "control-name": "ethernet_tx_bandwidth",
-        "control-description": "This parameter gets transmitted Ethernet bandwidth - divided by 1000 and display as Mbps.",
-        "control-indexes": "This control API has indexes: .[0..127]"
-    },
-    "9909": {
-        "control-name": "clear_stats",
-        "control-description": "This parameter is used to clear statistics.",
-        "control-indexes": "This control API has indexes: .[0..127]"
-    },
-    "9910": {
-        "control-name": "sfp_part_number",
-        "control-description": "This parameter gets part number of SFP.",
-        "control-indexes": "This control API has indexes: .[0..127]"
-    },
-    "9911": {
-        "control-name": "sfp_type",
-        "control-description": "This parameter gets type of SFP.",
-        "control-indexes": "This control API has indexes: .[0..127]"
-    },
-    "9912": {
-        "control-name": "sfp_rx_power_level",
-        "control-description": "This parameter gets receiver power level of SFP,.",
-        "control-indexes": "This control API has indexes: .[0..127]"
-    },
-    "9913": {
-        "control-name": "sfp_tx_power_level",
-        "control-description": "This parameter gets transmitter power level of SFP.",
-        "control-indexes": "This control API has indexes: .[0..127]"
-    },
+
     "9914": {
         "control-name": "data_port",
         "control-description": "This parameter sets SFP port for RPC control.",
@@ -1896,135 +879,5 @@
         "control-description": "This parameter sets tally multicast IP address.",
         "control-indexes": "This control API has indexes: .[0..1]",
         "table-mame": "Product General"
-    },
-    "10000": {
-        "control-name": "frame_send_trap",
-        "control-description": "",
-        "control-indexes": "This control API has indexes: .[0..1]"
-    },
-    "10001": {
-        "control-name": "frame_fault_present",
-        "control-description": "",
-        "control-indexes": "This control API has indexes: .[0..1]"
-    },
-    "10002": {
-        "control-name": "sfp_send_trap",
-        "control-description": "",
-        "control-indexes": "This control API has indexes: .[0..17].[0..6]"
-    },
-    "10003": {
-        "control-name": "sfp_fault_present",
-        "control-description": "",
-        "control-indexes": "This control API has indexes: .[0..17].[0..6]"
-    },
-    "10004": {
-        "control-name": "module_send_trap",
-        "control-description": "",
-        "control-indexes": "This control API has indexes: .[0..17].[0..1]"
-    },
-    "10005": {
-        "control-name": "module_fault_present",
-        "control-description": "",
-        "control-indexes": "This control API has indexes: .[0..17].[0..1]"
-    },
-    "10006": {
-        "control-name": "trunk_port_send_trap",
-        "control-description": "",
-        "control-indexes": "This control API has indexes: .[0..1].[0..0]"
-    },
-    "10007": {
-        "control-name": "trunk_port_fault_present",
-        "control-description": "",
-        "control-indexes": "This control API has indexes: .[0..1].[0..0]"
-    },
-    "10008": {
-        "control-name": "ip_input_send_trap",
-        "control-description": "",
-        "control-indexes": "This control API has indexes: .[0..15].[0..0]"
-    },
-    "10009": {
-        "control-name": "ip_input_fault_present",
-        "control-description": "",
-        "control-indexes": "This control API has indexes: .[0..15].[0..0]"
-    },
-    "10010": {
-        "control-name": "ip_output_send_trap",
-        "control-description": "",
-        "control-indexes": "This control API has indexes: .[0..15].[0..0]"
-    },
-    "10011": {
-        "control-name": "ip_output_fault_present",
-        "control-description": "",
-        "control-indexes": "This control API has indexes: .[0..15].[0..0]"
-    },
-    "10012": {
-        "control-name": "ip_input_send_trap",
-        "control-description": "",
-        "control-indexes": "This control API has indexes: .[0..15].[0..0]"
-    },
-    "10013": {
-        "control-name": "ip_input_fault_present",
-        "control-description": "",
-        "control-indexes": "This control API has indexes: .[0..15].[0..0]"
-    },
-    "10014": {
-        "control-name": "ip_output_send_trap",
-        "control-description": "",
-        "control-indexes": "This control API has indexes: .[0..15].[0..0]"
-    },
-    "10015": {
-        "control-name": "ip_output_fault_present",
-        "control-description": "",
-        "control-indexes": "This control API has indexes: .[0..15].[0..0]"
-    },
-    "10016": {
-        "control-name": "frame_status_send_trap",
-        "control-description": "",
-        "control-indexes": "This control API has indexes: .[0..2]"
-    },
-    "10017": {
-        "control-name": "frame_status_fault_present",
-        "control-description": "",
-        "control-indexes": "This control API has indexes: .[0..2]",
-        "table-mame": "IP Input ST2110 Metadata"
-    },
-    "30000": {
-        "control-name": "fpga_route_table",
-        "control-description": "This parameter is reseved for internal use.",
-        "control-indexes": "none"
-    },
-    "30001": {
-        "control-name": "top_level_crosspoint",
-        "control-description": "This parameter is reseved for internal use.",
-        "control-indexes": "none",
-        "table-mame": "IP Input Ethernet"
-    },
-    "30002": {
-        "control-name": "module_view_setup",
-        "control-description": "This parameter is reseved for internal use.",
-        "control-indexes": "none"
-    },
-    "30003": {
-        "control-name": "module_view_update",
-        "control-description": "This parameter is reseved for internal use.",
-        "control-indexes": "none",
-        "table-mame": "IP Output Ethernet"
-    },
-    "30004": {
-        "control-name": "video_standard",
-        "control-description": "This parameter is reseved for internal use. (Dynamic-ComboBox)",
-        "control-indexes": "none"
-    },
-    "30005": {
-        "control-name": "video_pattern",
-        "control-description": "This parameter is reseved for internal use. (Dynamic-ComboBox)",
-        "control-indexes": "none",
-        "table-mame": "IP Output ST2022"
-    },
-    "30006": {
-        "control-name": "trunk_port_rx_filter_table",
-        "control-description": "This parameter is reseved for internal use. This parameter is subject to product options.",
-        "control-indexes": "none",
-        "table-mame": "IP Input 2110-20"
     }
 }
