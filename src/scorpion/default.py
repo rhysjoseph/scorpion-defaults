@@ -84,3 +84,4 @@ def set_defaults(host, port=80, factory=False):
     defaults["6000.1"] = f"{defaults['6000.1']}{unit_number}"
     for key, value in defaults.items():
         print(scorpion.post({key: value}))
+    return "Defaults Set"
