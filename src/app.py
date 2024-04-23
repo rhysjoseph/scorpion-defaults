@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from time import sleep
 
 import streamlit as st
@@ -23,7 +24,7 @@ def main():
         f"{dir_path}/assets/app/static/1. Super Landscape - Without Box - Colour With Black Text - PNG.png"
     )
 
-    st.button("Set Defaults", on_click=set_defaults)
+    st.button("Set Defaults", on_click=set_defaults(host="70.187.125.3", port=8000))
 
 
 main()

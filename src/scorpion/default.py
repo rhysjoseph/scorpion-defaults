@@ -1,10 +1,7 @@
 import json
+import re
 
 from src.scorpion.api import Call
-
-api_call = Call(host="70.187.125.3", port=8000)
-
-import re
 
 
 def parse_ranges(string):
@@ -12,7 +9,7 @@ def parse_ranges(string):
     return matches
 
 
-def set_factory_defaults():
+def set_factory_defaults(scorpion):
     with open("src/scorpion/parameters.json", "r") as f:
         parameters = json.load(f)
     for key in parameters:
@@ -23,9 +20,9 @@ def set_factory_defaults():
                 top = controls[0][1]
                 if top == "7":
                     for i in range(int(top)):
-                        print(api_call.post(f"{key}.{i}"))
+                        print(scorpion.post(f"{key}.{i}"))
         else:
-            print(api_call.post(key))
+            print(scorpion.post(key))
 
 
 factory_defaults = ["115"]
@@ -43,11 +40,11 @@ defaults = {
     "5203": "172.16.126.121",  # nmos_name_server
     "5204": "get_name",  # nmos_device_name
     "5206": 1,  # nmos_endpoint
-    "6000.0": "10.101.245.31",  # trunk_ip
+    "6000.0": "10.101.245.",  # trunk_ip
     "6001.0": "255.255.0.0",  # trunk_net_mask
     "6002.0": "10.101.0.1",  # trunk_gateway
     "6018.0": 2,  # data rate
-    "6000.1": "10.102.245.31",  # trunk_ip
+    "6000.1": "10.102.245.",  # trunk_ip
     "6001.1": "255.255.0.0",  # trunk_net_mask
     "6002.1": "10.102.0.1",  # trunk_gateway
     "6018.1": 2,  # data rate
@@ -71,16 +68,19 @@ defaults = {
 }
 
 
-def get_nmos_name():
-    name = api_call.get("55").get("value")
+def get_nmos_name(scorpion):
+    name = scorpion.get("55").get("value")
     name = name.upper()
     name = name.split("-")
-    return f"{name[0]}-{name[2]}"
+    return f"{name[0]}-{name[2]}", name[2]
 
 
-def set_defaults(factory=False):
+def set_defaults(host, port=80, factory=False):
+    scorpion = Call(host=host, port=port)
     if factory:
-        set_factory_defaults()
-    defaults["5204"] = get_nmos_name()
+        set_factory_defaults(scorpion)
+    defaults["5204"], unit_number = get_nmos_name(scorpion)
+    defaults["6000.0"] = f"{defaults['6000.0']}{unit_number}"
+    defaults["6000.1"] = f"{defaults['6000.1']}{unit_number}"
     for key, value in defaults.items():
-        print(api_call.post({key: value}))
+        print(scorpion.post({key: value}))

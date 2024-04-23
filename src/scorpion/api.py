@@ -7,7 +7,6 @@ from typing import Optional
 import requests
 from dotenv import load_dotenv
 
-
 from src.scorpion.session import Session
 
 load_dotenv(override=True)
@@ -16,10 +15,8 @@ load_dotenv(override=True)
 class Call(Session):
     """Creates a requests session to the UBS R2 api"""
 
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
 
     def get(self, path, query=None):
         """GET request
