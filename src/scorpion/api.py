@@ -11,21 +11,10 @@ from src.scorpion.session import Session
 
 load_dotenv(override=True)
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
+
 class Call(Session):
-    """Creates a requests session to the UBS R2 api"""
+    """Creates a requests session to the Evertz Scorpion api"""
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-    def _get_config(self):
-        with open(f"{dir_path}/config.json", "r", encoding="utf-8") as f:
-            return json.load(f)
-
-    def _write_config(self):
-        with open(f"{dir_path}/config.json", "w", encoding="utf-8") as f:
-            f.write(
-                json.dumps(self.config, indent=4, sort_keys=True, ensure_ascii=False)
-            )
     def get(self, path, query=None):
         """GET request
         Args:

@@ -5,14 +5,14 @@ import sys
 from datetime import datetime, timedelta
 from typing import Optional
 
-import dotenv
 import requests
+from dotenv import load_dotenv
 from pydantic import BaseModel, ConfigDict
 
 from src.scorpion.utils import Url
 
-dotenv_file = dotenv.find_dotenv()
-dotenv.load_dotenv(dotenv_file, override=True)
+DIR_PATH = os.path.dirname(os.path.realpath(__file__))
+load_dotenv(override=True)
 
 
 class Session(BaseModel):
@@ -29,10 +29,11 @@ class Session(BaseModel):
     url: Optional[str] = None
     timeout: float = 5
     token: str = os.environ.get("SCORPION_TOKEN")
+    config: dict = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
+        self.config = self._get_config()
         self.session = requests.Session()
         self.url = Url(
             scheme=self.scheme,
@@ -40,7 +41,20 @@ class Session(BaseModel):
             port=self.port,
             version=self.version,
         )
+        self._token()
+        self.session.headers.update({"jwt": self.token})
 
+    def _get_config(self):
+        with open(f"{DIR_PATH}/config.json", "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    def _write_config(self):
+        with open(f"{DIR_PATH}/config.json", "w", encoding="utf-8") as f:
+            f.write(
+                json.dumps(self.config, indent=4, sort_keys=True, ensure_ascii=False)
+            )
+
+    def _token(self):
         if not self.token:
             self.token = self._get_token()
         else:
@@ -48,16 +62,12 @@ class Session(BaseModel):
             timestamp = datetime.strptime(timestamp_str, "%Y-%m-%d %H:%M:%S")
             if not datetime.now() < timestamp:
                 self.token = self._get_token()
-        self.session.headers.update({"jwt": self.token})
-
-    def _set_env(self, key, value):
-        os.environ[key] = value
-        dotenv.set_key(dotenv_file, key, os.environ[key])
 
     def _set_token_timeout(self, timeout: int):
         timestamp = datetime.now()
         timestamp += timedelta(seconds=timeout)
-        self._set_env("SCORPION_TOKEN_TIMEOUT", timestamp.strftime("%Y-%m-%d %H:%M:%S"))
+        self.config["SCORPION_TOKEN_TIMEOUT"] = timestamp.strftime("%Y-%m-%d %H:%M:%S")
+        self._write_config()
 
     def _get_token(self):
         creds = json.dumps(
@@ -75,7 +85,8 @@ class Session(BaseModel):
             timeout=5,
         )
         token = response.json()["jwt"]
-        self._set_env("SCORPION_TOKEN", token)
+        self.config["SCORPION_TOKEN"] = token
+        self._write_config()
         self._set_token_timeout(response.json()["brief"]["life"])
         return token
 
@@ -100,6 +111,8 @@ class Session(BaseModel):
             timeout=5,
         )
         token = response.json().get("jwt")
+        self.config["SCORPION_TOKEN"] = token
+        self._write_config()
         self._set_env("SCORPION_TOKEN", token)
         self._set_token_timeout(response.json()["brief"]["life"])
         return False

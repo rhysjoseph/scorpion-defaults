@@ -24,7 +24,9 @@ def main():
         f"{dir_path}/assets/app/static/1. Super Landscape - Without Box - Colour With Black Text - PNG.png"
     )
 
-    response = st.button("Set Defaults", on_click=set_defaults(host="70.187.125.3", port=8000))
+    response = st.button(
+        "Set Defaults", on_click=set_defaults(host="70.187.125.3", port=8000)
+    )
     st.write(response)
 
 
