@@ -44,9 +44,9 @@ if __name__ == "__main__":
 
 @app.command()
 def post(
-    parameters: Annotated[List[str], typer.Argument(help="Parameter")] = None,
-    host: Annotated[str, typer.Option(help="IP or hostname for device")] = os.environ.get("SCORPION_HOST"),    
-    port: Annotated[str, typer.Option(help="Port for device")] = os.environ.get("SCORPION_PORT"),
+    parameters: Annotated[List[str], typer.Argument(help="List of Parameters (i.e. 6501.1.1=192.1.1.1 or multiple commands 6501.1.1=192.1.1.0 6501.1.1=192.1.1.2 ")],
+    host: Annotated[str, typer.Option(help="IP or hostname for device (derived from session)")] = os.environ.get("SCORPION_HOST"),    
+    port: Annotated[str, typer.Option(help="Port for device (derived from session)")] = os.environ.get("SCORPION_PORT"),
 ):
     call = Call(host=host, port=port)
     query = {}
