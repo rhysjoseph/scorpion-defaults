@@ -6,90 +6,20 @@ from typing import Optional
 
 import requests
 from dotenv import load_dotenv
-from pydantic import BaseModel, ConfigDict
 
-from src.scorpion.utils import Url
+
+from src.scorpion.session import Session
 
 load_dotenv(override=True)
 
 
-class Session(BaseModel):
+class Call(Session):
     """Creates a requests session to the UBS R2 api"""
 
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-    scheme: str = "http"
-    host: str = "98.188.63.196"
-    port: str = None
-    version: str = "v.api/apis/"
-    api_limit: float = 1.0 / 4
-    max_records_per_request: int = 100
-    session: Optional[requests.Session] = None
-    url: Optional[str] = None
-    timeout: float = 3
-    token: str = None
 
-    def __init__(self, token=None, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        print(self.host, self.port)
-        self.session = requests.Session()
-        self.url = Url(
-            scheme=self.scheme,
-            host=self.host,
-            port=self.port,
-            version=self.version,
-        )
-        self.token = token or self._get_token()
-        self.session.headers.update({"jwt": self.token})
 
-    def _get_token(
-        self,
-    ):
-        creds = json.dumps(
-            {
-                "username": os.environ["SCORPION_USER"],
-                "password": os.environ["SCORPION_PASS"],
-            }
-        ).encode("ascii")
-        creds = base64.b64encode(creds)
-        creds = creds.decode("ascii")
-        self.url.path = f"{self.version}BT/JWTCREATE/{creds}"
-        print(self.url.to_string())
-        response = requests.post(
-            self.url.to_string(),
-            verify=False,
-            timeout=3,
-        )
-        token = response.json()["jwt"]
-        return token
-
-    def _process_response(self, response):
-
-        try:
-            response.raise_for_status()
-        except requests.exceptions.HTTPError as exc:
-            err_msg = str(exc)
-            try:
-                error_dict = response.json()
-            except ValueError:
-                pass
-            else:
-                if "error" in error_dict:
-                    err_msg = f"{err_msg} [Error: {error_dict['error']}]"
-            print(err_msg)
-            raise exc
-
-        return response.json()
-
-    def _request(self, http_method: str, params=None, json_data=None, files=None):
-        response = self.session.request(
-            http_method,
-            self.url.to_string(),
-            params=params,
-            json=json_data,
-            files=files,
-            timeout=self.timeout,
-        )
-        return self._process_response(response)
 
     def get(self, path, query=None):
         """GET request

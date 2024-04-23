@@ -26,7 +26,7 @@ class Url(BaseModel):
     host: Union[str, None] = None
     port: Union[int, None] = None
     path: Union[str, None] = None
-    query: Union[dict, None] = None
+    query: Union[dict, str, None] = None
     fragment: Union[str, None] = None
 
     # @model_validator(mode="after")
