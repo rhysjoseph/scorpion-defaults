@@ -27,7 +27,7 @@ class Session(BaseModel):
     max_records_per_request: int = 100
     session: Optional[requests.Session] = None
     url: Optional[str] = None
-    timeout: float = 5
+    timeout: float = 2
     token: str = os.environ.get("SCORPION_TOKEN")
     config: dict = None
 
@@ -96,7 +96,7 @@ class Session(BaseModel):
         response = requests.post(
             self.url.to_string(),
             verify=False,
-            timeout=5,
+            timeout=2,
         )
         if response.json().get("status") == "valid":
             print(f"{response.json().get('life-remain')}")

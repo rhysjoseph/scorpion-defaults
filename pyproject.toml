@@ -18,7 +18,9 @@ dependencies = [
     "pandas",
     "ipython",
     "pyairtable",
-    "python-dotenv"    
+    "python-dotenv"   ,
+    "panda",
+    "numpy" 
 ]
 
 [tool.setuptools.packages.find]

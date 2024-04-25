@@ -43,6 +43,18 @@ class Call(Session):
         self.url.query = query
         return self._request("GET")
 
+    def route(self, query=None):
+        """POST request
+        Args:
+            path (str): The path to the endpoint
+            query (dict): OptionalThe query parameters to be sent with the request
+        Returns:
+            dict: The response from the server as a dictionary
+        """
+        self.url.path = f"{self.version}v.api/apis/RT/GET/router-destination/1/12"
+        self.url.query = query
+        return self._request("GET")
+
     def set_multicast(
         self,
         flow_type="VIDEO",
