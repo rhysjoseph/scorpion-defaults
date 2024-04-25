@@ -136,13 +136,18 @@ def set_defaults(host, port=80, factory=False):
     return "Defaults Set"
 
 
-def get_defaults(host, port=80):
+def get_current(host, port=80):
+    scorpion = Call(host=host, port=port)
     current = {"name": [], "code": [], "value": [], "default": []}
-    # scorpion = Call(host=host, port=port)
-    # for key, value in defaults.items():
-    #     call = scorpion.get(key)
-    #     current["name"].append(call["name"])
-    #     current["code"].append(call["id"])
-    #     current["value"].append(call["value"])
-    #     current["default"].append(value)
+    defaults = get_user_defaults()
+    defaults["5204"], unit_number = get_nmos_name(scorpion)
+    defaults["6000.0"] = f"{defaults['6000.0']}{int(unit_number)}"
+    defaults["6000.1"] = f"{defaults['6000.1']}{int(unit_number)}"
+
+    for key, value in defaults.items():
+        call = scorpion.get(key)
+        current["name"].append(call["name"])
+        current["code"].append(call["id"])
+        current["value"].append(call["value"])
+        current["default"].append(value)
     return current
