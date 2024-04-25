@@ -45,6 +45,9 @@ def get_user_defaults():
         "122": -7,  # time_offset
         "123": 0,  # time_daylight
         "124": "10.244.240.1",  # time_server
+        "164": 0,  # ref frequency and time ref source
+        "165": 1,  # sync ref source
+        "166": 0,  # sync standard
         "5200": 1,  # nmos_support
         "5201": 1,  # nmos_dns
         "5202": "testsuite.nmos.tv",  # nmos_domain
@@ -61,7 +64,6 @@ def get_user_defaults():
         "6002.1": "10.102.0.1",  # trunk_gateway
         "6018.1": 2,  # data rate
         "6022.1": 0,  # dhcp off
-        "165": 1,  # ref sync source
         "6213.0": 1,  # input video redundancy mode non-invertive
         "6213.1": 1,
         "6213.2": 1,
@@ -81,8 +83,7 @@ def get_user_defaults():
     }
 
 
-def get_nmos_name(scorpion):
-    name = scorpion.get("55").get("value")
+def get_nmos_name(name):
     name = name.upper()
     name = name.split("-")
     return f"{name[0]}-{name[2]}", name[2]
@@ -117,12 +118,16 @@ def set_defaults(host, port=80, factory=False):
         scorpion = Call(host=host, port=port)
     except Exception:
         return f"Scorpion not found: {host}"
+    try:
+        alias_name = scorpion.get("55").get("value")
+    except Exception:
+        return "API Not Enabled!"
+
     if factory:
         set_factory_defaults(scorpion)
-
     defaults = get_user_defaults()
 
-    defaults["5204"], unit_number = get_nmos_name(scorpion)
+    defaults["5204"], unit_number = get_nmos_name(alias_name)
     defaults["6000.0"] = f"{defaults['6000.0']}{int(unit_number)}"
     defaults["6000.1"] = f"{defaults['6000.1']}{int(unit_number)}"
 
@@ -137,17 +142,28 @@ def set_defaults(host, port=80, factory=False):
 
 
 def get_current(host, port=80):
-    scorpion = Call(host=host, port=port)
     current = {"name": [], "code": [], "value": [], "default": []}
+    try:
+        scorpion = Call(host=host, port=port)
+    except Exception:
+        return "Scorpion Not Found!"
+
     defaults = get_user_defaults()
-    defaults["5204"], unit_number = get_nmos_name(scorpion)
+    try:
+        alias_name = scorpion.get("55").get("value")
+    except Exception:
+        return "API Not Enabled!"
+    defaults["5204"], unit_number = get_nmos_name(alias_name)
     defaults["6000.0"] = f"{defaults['6000.0']}{int(unit_number)}"
     defaults["6000.1"] = f"{defaults['6000.1']}{int(unit_number)}"
 
     for key, value in defaults.items():
-        call = scorpion.get(key)
-        current["name"].append(call["name"])
-        current["code"].append(call["id"])
-        current["value"].append(call["value"])
+        try:
+            call = scorpion.get(key)
+        except Exception:
+            return False
+        current["name"].append(call.get("name"))
+        current["code"].append(call.get("id"))
+        current["value"].append(call.get("value"))
         current["default"].append(value)
     return current

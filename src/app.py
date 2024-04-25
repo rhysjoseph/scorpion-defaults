@@ -33,38 +33,40 @@ def main():
         with st.spinner("Setting Defaults..."):
             response = set_defaults(host=f"10.244.245.{int(select[-3:])}")
         st.write(response)
-    # if st.button("Get Current"):
+
     with st.spinner("Getting Current..."):
         data = get_current(host=f"10.244.245.{int(select[-3:])}")
+    if isinstance(data, str):
+        st.write(data)
+    else:
+        colms = st.columns((1, 2, 1, 2, 2))
+        fields = ["№", "Setting", "Code", "Vale", "Set Default"]
+        for col, field_name in zip(colms, fields):
+            # header
+            col.write(field_name)
 
-    colms = st.columns((1, 2, 1, 2, 2))
-    fields = ["№", "setting", "code", "value", "default"]
-    for col, field_name in zip(colms, fields):
-        # header
-        col.write(field_name)
+        for x, email in enumerate(data["name"]):
+            command_id = data["code"][x].split("@")[0]
+            col1, col2, col3, col4, col5 = st.columns((1, 2, 1, 2, 2))
+            col1.write(x)  # index
+            col2.write(data["name"][x])  # email
+            col3.write(command_id)  # unique ID
+            col4.write(data["value"][x])  # email status
+            button_type = (
+                "Set Default" if data["value"][x] != data["default"][x] else "Current"
+            )
 
-    for x, email in enumerate(data["name"]):
-        command_id = data["code"][x].split("@")[0]
-        col1, col2, col3, col4, col5 = st.columns((1, 2, 1, 2, 2))
-        col1.write(x)  # index
-        col2.write(data["name"][x])  # email
-        col3.write(command_id)  # unique ID
-        col4.write(data["value"][x])  # email status
-        disable_status = data["default"][x]  # flexible type of button
-        button_type = (
-            "Set Default" if data["value"][x] != data["default"][x] else "Current"
-        )
-
-        button_phold = col5.empty()  # create a placeholder
-        command = f"{command_id}={data['default'][x]}"
-        do_action = button_phold.button(button_type, key=x)
-        if do_action:
-            scorpion = Call(host=f"10.244.245.{int(select[-3:])}")
-            call = scorpion.post(command)
-
-            st.write(call.get("status", "Failed!"))
-            sleep(3)
-            st.rerun()
+            button_phold = col5.empty()  # create a placeholder
+            do_action = None
+            if button_type == "Set Default":
+                command = f"{command_id}={data['default'][x]}"
+                do_action = button_phold.button(button_type, key=x)
+            if do_action:
+                scorpion = Call(host=f"10.244.245.{int(select[-3:])}")
+                call = scorpion.post(command)
+                st.write(call.get("status", "Failed!"))
+                sleep(3)
+                st.rerun()
 
 
 main()
