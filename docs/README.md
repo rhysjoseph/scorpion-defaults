@@ -1,12 +1,5 @@
 # ct-flows
 
-Template Setup
-
-Replacements
-
--   ct-flows : repo name in snake case
--   flows : Cli command name for entry point
-
 ## Install
 
 ```
