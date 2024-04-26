@@ -145,14 +145,14 @@ def get_current(host, port=80):
     current = {"name": [], "code": [], "value": [], "default": []}
     try:
         scorpion = Call(host=host, port=port)
-    except Exception:
-        return "Scorpion Not Found!"
+    except Exception as exc:
+        return f"Scorpion Not Found!: \n{exc}"
 
     defaults = get_user_defaults()
     try:
         alias_name = scorpion.get("55").get("value")
-    except Exception:
-        return "API Not Enabled!"
+    except Exception as exc:
+        return f"Failed (Maybe API Enable??): {exc}"
     defaults["5204"], unit_number = get_nmos_name(alias_name)
     defaults["6000.0"] = f"{defaults['6000.0']}{int(unit_number)}"
     defaults["6000.1"] = f"{defaults['6000.1']}{int(unit_number)}"

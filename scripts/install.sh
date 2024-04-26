@@ -29,7 +29,7 @@ sudo apt-get update -y
 sudo apt-get full-upgrade -y
 
 sudo apt-get -y install python3.11
-sudo apt-get -y install python3-pip
+sudo apt-get -y install python3.11-pip
 sudo apt-get -y install python3.11-venv
 sudo apt-get -y install python-is-python3
 sudo apt-get -y install nginx

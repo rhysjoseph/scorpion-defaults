@@ -15,6 +15,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
 def main():
+    # Call("10.244.245.6")
     st.set_page_config(
         initial_sidebar_state="collapsed",
         page_title="App",
@@ -40,7 +41,7 @@ def main():
         st.write(data)
     else:
         colms = st.columns((1, 2, 1, 2, 2))
-        fields = ["№", "Setting", "Code", "Vale", "Set Default"]
+        fields = ["№", "Setting", "Code", "Value", "Set Default"]
         for col, field_name in zip(colms, fields):
             # header
             col.write(field_name)
