@@ -1,14 +1,14 @@
 streamlit>=1.33.0
-streamlit-js-eval>=0.1.7
-netaddr>=1.2.1
-typer
-requests
-urllib3<2
-pydantic
-furl
-pandas
-ipython
-pyairtable
-python-dotenv
-panda
-numpy
+# streamlit-js-eval>=0.1.7
+# netaddr>=1.2.1
+# typer
+# requests
+# urllib3<2
+# pydantic
+# furl
+# pandas
+# ipython
+# pyairtable
+# python-dotenv
+# panda
+# numpy
