@@ -11,7 +11,9 @@ from pydantic import BaseModel, ConfigDict
 
 from src.scorpion.utils import Url
 
-DIR_PATH = os.path.dirname(os.path.realpath(__file__))
+PARENT_DIR = os.path.dirname(os.path.realpath(__file__))
+ROOT_DIR = os.path.dirname(PARENT_DIR)
+print(PARENT_DIR, ROOT_DIR)
 load_dotenv(override=True)
 
 
@@ -45,11 +47,11 @@ class Session(BaseModel):
         self.session.headers.update({"jwt": self.token})
 
     def _get_config(self):
-        with open(f"{DIR_PATH}/config.json", "r", encoding="utf-8") as f:
+        with open(f"{PARENT_DIR}/config.json", "r", encoding="utf-8") as f:
             return json.load(f)
 
     def _write_config(self):
-        with open(f"{DIR_PATH}/config.json", "w", encoding="utf-8") as f:
+        with open(f"{PARENT_DIR}/config.json", "w", encoding="utf-8") as f:
             f.write(
                 json.dumps(self.config, indent=4, sort_keys=True, ensure_ascii=False)
             )
