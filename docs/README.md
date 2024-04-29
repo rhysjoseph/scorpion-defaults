@@ -1,5 +1,10 @@
 # ct-flows
 
+## Notes
+
+- .env file Scorpion user/pass
+- config/config set 
+- config/default_params set
 ## Install
 
 ```

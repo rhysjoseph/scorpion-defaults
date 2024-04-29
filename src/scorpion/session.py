@@ -1,20 +1,19 @@
+"""Creates a requests session to the Evertz Scorpion api"""
+
 import base64
 import json
 import os
-import sys
 from datetime import datetime, timedelta
 from typing import Optional
 
 import requests
-from dotenv import load_dotenv
 from pydantic import BaseModel, ConfigDict
 
 from src.scorpion.utils import Url
 
 PARENT_DIR = os.path.dirname(os.path.realpath(__file__))
-ROOT_DIR = os.path.dirname(PARENT_DIR)
-print(PARENT_DIR, ROOT_DIR)
-load_dotenv(override=True)
+SRC_DIR = os.path.dirname(PARENT_DIR)
+ROOT_DIR = os.path.dirname(SRC_DIR)
 
 
 class Session(BaseModel):
@@ -30,12 +29,13 @@ class Session(BaseModel):
     session: Optional[requests.Session] = None
     url: Optional[str] = None
     timeout: float = 2
-    token: str = os.environ.get("SCORPION_TOKEN")
     config: dict = None
+    token: str = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.config = self._get_config()
+        self.token = self.config.get("SCORPION_TOKEN")
         self.session = requests.Session()
         self.url = Url(
             scheme=self.scheme,
@@ -47,20 +47,21 @@ class Session(BaseModel):
         self.session.headers.update({"jwt": self.token})
 
     def _get_config(self):
-        with open(f"{PARENT_DIR}/config.json", "r", encoding="utf-8") as f:
+        with open(f"{ROOT_DIR}/config/config.json", "r", encoding="utf-8") as f:
             return json.load(f)
 
     def _write_config(self):
-        with open(f"{PARENT_DIR}/config.json", "w", encoding="utf-8") as f:
+        with open(f"{ROOT_DIR}/config/config.json", "w", encoding="utf-8") as f:
             f.write(
                 json.dumps(self.config, indent=4, sort_keys=True, ensure_ascii=False)
             )
 
     def _token(self):
+        
         if not self.token:
             self.token = self._get_token()
         else:
-            timestamp_str = os.environ["SCORPION_TOKEN_TIMEOUT"]
+            timestamp_str = self.config["SCORPION_TOKEN_TIMEOUT"]
             timestamp = datetime.strptime(timestamp_str, "%Y-%m-%d %H:%M:%S")
             if not datetime.now() < timestamp:
                 self.token = self._get_token()
@@ -93,7 +94,11 @@ class Session(BaseModel):
         return token
 
     def verify_token(self):
+        """Verifies if the currently stored token is valid
 
+        Returns:
+            bool: True if the token is valid, False otherwise
+        """
         self.url.path = f"{self.version}BT/JWTVERIFY/{self.token}"
         response = requests.post(
             self.url.to_string(),
