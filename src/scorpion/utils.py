@@ -29,16 +29,6 @@ class Url(BaseModel):
     query: Union[dict, str, None] = None
     fragment: Union[str, None] = None
 
-    # @model_validator(mode="after")
-    # def _check_user_password(self) -> "UserModel":
-    #     if self.username:
-    #         if self.password is None:
-    #             raise ValueError("Username supplied so password is required")
-    #     if self.password:
-    #         if self.username is None:
-    #             raise ValueError("Password supplied so username is required")
-    #     return self
-
     def to_string(self):
         """Returns URL as string"""
         url = furl(**self.model_dump())

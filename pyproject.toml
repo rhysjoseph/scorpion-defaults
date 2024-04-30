@@ -1,6 +1,6 @@
 [project]
-name = "ct-flows"
-version = "0.1.0"
+name = "scorpion-defaults"
+version = "1.1.0"
 description = ""
 authors = [{name ="cloudsupport", email=  "cloudsupport@ctus.com"}]
 license = {file = "LICENSE"}

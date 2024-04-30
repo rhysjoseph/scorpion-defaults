@@ -14,23 +14,12 @@ ROOT_DIR = os.path.dirname(SRC_DIR)
 class Defaults:
     """Connects to scorpion to set or read a list of defaults"""
 
-    def __init__(self, host, port):
-        self.scorpion = self._get_scorpion(host, port)
-        self.alias_name = self._get_alias(self.scorpion)
+    def __init__(self, name, host, port=80):
+        self.name = name
+        self.scorpion = Call(host=host, port=port)
+        self.last_octet = host.split(".")[-1]
         self.config = self._get_config()
         self.default_params = self.get_user_defaults()
-
-    def _get_scorpion(self, host, port):
-        try:
-            return Call(host=host, port=port)
-        except RequestException as exc:
-            raise ValueError(f"Scorpion not found: {host}") from exc
-
-    def _get_alias(self, scorpion):
-        try:
-            return scorpion.get("55").get("value")
-        except RequestException as exc:
-            raise ValueError("API not enabled!") from exc
 
     def _get_config(self):
         with open(f"{ROOT_DIR}/config/config.json", "r", encoding="utf-8") as f:
@@ -53,17 +42,10 @@ class Defaults:
         queries = self._split_dict(params, 10)
         for split_query in queries:
             response = self.scorpion.post(query=split_query)
-            print(response)
+            # print(response)
             responses.extend(response)
         fails = [item for item in responses if item.get("error")]
-
         return responses, fails
-
-    @staticmethod
-    def _get_name_and_number(name):
-        name = name.upper()
-        name = name.split("-")
-        return f"{name[0]}-{name[2]}", name[2]
 
     def get_user_defaults(
         self,
@@ -76,10 +58,10 @@ class Defaults:
             defaults = json.load(f)
 
         #  Set NMOS Name to alias upper case and remove rack number
-        defaults["5204"], unit_number = self._get_name_and_number(self.alias_name)
+        defaults["5204"] = self.name
         #  Set unit number as last octet of trunks
-        defaults["6000.0"] = f"{self.config['TRUNK_A_PREFIX']}.{int(unit_number)}"
-        defaults["6000.1"] = f"{self.config['TRUNK_B_PREFIX']}.{int(unit_number)}"
+        defaults["6000.0"] = f"{self.config['TRUNK_A_PREFIX']}.{self.last_octet}"
+        defaults["6000.1"] = f"{self.config['TRUNK_B_PREFIX']}.{self.last_octet}"
 
         return defaults
 
@@ -90,8 +72,8 @@ class Defaults:
         for key, value in self.default_params.items():
             try:
                 call = self.scorpion.get(key)
-            except Exception:
-                return False
+            except RequestException as exc:
+                return f"Scorpion API Call Failed: {exc}"
             current["name"].append(call.get("name"))
             current["code"].append(call.get("id"))
             current["value"].append(call.get("value"))

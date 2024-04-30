@@ -1,9 +1,0 @@
-[Unit]
-Description=Stats Display to OLED
-After=multi-user.target
-[Service]
-Type=simple
-Restart=always
-ExecStart={{HOME}}/ct-flows/.venv/bin/python {{HOME}}/ct-flows/src/stats.py
-[Install]
-WantedBy=multi-user.target

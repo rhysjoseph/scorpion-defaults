@@ -21,7 +21,7 @@ class Session(BaseModel):
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
     scheme: str = "http"
-    host: str = "98.188.63.196"
+    host: str = None
     port: int = None
     version: str = "v.api/apis/"
     api_limit: float = 1.0 / 4
@@ -43,8 +43,9 @@ class Session(BaseModel):
             port=self.port,
             version=self.version,
         )
-        self._token()
-        self.session.headers.update({"jwt": self.token})
+        if self.config.get("JWT_ENABLED"):
+            self._token()
+            self.session.headers.update({"jwt": self.token})
 
     def _get_config(self):
         with open(f"{ROOT_DIR}/config/config.json", "r", encoding="utf-8") as f:
@@ -57,7 +58,7 @@ class Session(BaseModel):
             )
 
     def _token(self):
-        
+
         if not self.token:
             self.token = self._get_token()
         else:
