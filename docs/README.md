@@ -4,7 +4,7 @@ Creates a docker that runs a webpage to compare and set a list of default parame
 
 ## Setup
 
-### Clone git and create env
+### Clone git and create env template
 
 ```
 git clone https://github.com/ctus-dev/scorpion-defaults.git
