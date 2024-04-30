@@ -4,11 +4,13 @@ Creates a docker that runs a webpage to compare and set a list of default parame
 
 ## Setup
 
-### Clone git
+### Clone git and create env
 
 ```
 git clone https://github.com/ctus-dev/scorpion-defaults.git
 cd scorpion-defaults
+echo 'SCORPION_USER={{USER}}
+SCORPION_PASS={{PASS}}' > .env
 ```
 
 ### Set config/config.json for the following required options:
@@ -90,6 +92,9 @@ docker compose up --build
 ## Run as service
 
 Script adds docker compose systemd service and starts docker on startup
+
+-   change scripts/docker-compose.service working directory to your home directory (or wherever you cloned the git to)
+-
 
 ```
 chmod +x scripts/run-as-service.sh
