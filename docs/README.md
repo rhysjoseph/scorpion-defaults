@@ -94,7 +94,6 @@ docker compose up --build
 Script adds docker compose systemd service and starts docker on startup
 
 -   change scripts/docker-compose.service working directory to your home directory (or wherever you cloned the git to)
--
 
 ```
 chmod +x scripts/run-as-service.sh
