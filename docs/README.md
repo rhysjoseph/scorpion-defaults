@@ -4,11 +4,13 @@ Creates a docker that runs a webpage to compare and set a list of default parame
 
 ## Setup
 
-### Clone git
+### Clone git and create env
 
 ```
 git clone https://github.com/ctus-dev/scorpion-defaults.git
 cd scorpion-defaults
+echo 'SCORPION_USER={{USER}}
+SCORPION_PASS={{PASS}}' > .env
 ```
 
 ### Set config/config.json for the following required options:

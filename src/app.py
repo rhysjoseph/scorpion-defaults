@@ -68,7 +68,7 @@ def main():
         col3.write("")  # hacky way to lower the button
         col3.write("")
         col4.write("")
-        col4.write("")
+        col4.write(scorpion.scorpion.token)
         col4.link_button("Goto Control", f"http://{units[select]}")
 
         if col3.button("Set Defaults"):
