@@ -1,12 +1,14 @@
 import platform
 import subprocess
+import pprint
 
+from src.mcm.api import Call
 
-from src.scorpion.api import Call
+pp = pprint.PrettyPrinter(indent=4)
 
-
-test = Call(host="10.244.245.24", port=80)
-print(test.get("1010.1"))
+test = Call()
+# pp.pprint(test.get_channels())
+pp.pprint(test.monitor_all_channels("70", "on"))
 
 # print(test.get("6551.2.3.0"))
 # for i in range(8):
