@@ -4,7 +4,9 @@ Creates a docker that runs a webpage to compare and set a list of default parame
 
 ## Setup
 
-### Clone git and create env template
+
+### Clone git and create env
+
 
 ```
 git clone https://github.com/ctus-dev/scorpion-defaults.git
@@ -98,4 +100,24 @@ Script adds docker compose systemd service and starts docker on startup
 ```
 chmod +x scripts/run-as-service.sh
 ./run-as-service.sh
+```
+
+
+## Updates
+stop the service
+
+```
+sudo systemctl stop docker-compose@scorpion-defaults
+
+```
+
+make your changes then build
+```
+sudo docker compose build
+```
+
+then start the service
+
+```
+sudo systemctl start docker-compose@scorpion-defaults
 ```

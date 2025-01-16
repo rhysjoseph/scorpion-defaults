@@ -1,0 +1,23 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: InstanceStack",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "tests.fping_test",
+            "justMyCode": true,
+            "env": {
+                "AWS_PROFILE": "cloud",
+                "AWS_REGION": "us-west-2",
+                "FLOWS_TABLE_ID": "oGWN5qNlAe",
+                "DOMAIN": "ctus.live",
+                "TADA_SECRET": "arn:aws:secretsmanager:us-east-1:230337456530:secret:tada/streammaster-5RoqV9",
+                "PYTHONPATH": "${workspaceFolder}/lambdas/ApiInstanceStack"
+            }
+        },
+    ]
+}
