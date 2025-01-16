@@ -62,7 +62,6 @@ class Session(BaseModel):
         credentials_string = f"{username}:{password}"
         credentials_bytes = credentials_string.encode("utf-8")
         encoded_credentials = base64.b64encode(credentials_bytes).decode("utf-8")
-        print(encoded_credentials)
         return encoded_credentials
 
  

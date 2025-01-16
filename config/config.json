@@ -1,18 +1,67 @@
 {
-    "CONTROL_PREFIX": "10.244.245",
-    "JWT_ENABLED": true,
-    "MCM_LIST": {
-        "MCM-1": "10.244.243.201",
-        "MCM-2": "10.244.243.202"
-    },
-    "SCORPION_CONTROL_PORT": "80",
-    "SCORPION_LIST": {
-        "SCPN6-4": "10.244.245.4"
-    },
-    "SCORPION_RANGE": "1-36",
-    "SCORPION_RANGE_NAME_PFIX": "SCPN6-",
-    "SCORPION_TOKEN": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzcwNTI5MjIsImp0aSI6IiIsImlzcyI6IjEwLjI0NC4yNDUuMS1XZWJFQVNZIHNlcnZlciIsImNsaSI6IjEwLjI0NC4yNTUuMTQiLCJuYmYiOjE3MzcwNTI5MjIsImV4cCI6MTczNzA1MzQwMiwic3ViIjoiRXZlcnR6Iiwib3JpIjoiY3JlIiwidXNyIjp7ImxvZ2luIjoicm9vdCIsInJvbGVuYW1lIjoiYWRtaW5pc3RyYXRvciJ9fQ.3GHcTf1uvHk-OadNu0eVTtM7Bfw2dttyE24L68X0oHQ",
-    "SCORPION_TOKEN_TIMEOUT": "2025-01-16 18:50:01",
-    "TRUNK_A_PREFIX": "10.1.101",
-    "TRUNK_B_PREFIX": "10.64.101"
+  "CISCO_LIST": {
+    "Arista Core Blue": "10.244.169.64",
+    "Arista Core Red": "10.244.169.1",
+    "C8FP2-201": "10.244.240.201",
+    "C8FP2-202": "10.244.240.202",
+    "C8FP2-203": "10.244.240.203",
+    "C8FP2-204": "10.244.240.204",
+    "C8FP2-205": "10.244.240.205",
+    "C8FP2-206": "10.244.240.206",
+    "C8FP2-207": "10.244.240.207",
+    "C8FP2-208": "10.244.240.208",
+    "C8FP2-209": "10.244.240.209",
+    "C8FP2-210": "10.244.240.210",
+    "Core 01-1": "10.244.240.11",
+    "Core 01-2": "10.244.240.12",
+    "M2010-1001": "10.244.169.11",
+    "M2010-1002": "10.244.169.12",
+    "M2010-1003": "10.244.169.13",
+    "M2010-1004": "10.244.169.13",
+    "M2010-2001": "10.244.169.74",
+    "M2010-2002": "10.244.169.75",
+    "M2010-2003": "10.244.169.76",
+    "M2010-2004": "10.244.169.77",
+    "Node Rack 01-A": "10.244.240.101",
+    "Node Rack 01-B": "10.244.240.102",
+    "Node Rack 02-A": "10.244.240.103",
+    "Node Rack 02-B": "10.244.240.104",
+    "Node Rack 03-A": "10.244.240.105",
+    "Node Rack 03-B": "10.244.240.106",
+    "Node Rack 04-A": "10.244.240.107",
+    "Node Rack 04-B": "10.244.240.108",
+    "Node Rack 05-A": "10.244.240.109",
+    "Node Rack 05-B": "10.244.240.110",
+    "Node Rack 06-A": "10.244.240.111",
+    "Node Rack 06-B": "10.244.240.112",
+    "Node Rack 07-A": "10.244.240.113",
+    "Node Rack 07-B": "10.244.240.114",
+    "Node Rack 08-A": "10.244.240.115",
+    "Node Rack 08-B": "10.244.240.116",
+    "Node Rack 09-A": "10.244.240.117",
+    "Node Rack 09-B": "10.244.240.118",
+    "Node Rack 10-A": "10.244.240.119",
+    "Node Rack 10-B": "10.244.240.120",
+    "Peplink": "10.244.240.1"
+  },
+  "CONTROL_PREFIX": "10.244.245",
+  "JWT_ENABLED": true,
+  "LINKS": {
+    "Prism": "10.244.243.11:6080/vnc.html",
+    "hi": "10.244.255.9"
+  },
+  "MCM_LIST": {
+    "MCM-1": "10.244.243.201",
+    "MCM-2": "10.244.243.202"
+  },
+  "SCORPION_CONTROL_PORT": "80",
+  "SCORPION_LIST": {
+    "SCPN6-4": "10.244.245.4"
+  },
+  "SCORPION_RANGE": "1-36",
+  "SCORPION_RANGE_NAME_PFIX": "SCPN6-",
+  "SCORPION_TOKEN": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzcwNjc3NTMsImp0aSI6IiIsImlzcyI6IjEwLjI0NC4yNDUuMS1XZWJFQVNZIHNlcnZlciIsImNsaSI6IjEwLjI0NC4yNTUuMTQiLCJuYmYiOjE3MzcwNjc3NTMsImV4cCI6MTczNzA2ODIzMywic3ViIjoiRXZlcnR6Iiwib3JpIjoiY3JlIiwidXNyIjp7ImxvZ2luIjoicm9vdCIsInJvbGVuYW1lIjoiYWRtaW5pc3RyYXRvciJ9fQ.ZVsEPm209EEdUlmXkIwoMCk6Wb_boQXu9SQRko-uQko",
+  "SCORPION_TOKEN_TIMEOUT": "2025-01-16 22:57:13",
+  "TRUNK_A_PREFIX": "10.1.101",
+  "TRUNK_B_PREFIX": "10.64.101"
 }

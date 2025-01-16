@@ -6,7 +6,6 @@ from time import sleep
 import pandas
 import streamlit as st
 from requests.exceptions import RequestException
-
 from src.scorpion.api import Call 
 from src.scorpion.default import Defaults
 from src.mcm.api import Call as McmCall
@@ -49,11 +48,32 @@ def main():
     st.image(
         f"{PARENT_DIR}/assets/app/static/1. Super Landscape - Without Box - Colour With Black Text - PNG.png"
     )
-    config = _get_config()
-    tab1, tab2 = st.tabs(["Scorpions", "MCM"])
-    with tab1:  
-        
 
+    config = _get_config()    
+
+    home_page, mcm_page, scorpion_page = st.tabs(["Home","MCM", "Scorpions"])
+    with home_page:
+        col1, col2,col3,col4 = st.columns([1,1,1,1])
+        col1.link_button("hi",f"http://{config['LINKS']['hi']}", use_container_width=True)
+        col2.link_button("Prism",f"http://{config['LINKS']['Prism']}", use_container_width=True)
+
+        col1, col2,col3,col4 = st.columns([1,.7,.25,1])
+        selected_cisco = col1.selectbox("Select Switch:", config["CISCO_LIST"])
+        col2.write("")
+        col2.write("")
+        col2.link_button("Goto control", f"http://{config['CISCO_LIST'][selected_cisco]}", use_container_width=True)
+        col3.write("")
+        col3.write("")
+        col4.write("")
+        col4.write("")
+        text_to_copy = f"ssh admin@{config['CISCO_LIST'][selected_cisco]}"
+        hosted_html_file = "https://ct-testing-east-cm.s3.us-east-1.amazonaws.com/copy.html"
+        iframe_url = f"{hosted_html_file}?copy={text_to_copy}"
+        col4.markdown(f'<iframe style="overflow: hidden;  width: 50px; height: 50px;" src="{iframe_url}"></iframe>', unsafe_allow_html=True)
+        
+        col3.text("Copy SSH")
+
+    with scorpion_page:
         units = _get_scorpion_unit_list(config)
         col1, col2, col3, col4 = st.columns([2, 0.5, 1, 1])
         select = col1.selectbox("Select Unit", units)
@@ -119,13 +139,17 @@ def main():
                         st.write(call.get("status", "Failed!"))
                         sleep(3)
                         st.rerun()
-    with tab2:
-        units = _get_mcm_unit_list(config)
-        col1, col2, col3, col4 = st.columns([2, 0.5, 1, 1])
-        mcm_select = col1.selectbox("Select MCM", units)
+    with mcm_page:
+        mcm_units = _get_mcm_unit_list(config)
+        col1, col2, col3, col4 = st.columns([1, 1,1,1])
+        mcm_select = col1.selectbox("Select MCM", mcm_units)
+        col2.write("")
+        col2.write("")
+
+        col2.link_button("Goto Control", f"http://{mcm_units[mcm_select]}")
         try:
             mcm = McmCall(
-                host=units[mcm_select]
+                host=mcm_units[mcm_select]
             )
         except RequestException as exc:
             scorpion = None
