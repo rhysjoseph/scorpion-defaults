@@ -37,6 +37,7 @@ def _get_unit_list(config):
 def main():
     st.set_page_config(
         initial_sidebar_state="collapsed",
+        layout="wide",
         page_title="Scorpion Defaults",
         page_icon=f"{PARENT_DIR}/assets/app/static/4. CT Mark - Colour PNG.png",
         # layout="wide",
