@@ -13,11 +13,35 @@ from src.mcm.api import Call as McmCall
 PARENT_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(PARENT_DIR)
 
+def ping(host, timeout=.1): 
+    """
+    Pings a host with a specified timeout and returns True if the host is reachable, 
+    False otherwise.
+    """
+    response = os.system("ping -c 1 -W " + str(timeout) + " " + host)
+    if response == 0:
+        return True
+    else:
+        return False
+
+def discover_devices(scorpions, mcms, switches):
+    devices = scorpions | mcms| switches
+    status = {}
+    for device in devices:
+        ip_address = (devices[device])
+        if ping(ip_address):
+            status[device] = True
+        else:
+            status[device] = False
+    print(status)
+    return (status)
+
 
 def _get_config():
     with open(f"{ROOT_DIR}/config/config.json", "r", encoding="utf-8") as f:
         config = json.load(f)
-    return config
+    scorpions = _get_scorpion_unit_list(config)
+    return config, scorpions, config["MCM_LIST"], config["SWITCH_LIST"]
 
 
 def _get_scorpion_unit_list(config):
@@ -31,14 +55,13 @@ def _get_scorpion_unit_list(config):
     else:
         return config["SCORPION_LIST"]
 
-def _get_mcm_unit_list(config):
-    return config["MCM_LIST"]
+
 
 def main():
     st.set_page_config(
         initial_sidebar_state="collapsed",
         layout="wide",
-        page_title="Scorpion Defaults",
+        page_title="CT 2110",
         page_icon=f"{PARENT_DIR}/assets/app/static/4. CT Mark - Colour PNG.png",
         # layout="wide",
     )
@@ -49,39 +72,64 @@ def main():
         f"{PARENT_DIR}/assets/app/static/1. Super Landscape - Without Box - Colour With Black Text - PNG.png"
     )
 
-    config = _get_config()    
+    config, scorpions, mcms, switches = _get_config()    
 
     home_page, mcm_page, scorpion_page = st.tabs(["Home","MCM", "Scorpions"])
     with home_page:
+
         col1, col2,col3,col4 = st.columns([1,1,1,1])
         col1.link_button("hi",f"http://{config['LINKS']['hi']}", use_container_width=True)
         col2.link_button("Prism",f"http://{config['LINKS']['Prism']}", use_container_width=True)
 
-        col1, col2,col3,col4 = st.columns([1,.7,.25,1])
-        selected_cisco = col1.selectbox("Select Switch:", config["CISCO_LIST"])
+        col1, col2,col3,col4, col5 = st.columns([1,.7,.25,1,1])
+        selected_cisco = col1.selectbox("Select Switch:", config["SWITCH_LIST"])
         col2.write("")
         col2.write("")
-        col2.link_button("Goto control", f"http://{config['CISCO_LIST'][selected_cisco]}", use_container_width=True)
+        col2.link_button("Goto control", f"http://{config['SWITCH_LIST'][selected_cisco]}", use_container_width=True)
         col3.write("")
         col3.write("")
+        col3.text("Copy SSH")
+
         col4.write("")
         col4.write("")
-        text_to_copy = f"ssh admin@{config['CISCO_LIST'][selected_cisco]}"
+        text_to_copy = f"ssh admin@{config['SWITCH_LIST'][selected_cisco]}"
         hosted_html_file = "https://ct-testing-east-cm.s3.us-east-1.amazonaws.com/copy.html"
         iframe_url = f"{hosted_html_file}?copy={text_to_copy}"
         col4.markdown(f'<iframe style="overflow: hidden;  width: 50px; height: 50px;" src="{iframe_url}"></iframe>', unsafe_allow_html=True)
-        
-        col3.text("Copy SSH")
-
+                
+        col5.write("")
+        col5.write("")
+        if col5.button("Ping"):
+            if ping(config['SWITCH_LIST'][selected_cisco], timeout=2):
+                st.info("PONG")
+            else:
+                st.error("wa wa")
+        device_status={}
+        st.write("")
+        st.write("")
+        if st.button("Discover All Devices"):
+            with st.spinner("Discovering Devices..."):
+                device_status= discover_devices(scorpions, mcms, switches)
+        if device_status:
+            for unit, status in device_status.items():
+                if status:
+                    st.write(f"<span style='color:green;'>{unit}: Online</span>", unsafe_allow_html=True)
+                else:
+                    st.write(f"<span style='color:red;'>{unit}: Offline</span>", unsafe_allow_html=True)
     with scorpion_page:
-        units = _get_scorpion_unit_list(config)
-        col1, col2, col3, col4 = st.columns([2, 0.5, 1, 1])
-        select = col1.selectbox("Select Unit", units)
-
+        col1, col2, col3, col4, col5 = st.columns([2, 0.5, 1, 1,1])
+        select = col1.selectbox("Select Unit", scorpions)
+        col5.write("")
+        col5.write("")
+        if col5.button("Ping", "scorpion_ping"):
+            if ping(scorpions[select], timeout=2):
+                st.info("PONG")
+            else:
+                st.error("wa wa")
         try:
             scorpion = Defaults(
                 name=select,
-                host=units[select],
+                host=scorpions[select],
                 port=config.get("SCORPION_CONTROL_PORT", 80),
             )
         except RequestException as exc:
@@ -93,7 +141,7 @@ def main():
             col3.write("")
             col4.write("")
             col4.write("")
-            col4.link_button("Goto Control", f"http://{units[select]}")
+            col4.link_button("Goto Control", f"http://{scorpions[select]}")
 
             if col3.button("Set Defaults"):
                 with st.spinner("Setting Defaults..."):
@@ -140,16 +188,23 @@ def main():
                         sleep(3)
                         st.rerun()
     with mcm_page:
-        mcm_units = _get_mcm_unit_list(config)
-        col1, col2, col3, col4 = st.columns([1, 1,1,1])
-        mcm_select = col1.selectbox("Select MCM", mcm_units)
+
+        col1, col2, col3, col4, col5 = st.columns([1, 1,1,1,1])
+        mcm_select = col1.selectbox("Select MCM", mcms)
         col2.write("")
         col2.write("")
 
-        col2.link_button("Goto Control", f"http://{mcm_units[mcm_select]}")
+        col2.link_button("Goto Control", f"http://{mcms[mcm_select]}")
+        col3.write("")
+        col3.write("")
+        if col3.button("Ping", "mcm_ping"):
+            if ping(mcms[mcm_select], timeout=2):
+                st.info("PONG")
+            else:
+                st.error("wa wa")
         try:
             mcm = McmCall(
-                host=mcm_units[mcm_select]
+                host=mcms[mcm_select]
             )
         except RequestException as exc:
             scorpion = None
