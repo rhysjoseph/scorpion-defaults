@@ -4,6 +4,7 @@ import streamlit as st
 import src.main_tabs.home as home_tab
 import src.main_tabs.scorpions as scorpions_tab
 import src.main_tabs.mcms as mcms_tab
+
 import src.utils as utils
 
 PARENT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -15,7 +16,6 @@ def main():
         layout="wide",
         page_title="CT 2110",
         page_icon=f"{PARENT_DIR}/assets/app/static/4. CT Mark - Colour PNG.png",
-        # layout="wide",
     )
     with open(f"{PARENT_DIR}/assets/app/style.css", encoding="utf-8") as css:
         st.markdown(f"<style>{css.read()}</style>", unsafe_allow_html=True)

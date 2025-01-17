@@ -42,4 +42,4 @@ COPY . .
 EXPOSE 8501
 
 # Run the application.
-CMD streamlit run src/app.py "--server.port=8501" "--server.address=0.0.0.0"
+CMD streamlit run src/Home.py "--server.port=8501" "--server.address=0.0.0.0"
