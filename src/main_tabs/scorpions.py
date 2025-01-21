@@ -1,65 +1,25 @@
-import json
-import os
-import re
-from time import sleep
-
-import pandas
 import streamlit as st
 from requests.exceptions import RequestException
-
-from src.scorpion.api import Call
-
-# from streamlit_js_eval import get_page_location
+import src.utils as utils
+from src.scorpion.api import Call 
 from src.scorpion.default import Defaults
+from time import sleep
 
-PARENT_DIR = os.path.dirname(os.path.realpath(__file__))
-ROOT_DIR = os.path.dirname(PARENT_DIR)
-
-
-def _get_config():
-    with open(f"{ROOT_DIR}/config/config.json", "r", encoding="utf-8") as f:
-        config = json.load(f)
-    return config
-
-
-def _get_unit_list(config):
-    if config.get("SCORPION_RANGE"):
-        start = config.get("SCORPION_RANGE").split("-")[0]
-        end = config.get("SCORPION_RANGE").split("-")[1]
-        return {
-            f"{config['SCORPION_RANGE_NAME_PFIX']}{i:03}": f"{config['CONTROL_PREFIX']}.{int(i)}"
-            for i in range(int(start), int(end) + 1)
-        }
-    else:
-        return config["SCORPION_LIST"]
-
-
-def main():
-    st.set_page_config(
-        initial_sidebar_state="collapsed",
-        layout="wide",
-        page_title="Scorpion Defaults",
-        page_icon=f"{PARENT_DIR}/assets/app/static/4. CT Mark - Colour PNG.png",
-        # layout="wide",
-    )
-    with open(f"{PARENT_DIR}/assets/app/style.css", encoding="utf-8") as css:
-        st.markdown(f"<style>{css.read()}</style>", unsafe_allow_html=True)
-
-    st.image(
-        f"{PARENT_DIR}/assets/app/static/1. Super Landscape - Without Box - Colour With Black Text - PNG.png"
-    )
-
-    config = _get_config()
-
-    units = _get_unit_list(config)
-    col1, col2, col3, col4 = st.columns([2, 0.5, 1, 1])
-    select = col1.selectbox("Select Unit", units)
-
+def tab(scorpions, control_port):
+    col1, col2, col3, col4, col5 = st.columns([2, 0.5, 1, 1,1])
+    select = col1.selectbox("Select Unit", scorpions)
+    col5.write("")
+    col5.write("")
+    if col5.button("Ping", "scorpion_ping"):
+        if utils.ping(scorpions[select], timeout=2):
+            st.info("PONG")
+        else:
+            st.error("WA WA")
     try:
         scorpion = Defaults(
             name=select,
-            host=units[select],
-            port=config.get("SCORPION_CONTROL_PORT", 80),
+            host=scorpions[select],
+            port=control_port,
         )
     except RequestException as exc:
         scorpion = None
@@ -70,7 +30,7 @@ def main():
         col3.write("")
         col4.write("")
         col4.write("")
-        col4.link_button("Goto Control", f"http://{units[select]}")
+        col4.link_button("Goto Control", f"http://{scorpions[select]}")
 
         if col3.button("Set Defaults"):
             with st.spinner("Setting Defaults..."):
@@ -107,7 +67,7 @@ def main():
                     do_action = button_phold.button(button_type, key=x)
                 if do_action:
                     scorpion_direct = Call(
-                        host=units[select], port=config.get("SCORPION_CONTROL_PORT", 80)
+                        host=scorpions[select], port=config.get("SCORPION_CONTROL_PORT", 80)
                     )
                     if str(command_id).startswith("3009"):
                         command_reset = {command_id: 0}
@@ -116,6 +76,3 @@ def main():
                     st.write(call.get("status", "Failed!"))
                     sleep(3)
                     st.rerun()
-
-
-main()

@@ -31,7 +31,7 @@ ARG UID=10001
 RUN --mount=type=cache,target=/root/.cache/pip \
     --mount=type=bind,source=requirements.txt,target=requirements.txt \
     python -m pip install -r requirements.txt
-
+RUN apt-get update && apt-get install -y iputils-ping
 # Switch to the non-privileged user to run the application.
 # USER appuser
 
@@ -42,4 +42,4 @@ COPY . .
 EXPOSE 8501
 
 # Run the application.
-CMD streamlit run src/app.py "--server.port=8501" "--server.address=0.0.0.0"
+CMD streamlit run src/Home.py "--server.port=8501" "--server.address=0.0.0.0"
