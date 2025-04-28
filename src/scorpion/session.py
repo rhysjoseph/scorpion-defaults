@@ -152,5 +152,5 @@ class Session(BaseModel):
             files=files,
             timeout=self.timeout,
         )
-
+        print(self.url.to_string())
         return self._process_response(response)
