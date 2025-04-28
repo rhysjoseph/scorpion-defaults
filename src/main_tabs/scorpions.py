@@ -7,7 +7,7 @@ from time import sleep
 
 
 def tab(scorpions, control_port):
-    col1, col2, col3, col4, col5 = st.columns([2, 0.5, 1, 1, 1])
+    col1, col2, col3, col4, col5, col6, col7 = st.columns([2, 0.5, 1, 1, 1, 1, 1])
     select = col1.selectbox("Select Unit", scorpions)
     if select != "Select":
         col5.write("")
@@ -35,6 +35,19 @@ def tab(scorpions, control_port):
             col4.write("")
             col4.write("")
             col4.link_button("Goto Control", f"http://{scorpions[select]}")
+
+            col6.write("")  # hacky way to lower the button
+            col6.write("")
+            col7.write("")
+            col7.write("")
+            if col6.button("Set Routes to 1:1"):
+                with st.spinner("Setting Routes to 1:1..."):
+                    response = scorpion.set_default_routes()
+                st.write(response)
+            if col7.button("Set Routes to Test"):
+                with st.spinner("Setting Routes to Test..."):
+                    response = scorpion.set_default_routes(test=True)
+                st.write(response)
 
             if col3.button("Set Defaults"):
                 with st.spinner("Setting Defaults..."):
