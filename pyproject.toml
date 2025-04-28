@@ -20,7 +20,8 @@ dependencies = [
     "pyairtable",
     "python-dotenv"   ,
     "panda",
-    "numpy" 
+    "numpy",
+    "pyeapi"
 ]
 
 [tool.setuptools.packages.find]
