@@ -3,13 +3,13 @@ import re
 
 import streamlit as st
 
-from src.arista.api import Call
+# from src.arista.api import Call
 from src.utils import ping
 
 PARENT_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(PARENT_DIR)
 
-arista_api = Call()
+# arista_api = Call()
 
 
 def display_interface_toggles(interface_status_dict):
@@ -103,8 +103,8 @@ def tab(aristas):
         col4.write("")
         ssh_command = f"ssh admin@{aristas[selected_arista]}"
         col4.code(ssh_command, language="python")
-        ports = arista_api.get_status()
+        # ports = arista_api.get_status()
         c = 0
 
         port1, port2, port3, port4, port5, port6, port7, port8 = st.columns(8)
-        display_interface_toggles(ports)
+        # display_interface_toggles(ports)

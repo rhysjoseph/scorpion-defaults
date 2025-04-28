@@ -24,6 +24,7 @@ def tab(scorpions, control_port):
                 host=scorpions[select],
                 port=control_port,
             )
+
         except RequestException as exc:
             scorpion = None
             st.write(f"Scorpion Api Error: {exc}")
@@ -52,6 +53,7 @@ def tab(scorpions, control_port):
 
                 for x, variable in enumerate(data["name"]):
                     command_id = data["code"][x].split("@")[0]
+
                     col1, col2, col3, col4, col5 = st.columns((1, 2, 1, 2, 2))
                     col1.write(x)  # index
                     col2.write(data["name"][x])  # email

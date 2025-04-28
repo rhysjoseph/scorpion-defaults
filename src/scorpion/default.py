@@ -72,12 +72,14 @@ class Defaults:
         for key, value in self.default_params.items():
             try:
                 call = self.scorpion.get(key)
+                print(key)
             except RequestException as exc:
                 return f"Scorpion API Call Failed: {exc}"
             current["name"].append(call.get("name"))
             current["code"].append(call.get("id"))
             current["value"].append(call.get("value"))
             current["default"].append(value)
+
         return current
 
     def set_defaults(self, factory=False):

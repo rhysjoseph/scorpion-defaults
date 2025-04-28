@@ -12,3 +12,4 @@ pyairtable
 python-dotenv
 panda
 numpy
+pyeapi
