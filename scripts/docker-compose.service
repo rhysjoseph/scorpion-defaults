@@ -6,9 +6,10 @@ After=docker.service
 [Service]
 Type=oneshot
 RemainAfterExit=true
-WorkingDirectory=/home/ubuntu/%i
+WorkingDirectory=/Users/rjoseph/Documents/Scorpion_Defaults/scorpion-defaults
 ExecStart=/usr/bin/docker compose up -d --remove-orphans
 ExecStop=/usr/bin/docker compose down
 
 [Install]
 WantedBy=multi-user.target
+
