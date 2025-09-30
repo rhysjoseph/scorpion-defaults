@@ -10,6 +10,11 @@ def _ensure_dot_suffix(s: str) -> str:
     return s if s.endswith(".") else f"{s}."
 
 
+def _strip_dot_suffix(s: str) -> str:
+    s = (s or "").strip()
+    return s[:-1] if s.endswith(".") else s
+
+
 def _norm_url(v: Optional[str]) -> Optional[str]:
     if not v:
         return None
@@ -63,17 +68,34 @@ class Defaults:
         self.audio_rng_end   = a_end
 
         # XIP: only one audio stream per channel
-        self.audio_streams = int(self.refs["defaults"].get("audio_streams_per_output", 1))
+        self.audio_streams = int(self.refs.get("defaults", {}).get("audio_streams_per_output", 1))
 
-        # UDPs and audio type/profile from standards JSON
-        self.udp_video = int(self.refs["defaults"]["udp_ports"]["video"])
-        self.udp_audio = int(self.refs["defaults"]["udp_ports"]["audio"])
-        self.udp_meta  = int(self.refs["defaults"]["udp_ports"]["meta"])
-        self.audio_type    = self.refs["defaults"]["audio_type"]
-        self.audio_profile = self.refs["defaults"]["audio_profile"]
+        # --- UDPs and audio type/profile from standards JSON (compat: flat or nested) ---
+        udp_flat   = self.refs.get("defaults", {})
+        udp_nested = udp_flat.get("udp_ports", {}) if isinstance(udp_flat.get("udp_ports", {}), dict) else {}
+
+        def _pick(k_flat: str, k_nested: str, dflt: int) -> int:
+            # accept either:
+            #   "defaults": { "udp_ports": {"video": 50100, ...} }
+            # or
+            #   "defaults": { "video_udp": 50100, "audio_udp": 50200, "meta_udp": 50300 }
+            v_flat = udp_flat.get(k_flat)
+            if isinstance(v_flat, (int, str)) and str(v_flat).strip():
+                return int(v_flat)
+            v_nested = udp_nested.get(k_nested)
+            if isinstance(v_nested, (int, str)) and str(v_nested).strip():
+                return int(v_nested)
+            return dflt
+
+        self.udp_video = _pick("video_udp", "video", 50100)
+        self.udp_audio = _pick("audio_udp", "audio", 50200)
+        self.udp_meta  = _pick("meta_udp",  "meta",  50300)
+
+        self.audio_type    = udp_flat.get("audio_type", "SMPTE ST 2110-30")
+        self.audio_profile = udp_flat.get("audio_profile", "125 usec, 16ch")
 
     # -------------------------------------------------------------------------
-    # Preview (unchanged)
+    # Preview
     # -------------------------------------------------------------------------
     def preview_summary(self) -> Dict[str, Any]:
         summary = {
@@ -110,7 +132,7 @@ class Defaults:
         return summary
 
     # -------------------------------------------------------------------------
-    # Hostname (unchanged)
+    # Hostname
     # -------------------------------------------------------------------------
     def apply_network_and_hostname(self) -> Dict[str, Any]:
         results = {}
@@ -123,14 +145,14 @@ class Defaults:
         return results
 
     # -------------------------------------------------------------------------
-    # Interfaces (unchanged)
+    # Interfaces
     # -------------------------------------------------------------------------
     def apply_interfaces(self) -> Dict[str, Any]:
         results: Dict[str, Any] = {}
 
-        ctrl_pfix = self.config.get("XIP3901_CONTROL_PREFIX", "10.169.60")
+        ctrl_net = _strip_dot_suffix(self.config.get("XIP3901_CONTROL_PREFIX", "10.169.60"))
         mask = self.config.get("XIP3901_NETMASK", "255.255.0.0")
-        gw   = self.config.get("XIP3901_GATEWAY", f"{ctrl_pfix}.1")
+        gw   = self.config.get("XIP3901_GATEWAY", f"{ctrl_net}.1")
 
         def body(mode: str, ip="0.0.0.0", sm="0.0.0.0", gw_="0.0.0.0"):
             return {"mode": mode, "ipAddress": ip, "subnetMask": sm, "gateway": gw_}
@@ -138,7 +160,7 @@ class Defaults:
         payloads = {
             "eth1": body("Auto (DHCP)"),
             "eth2": body("Auto (DHCP)"),
-            "eth3": body("Static", ip=f"{ctrl_pfix}.{self.last_octet}", sm=mask, gw_=gw),
+            "eth3": body("Static", ip=f"{ctrl_net}.{self.last_octet}", sm=mask, gw_=gw),
             "frame": body("Off")
         }
 
@@ -151,15 +173,15 @@ class Defaults:
         return results
 
     # -------------------------------------------------------------------------
-    # NMOS + PTP (UPDATED ENDPOINTS)
+    # NMOS + PTP (force-apply sequence)
     # -------------------------------------------------------------------------
     def apply_nmos_and_ptp(self) -> Dict[str, Any]:
         """
         Force-apply NMOS + PTP in a deterministic sequence:
-        1) NMOS global -> OFF (graceful stop)
-        2) NMOS registry -> set address/ports
-        3) NMOS global -> desired mode + label
-        4) PTP -> domain/interval/timeout/dscp
+          1) NMOS global -> OFF (graceful stop)
+          2) NMOS registry -> set address/ports
+          3) NMOS global -> desired mode + label
+          4) PTP -> domain/interval/timeout/dscp
         Skips any read-before-write checks; always overwrites.
         """
         import time
@@ -233,7 +255,7 @@ class Defaults:
         return out
 
     # -------------------------------------------------------------------------
-    # 2110 Senders / Advanced QoS / Internals (unchanged)
+    # 2110 Senders / Advanced QoS
     # -------------------------------------------------------------------------
     def apply_senders(self) -> Dict[str, Any]:
         results = {"video": [], "audio": [], "meta": []}
@@ -313,6 +335,9 @@ class Defaults:
 
         return out
 
+    # -------------------------------------------------------------------------
+    # Internals
+    # -------------------------------------------------------------------------
     def _fill_rtp_body(self, template: Dict[str, Any], suffix_octet: int, udp_port: int, audio: bool = False) -> Dict[str, Any]:
         t = json.loads(json.dumps(template))  # deep copy
         red  = f"{self.red_prefix}{self.last_octet}.{suffix_octet}"
