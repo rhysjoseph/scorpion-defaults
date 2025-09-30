@@ -1,0 +1,104 @@
+{
+  "networking": {
+    "host": {
+      "path": "networking/host",
+      "body": { "hostname": "<HOSTNAME>" }
+    }
+  },
+
+  "nmos": {
+    "global": {
+      "path": "nmos/global",
+      "apply": true,
+      "body_template": {
+        "mode": "<NMOS_MODE>",
+        "label": "<HOSTNAME>"
+      }
+    },
+    "registry": {
+      "path": "nmos/registry",
+      "apply": true,
+      "body_template": {
+        "registryMode": "<REG_MODE>",
+        "httpAddress": "<IS04_IP>",
+        "registrationPort": "<REG_PORT>",
+        "queryPort": "<QUERY_PORT>"
+      }
+    }
+  },
+
+  "ptp": {
+    "path": "reference/ptp",
+    "apply": true,
+    "body_template": {
+      "domainNumber": "<PTP_DOMAIN>",
+      "announceInterval": "<PTP_ANN_INT>",
+      "announceReceiptTimeoutCount": "<PTP_ANN_TO>",
+      "dscp": "<PTP_DSCP>"
+    }
+  },
+
+  "senders": {
+    "video": {
+      "path_template": "channels/{channelId}/output/streams/2110-20/1",
+      "body_template": {
+        "masterEnable": true,
+        "rtp": [
+          { "streamEnable": true, "txStreamAddress": "<RED>",  "txStreamPort": "<UDP>" },
+          { "streamEnable": true, "txStreamAddress": "<BLUE>", "txStreamPort": "<UDP>" }
+        ]
+      }
+    },
+    "audio": {
+      "path_template": "channels/{channelId}/output/streams/2110-3x/1",
+      "body_template": {
+        "smpteType": "<AUDIO_TYPE>",
+        "profile": "<AUDIO_PROFILE>",
+        "masterEnable": true,
+        "rtp": [
+          { "streamEnable": true, "txStreamAddress": "<RED>",  "txStreamPort": "<UDP>" },
+          { "streamEnable": true, "txStreamAddress": "<BLUE>", "txStreamPort": "<UDP>" }
+        ]
+      }
+    },
+    "meta": {
+      "path_template": "channels/{channelId}/output/streams/2110-40/1",
+      "body_template": {
+        "masterEnable": true,
+        "rtp": [
+          { "streamEnable": true, "txStreamAddress": "<RED>",  "txStreamPort": "<UDP>" },
+          { "streamEnable": true, "txStreamAddress": "<BLUE>", "txStreamPort": "<UDP>" }
+        ]
+      }
+    }
+  },
+
+  "advanced": {
+    "video":   { "path": "advanced/output/streams/2110-20", "dscp": 41,  "payloadType": 97  },
+    "audio30": { "path": "advanced/output/streams/2110-30", "dscp": 41, "payloadType": 96  },
+    "audio31": { "path": "advanced/output/streams/2110-31", "dscp": 41, "payloadType": 101 },
+    "meta":    { "path": "advanced/output/streams/2110-40", "dscp": 41,  "payloadType": 100 },
+    "global":  { "path": "advanced/global", "minimumProcessingDelayEnable": false }
+  },
+
+  "defaults": {
+    "udp_ports": {
+      "video": 50100,
+      "audio": 50200,
+      "meta": 50300
+    },
+    "audio_streams_per_output": 1,
+    "audio_type": "SMPTE ST 2110-30",
+    "audio_profile": "125 usec, 16ch",
+
+    "nmos_mode": "IS-04 & IS-05",
+    "registry_mode": "Static",
+    "registry_port": 30010,
+    "query_port": 30010,
+
+    "ptp_domain": 127,
+    "ptp_announce_interval": "1",
+    "ptp_announce_timeout": 3,
+    "ptp_dscp": 46
+  }
+}

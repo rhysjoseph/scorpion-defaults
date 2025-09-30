@@ -1,5 +1,105 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap'); 
+/* -------------------------------------------------------
+   Global fonts (Lato for UI; keep Material fonts for icons)
+-------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL,wght,GRAD,opsz@0,400,0,24');
 
-body * {
-    font-family: 'Lato', sans-serif !important;
+/* Use Lato for the app shell */
+html, body, [data-testid="stAppViewContainer"] {
+  font-family: 'Lato', sans-serif;
+}
+
+/* Do NOT override icon fonts (this is what avoids the raw ligature text) */
+.material-icons,
+.material-icons-outlined,
+.material-icons-round,
+.material-icons-sharp,
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-family: 'Material Icons','Material Symbols Outlined' !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  line-height: 1;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+/* -------------------------------------------------------
+   Sidebar toggle: replace icon/ligature with "Menu"
+   (works even if icon font fails to load)
+-------------------------------------------------------- */
+button[data-testid="baseButton-sidebarCollapseButton"],
+button[data-testid="stSidebarCollapseButton"] {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.65rem;
+  gap: 0.25rem;
+  max-width: fit-content;
+  overflow: visible;
+  z-index: 5; /* keep it on top of header, but not over content */
+  border-radius: 6px;
+}
+
+/* Hide whatever Streamlit places inside (icon/ligature/text) */
+button[data-testid="baseButton-sidebarCollapseButton"] > *,
+button[data-testid="stSidebarCollapseButton"] > *,
+button[data-testid="baseButton-sidebarCollapseButton"] .material-icons,
+button[data-testid="stSidebarCollapseButton"] .material-icons,
+button[data-testid="baseButton-sidebarCollapseButton"] .material-symbols-outlined,
+button[data-testid="stSidebarCollapseButton"] .material-symbols-outlined {
+  font-size: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Inject a short label instead of the icon text */
+button[data-testid="baseButton-sidebarCollapseButton"]::after,
+button[data-testid="stSidebarCollapseButton"]::after {
+  content: "Menu";
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+/* Ensure the toggle doesn’t stretch across the header (prevents overlay) */
+header [data-testid="baseButton-headerNoPadding"] {
+  max-width: fit-content;
+}
+
+/* -------------------------------------------------------
+   Misc small refinements
+-------------------------------------------------------- */
+
+/* Expander title readability */
+section[aria-expanded] > div > div {
+  color: inherit; /* keep theme color */
+}
+
+/* Buttons in your grid look consistent */
+button[kind="secondary"] {
+  white-space: nowrap;
+}
+
+/* Streamlit link buttons (so long URLs don't overflow oddly) */
+a[role="button"] {
+  white-space: nowrap;
+}
+
+/* Slightly tighter spacing between top elements */
+.block-container {
+  padding-top: 1.2rem;
+}
+
+/* Keep forms/inputs from being overlapped by header controls on small screens */
+[data-testid="stHeader"] {
+  z-index: 3;
 }

@@ -11,22 +11,20 @@ def ping(host, timeout=0.1):
     False otherwise.
     """
     response = os.system("ping -c 1 -W " + str(timeout) + " " + host)
-    if response == 0:
-        return True
-    else:
-        return False
+    return response == 0
 
 
-def discover_devices(scorpions, mcms, switches):
-    devices = scorpions | mcms | switches
+def discover_devices(scorpions, mcms, switches, xips=None):
+    """
+    Ping through dicts of name->ip and return a combined online/offline map.
+    """
+    xips = xips or {}
     status = {}
-    for device in devices:
-        ip_address = devices[device]
-        if ping(ip_address):
-            status[device] = True
-        else:
-            status[device] = False
-    print(status)
+    for groups in (scorpions, mcms, switches, xips):
+        for device, ip_address in groups.items():
+            if device == "Select" or not ip_address:
+                continue
+            status[device] = ping(ip_address)
     return status
 
 
@@ -43,6 +41,13 @@ def get_config():
     )
 
 
+def get_xip3901_unit_list(config):
+    """
+    Public helper to build XIP list; mirrors the scorpion list logic.
+    """
+    return _get_xip3901_unit_list(config)
+
+
 def _get_scorpion_unit_list(config):
     if config.get("SCORPION_RANGE"):
         start = config.get("SCORPION_RANGE").split("-")[0]
@@ -57,3 +62,21 @@ def _get_scorpion_unit_list(config):
         return scorpion_list
     else:
         return config["SCORPION_LIST"]
+
+
+def _get_xip3901_unit_list(config):
+    """
+    Build { 'XIP3911-001': '10.169.60.1', ... } from XIP3901_* keys.
+    """
+    if config.get("XIP3901_RANGE"):
+        start = int(config.get("XIP3901_RANGE").split("-")[0])
+        end = int(config.get("XIP3901_RANGE").split("-")[1])
+        name_pfix = config.get("XIP3901_RANGE_NAME_PFIX", "XIP3911-")
+        ctrl_pfix = config.get("XIP3901_CONTROL_PREFIX", "10.169.60")
+        listing = {"Select": ""}
+        listing.update(
+            {f"{name_pfix}{i:03}": f"{ctrl_pfix}.{i}" for i in range(start, end + 1)}
+        )
+        return listing
+    # fallback static list if provided
+    return config.get("XIP3901_LIST", {"Select": ""})
