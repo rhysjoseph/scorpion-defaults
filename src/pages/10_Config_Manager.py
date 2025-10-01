@@ -62,26 +62,21 @@ def _info_pair(label: str, desc: str):
     st.markdown(f"**{label}**")
     st.caption(desc)
 
-# ---------- Enumerations (from API docs) ----------
-# XIP3901 NMOS global mode enum:
+# ---------- Enumerations ----------
 NMOS_MODES = ["IS-04 & IS-05", "IS-04", "OFF"]
-
-# XIP3901 NMOS registry mode enum:
 REGISTRY_MODES = ["Static", "Auto"]
-
-# XIP3901 PTP announceInterval enum:
 PTP_ANNOUNCE_INTERVALS = ["0.125", "0.250", "0.500", "1", "2", "4", "8", "16"]
-
-# XIP audio types
 AUDIO_TYPES = ["SMPTE ST 2110-30", "SMPTE ST 2110-31"]
 
-# Curated audio profiles (extend as needed)
 AUDIO_PROFILES_COMMON = [
     "125 usec, 1ch", "125 usec, 2ch", "125 usec, 4ch", "125 usec, 8ch", "125 usec, 16ch",
     "250 usec, 1ch", "250 usec, 2ch", "250 usec, 4ch", "250 usec, 8ch", "250 usec, 16ch",
     "1 msec, 1ch", "1 msec, 2ch", "1 msec, 4ch", "1 msec, 8ch",
 ]
 AUDIO_PROFILES = AUDIO_PROFILES_COMMON + ["Custom…"]
+
+IFACE_MODES = ["Auto (DHCP)", "Static", "Off"]  # For XIP interfaces
+SC_TRUNK_MODES = ["Auto (DHCP)", "Static"]      # For Scorpion trunk A/B
 
 # ---------- UI ----------
 st.title("Configuration Manager")
@@ -92,7 +87,7 @@ st.caption(
 
 # Load all files once (we re-write on Save)
 cfg_config    = _read_json(CONFIG_JSON_PATH)
-cfg_defaults  = _read_json(DEFAULTS_JSON_PATH)              # Scorpion defaults (raw JSON editor)
+cfg_defaults  = _read_json(DEFAULTS_JSON_PATH)            # Scorpion defaults (raw JSON editor)
 cfg_xip       = _read_json(XIP_JSON_PATH)
 
 with st.expander("Paths & files", expanded=False):
@@ -108,7 +103,6 @@ st.divider()
 st.header("A) config.json (global app & ranges)")
 st.caption("General ranges, prefixes, and links used by the app and devices.")
 
-# Working copy
 config_work = dict(cfg_config) if isinstance(cfg_config, dict) else {}
 
 st.subheader("Links (home screen buttons)")
@@ -138,20 +132,20 @@ with col2:
 
 col3, col4, col5 = st.columns(3)
 with col3:
-    _info_pair("2110_VIDEO_RANGE", "Per-output base last octet range for **video** (e.g. '101-108')")
+    _info_pair("2110_VIDEO_RANGE", "Per-output last-octet range for **video** (e.g. '101-108')")
     v_rng = st.text_input("2110_VIDEO_RANGE", value=str(config_work.get("2110_VIDEO_RANGE", "")), label_visibility="collapsed")
 with col4:
-    _info_pair("2110_AUDIO_RANGE", "Per-output base last octet range for **audio** (e.g. '201-208')")
+    _info_pair("2110_AUDIO_RANGE", "Per-output starting last-octet range for **audio** (e.g. '201-232')")
     a_rng = st.text_input("2110_AUDIO_RANGE", value=str(config_work.get("2110_AUDIO_RANGE", "")), label_visibility="collapsed")
 with col5:
-    _info_pair("2110_META_RANGE", "Per-output base last octet range for **anc/meta** (e.g. '1-8')")
+    _info_pair("2110_META_RANGE", "Per-output last-octet range for **anc/meta** (e.g. '1-8')")
     m_rng = st.text_input("2110_META_RANGE", value=str(config_work.get("2110_META_RANGE", "")), label_visibility="collapsed")
 
 # ---- NEW: Scorpion control addressing ----
 st.subheader("Scorpion control addressing")
 colS1, colS2, colS3 = st.columns(3)
 with colS1:
-    _info_pair("CONTROL_PREFIX", "Scorpion out-of-band control network prefix (e.g. '10.169.20.')")
+    _info_pair("CONTROL_PREFIX", "Scorpion OOB control prefix (e.g. '10.169.20.')")
     sc_ctrl_prefix = st.text_input("CONTROL_PREFIX", value=str(config_work.get("CONTROL_PREFIX", "")), label_visibility="collapsed")
 with colS2:
     _info_pair("SCORPION_RANGE", "Scorpion unit allocation range (e.g. '51-70')")
@@ -159,6 +153,41 @@ with colS2:
 with colS3:
     _info_pair("SCORPION_RANGE_NAME_PFIX", "Scorpion hostname prefix (e.g. 'SC_')")
     sc_name_pfix = st.text_input("SCORPION_RANGE_NAME_PFIX", value=str(config_work.get("SCORPION_RANGE_NAME_PFIX", "")), label_visibility="collapsed")
+
+# ---- NEW: Scorpion trunk ports (A/B) ----
+st.subheader("Scorpion 2110 trunk ports (A / B)")
+st.caption("Choose DHCP or Static and set addressing for each trunk. For Static, the IP is built as PREFIX + SUFFIX (two octets).")
+
+# Defaults
+trunk = config_work.get("SCORPION_TRUNKS", {}) if isinstance(config_work.get("SCORPION_TRUNKS", {}), dict) else {}
+
+def _trunk_defaults(side: str):
+    return {
+        "mode": "Auto (DHCP)",
+        "prefix": "10.20." if side == "A" else "10.120.",
+        "suffix": "",  # like "34.10" (the last two octets)
+        "subnetMask": "255.255.255.252",
+        "gateway": ""
+    }
+
+tA = {**_trunk_defaults("A"), **(trunk.get("A", {}) if isinstance(trunk.get("A", {}), dict) else {})}
+tB = {**_trunk_defaults("B"), **(trunk.get("B", {}) if isinstance(trunk.get("B", {}), dict) else {})}
+
+cola, colb = st.columns(2)
+with cola:
+    st.markdown("**Trunk A**")
+    ta_mode = st.selectbox("Mode (A)", SC_TRUNK_MODES, index=max(0, SC_TRUNK_MODES.index(tA.get("mode", "Auto (DHCP)"))))
+    ta_prefix = st.text_input("TRUNK_A_PREFIX", value=str(tA.get("prefix", "10.20.")))
+    ta_suffix = st.text_input("TRUNK_A_SUFFIX (last two octets, e.g. '34.10')", value=str(tA.get("suffix", "")))
+    ta_mask   = st.text_input("TRUNK_A_NETMASK", value=str(tA.get("subnetMask", "255.255.255.252")))
+    ta_gw     = st.text_input("TRUNK_A_GATEWAY", value=str(tA.get("gateway", "")))
+with colb:
+    st.markdown("**Trunk B**")
+    tb_mode = st.selectbox("Mode (B)", SC_TRUNK_MODES, index=max(0, SC_TRUNK_MODES.index(tB.get("mode", "Auto (DHCP)"))))
+    tb_prefix = st.text_input("TRUNK_B_PREFIX", value=str(tB.get("prefix", "10.120.")))
+    tb_suffix = st.text_input("TRUNK_B_SUFFIX (last two octets, e.g. '34.11')", value=str(tB.get("suffix", "")))
+    tb_mask   = st.text_input("TRUNK_B_NETMASK", value=str(tB.get("subnetMask", "255.255.255.252")))
+    tb_gw     = st.text_input("TRUNK_B_GATEWAY", value=str(tB.get("gateway", "")))
 
 # XIP3901 control addressing
 st.subheader("XIP3901 control addressing")
@@ -184,10 +213,40 @@ with col11:
     _info_pair("XIP3901_CONTROL_PORT", "XIP HTTP control port (default 80)")
     xip_port = st.number_input("XIP3901_CONTROL_PORT", value=_comma_int(config_work.get("XIP3901_CONTROL_PORT", 80), 80), step=1)
 
-# Validate ranges lightly before save
+# ---- NEW: XIP3901 Interfaces editor ----
+st.subheader("XIP3901 network interfaces (eth1 / eth2 / eth3 / frame)")
+st.caption("Set mode & addressing per interface. For Static, fill IP, subnet and gateway.")
+
+def _iface_defaults(name: str):
+    # Our app used: eth1/eth2 DHCP, eth3 Static control, frame Off, by default.
+    if name in ("eth1", "eth2"):
+        return {"mode": "Auto (DHCP)", "ipAddress": "0.0.0.0", "subnetMask": "0.0.0.0", "gateway": "0.0.0.0"}
+    if name == "eth3":
+        # default derives from XIP3901_CONTROL_PREFIX at apply-time if left at 0.0.0.0
+        return {"mode": "Static", "ipAddress": "0.0.0.0", "subnetMask": "255.255.0.0", "gateway": "0.0.0.0"}
+    # frame default Off
+    return {"mode": "Off", "ipAddress": "0.0.0.0", "subnetMask": "0.0.0.0", "gateway": "0.0.0.0"}
+
+xip_ifaces = config_work.get("XIP3901_INTERFACES", {})
+if not isinstance(xip_ifaces, dict):
+    xip_ifaces = {}
+for n in ("eth1", "eth2", "eth3", "frame"):
+    xip_ifaces[n] = {**_iface_defaults(n), **(xip_ifaces.get(n) or {})}
+
+cols = st.columns(4)
+for idx, name in enumerate(("eth1", "eth2", "eth3", "frame")):
+    with cols[idx]:
+        st.markdown(f"**{name}**")
+        mode = st.selectbox(f"Mode ({name})", IFACE_MODES, index=max(0, IFACE_MODES.index(xip_ifaces[name]["mode"])))
+        ip   = st.text_input(f"{name} ipAddress", value=str(xip_ifaces[name]["ipAddress"]))
+        sm   = st.text_input(f"{name} subnetMask", value=str(xip_ifaces[name]["subnetMask"]))
+        gw   = st.text_input(f"{name} gateway", value=str(xip_ifaces[name]["gateway"]))
+        xip_ifaces[name] = {"mode": mode, "ipAddress": ip, "subnetMask": sm, "gateway": gw}
+
+# ---- Validation & Save (config.json) ----
 config_errors: List[str] = []
 if v_rng and not _range_str_ok(v_rng): config_errors.append("2110_VIDEO_RANGE must be like '101-108'.")
-if a_rng and not _range_str_ok(a_rng): config_errors.append("2110_AUDIO_RANGE must be like '201-208'.")
+if a_rng and not _range_str_ok(a_rng): config_errors.append("2110_AUDIO_RANGE must be like '201-232'.")
 if m_rng and not _range_str_ok(m_rng): config_errors.append("2110_META_RANGE must be like '1-8'.")
 if xip_range and not _range_str_ok(xip_range): config_errors.append("XIP3901_RANGE must be like '1-40'.")
 if sc_range and not _range_str_ok(sc_range): config_errors.append("SCORPION_RANGE must be like '51-70' (or similar 'A-B').")
@@ -209,10 +268,28 @@ if save_cfg:
     config_work["2110_AUDIO_RANGE"] = a_rng
     config_work["2110_META_RANGE"]  = m_rng
 
-    # NEW: Scorpion fields
+    # Scorpion fields
     config_work["CONTROL_PREFIX"] = sc_ctrl_prefix
     config_work["SCORPION_RANGE"] = sc_range
     config_work["SCORPION_RANGE_NAME_PFIX"] = sc_name_pfix
+
+    # Scorpion trunks A/B (new block; consumed by Scorpion defaults code)
+    config_work["SCORPION_TRUNKS"] = {
+        "A": {
+            "mode": ta_mode,
+            "prefix": ta_prefix,
+            "suffix": ta_suffix,        # e.g. "34.10"
+            "subnetMask": ta_mask,
+            "gateway": ta_gw,
+        },
+        "B": {
+            "mode": tb_mode,
+            "prefix": tb_prefix,
+            "suffix": tb_suffix,        # e.g. "34.11"
+            "subnetMask": tb_mask,
+            "gateway": tb_gw,
+        }
+    }
 
     # XIP fields
     config_work["XIP3901_CONTROL_PREFIX"] = xip_ctrl_pfx
@@ -221,6 +298,7 @@ if save_cfg:
     config_work["XIP3901_RANGE"]   = xip_range
     config_work["XIP3901_RANGE_NAME_PFIX"] = xip_name_pfix
     config_work["XIP3901_CONTROL_PORT"]    = int(xip_port)
+    config_work["XIP3901_INTERFACES"] = xip_ifaces  # <-- NEW nest
 
     if _write_json(CONFIG_JSON_PATH, config_work, backup=True):
         st.success("Saved config.json")
@@ -293,7 +371,6 @@ with col10:
 with col11:
     _info_pair("Profile", "Packet time & channel count profile.")
     existing_prof = str(xip_defaults.get("audio_profile", "125 usec, 16ch"))
-    # If the existing value isn't in our curated list, start on "Custom…"
     start_idx = AUDIO_PROFILES.index(existing_prof) if existing_prof in AUDIO_PROFILES else AUDIO_PROFILES.index("Custom…")
 
     prof_pick = st.selectbox(
@@ -304,7 +381,6 @@ with col11:
     )
 
     if prof_pick == "Custom…":
-        # If existing was not on the curated list, prefill the custom box with it
         prefill = existing_prof if existing_prof not in AUDIO_PROFILES_COMMON else ""
         custom_prof = st.text_input(
             "Custom profile",

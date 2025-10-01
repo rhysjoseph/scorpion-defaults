@@ -1,3 +1,6 @@
+# src/xip3901/default.py
+from __future__ import annotations
+
 import json
 from typing import Any, Dict, Optional
 from requests.exceptions import RequestException
@@ -10,22 +13,7 @@ def _ensure_dot_suffix(s: str) -> str:
     return s if s.endswith(".") else f"{s}."
 
 
-def _strip_dot_suffix(s: str) -> str:
-    s = (s or "").strip()
-    return s[:-1] if s.endswith(".") else s
-
-
-def _norm_url(v: Optional[str]) -> Optional[str]:
-    if not v:
-        return None
-    v = v.strip()
-    if v.startswith(("http://", "https://")):
-        return v
-    return f"http://{v}"
-
-
 def _host_only(v: Optional[str]) -> str:
-    """Return just the host (IPv4) from '10.1.2.3', 'http://10.1.2.3:80', etc."""
     if not v:
         return ""
     v = v.strip()
@@ -37,12 +25,6 @@ def _host_only(v: Optional[str]) -> str:
 
 
 class Defaults:
-    """
-    XIP3901 defaults: hostname, interfaces, NMOS, PTP, 2110 senders, QoS.
-    Reads global ranges from config/config.json and API standards from
-    config/xip3901_parameters_reference.json.
-    """
-
     def __init__(self, name: str, host: str, port: int = 80):
         self.name = name
         self.host = host
@@ -52,13 +34,11 @@ class Defaults:
         self.config = self._load_json_from_repo("config/config.json")
         self.refs   = self._load_json_from_repo("config/xip3901_parameters_reference.json")
 
-        # Control IP last octet
         try:
             self.last_octet = int(str(host).split(".")[-1])
         except Exception:
             self.last_octet = int(host)
 
-        # Multicast prefixes and media ranges
         self.red_prefix  = _ensure_dot_suffix(self.config.get("2110_Red", "232.20."))
         self.blue_prefix = _ensure_dot_suffix(self.config.get("2110_Blue", "232.120."))
         self.video_rng   = self._expand_range(self.config.get("2110_VIDEO_RANGE", "101-108"))
@@ -67,18 +47,10 @@ class Defaults:
         self.audio_rng_start = a_start
         self.audio_rng_end   = a_end
 
-        # XIP: only one audio stream per channel
-        self.audio_streams = int(self.refs.get("defaults", {}).get("audio_streams_per_output", 1))
-
-        # --- UDPs and audio type/profile from standards JSON (compat: flat or nested) ---
         udp_flat   = self.refs.get("defaults", {})
         udp_nested = udp_flat.get("udp_ports", {}) if isinstance(udp_flat.get("udp_ports", {}), dict) else {}
 
         def _pick(k_flat: str, k_nested: str, dflt: int) -> int:
-            # accept either:
-            #   "defaults": { "udp_ports": {"video": 50100, ...} }
-            # or
-            #   "defaults": { "video_udp": 50100, "audio_udp": 50200, "meta_udp": 50300 }
             v_flat = udp_flat.get(k_flat)
             if isinstance(v_flat, (int, str)) and str(v_flat).strip():
                 return int(v_flat)
@@ -94,35 +66,27 @@ class Defaults:
         self.audio_type    = udp_flat.get("audio_type", "SMPTE ST 2110-30")
         self.audio_profile = udp_flat.get("audio_profile", "125 usec, 16ch")
 
-    # -------------------------------------------------------------------------
-    # Preview
-    # -------------------------------------------------------------------------
-    def preview_summary(self) -> Dict[str, Any]:
-        summary = {
-            "unit": self.name,
-            "host": self.host,
-            "udp_ports": {"video": self.udp_video, "audio": self.udp_audio, "meta": self.udp_meta},
-            "video": {}, "audio": {}, "meta": {}
-        }
+        self.audio_streams = int(self.refs.get("defaults", {}).get("audio_streams_per_output", 1))
 
+    def preview_summary(self) -> Dict[str, Any]:
+        summary = {"unit": self.name, "host": self.host,
+                   "udp_ports": {"video": self.udp_video, "audio": self.udp_audio, "meta": self.udp_meta},
+                   "video": {}, "audio": {}, "meta": {}}
         for out_idx in range(8):
             v_oct = self.video_rng[out_idx]
             summary["video"][f"out{out_idx+1}"] = {
                 "trunk1": f"{self.red_prefix}{self.last_octet}.{v_oct}",
                 "trunk2": f"{self.blue_prefix}{self.last_octet}.{v_oct}",
             }
-
         cur = self.audio_rng_start
         for out_idx in range(8):
-            out_key = f"out{out_idx+1}"
-            summary["audio"][out_key] = {
+            summary["audio"][f"out{out_idx+1}"] = {
                 "stream1": {
                     "trunk1": f"{self.red_prefix}{self.last_octet}.{cur}",
                     "trunk2": f"{self.blue_prefix}{self.last_octet}.{cur}",
                 }
             }
             cur += 1
-
         for out_idx in range(8):
             m_oct = self.meta_rng[out_idx]
             summary["meta"][f"out{out_idx+1}"] = {
@@ -131,11 +95,8 @@ class Defaults:
             }
         return summary
 
-    # -------------------------------------------------------------------------
-    # Hostname
-    # -------------------------------------------------------------------------
     def apply_network_and_hostname(self) -> Dict[str, Any]:
-        results = {}
+        results: Dict[str, Any] = {}
         hostname = f"{self.config.get('XIP3901_RANGE_NAME_PFIX','XIP3901-')}{self.last_octet:03}"
         path = self.refs.get("networking", {}).get("host", {}).get("path", "networking/host")
         try:
@@ -144,50 +105,47 @@ class Defaults:
             results["hostname"] = {"error": str(exc)}
         return results
 
-    # -------------------------------------------------------------------------
-    # Interfaces
-    # -------------------------------------------------------------------------
     def apply_interfaces(self) -> Dict[str, Any]:
         results: Dict[str, Any] = {}
 
-        ctrl_net = _strip_dot_suffix(self.config.get("XIP3901_CONTROL_PREFIX", "10.169.60"))
-        mask = self.config.get("XIP3901_NETMASK", "255.255.0.0")
-        gw   = self.config.get("XIP3901_GATEWAY", f"{ctrl_net}.1")
-
-        def body(mode: str, ip="0.0.0.0", sm="0.0.0.0", gw_="0.0.0.0"):
+        def _body(mode: str, ip="0.0.0.0", sm="0.0.0.0", gw_="0.0.0.0"):
             return {"mode": mode, "ipAddress": ip, "subnetMask": sm, "gateway": gw_}
 
-        payloads = {
-            "eth1": body("Auto (DHCP)"),
-            "eth2": body("Auto (DHCP)"),
-            "eth3": body("Static", ip=f"{ctrl_net}.{self.last_octet}", sm=mask, gw_=gw),
-            "frame": body("Off")
-        }
+        ifaces_cfg = self.config.get("XIP3901_INTERFACES")
+        if isinstance(ifaces_cfg, dict) and all(k in ifaces_cfg for k in ("eth1", "eth2", "eth3", "frame")):
+            for ifid in ("eth1", "eth2", "eth3", "frame"):
+                c = ifaces_cfg.get(ifid) or {}
+                mode = str(c.get("mode", "Auto (DHCP)"))
+                ip   = str(c.get("ipAddress", "0.0.0.0"))
+                sm   = str(c.get("subnetMask", "0.0.0.0"))
+                gw   = str(c.get("gateway", "0.0.0.0"))
+                try:
+                    results[ifid] = self.client.put(f"networking/interfaces/{ifid}",
+                                                    json_data=_body(mode, ip, sm, gw))
+                except RequestException as exc:
+                    results[ifid] = {"error": str(exc)}
+            return results
 
+        ctrl_net = (self.config.get("XIP3901_CONTROL_PREFIX", "10.169.60") or "10.169.60").rstrip(".")
+        mask = self.config.get("XIP3901_NETMASK", "255.255.0.0")
+        gw   = self.config.get("XIP3901_GATEWAY", f"{ctrl_net}.1")
+        payloads = {
+            "eth1": _body("Auto (DHCP)"),
+            "eth2": _body("Auto (DHCP)"),
+            "eth3": _body("Static", ip=f"{ctrl_net}.{self.last_octet}", sm=mask, gw_=gw),
+            "frame": _body("Off"),
+        }
         for ifid, b in payloads.items():
             try:
                 results[ifid] = self.client.put(f"networking/interfaces/{ifid}", json_data=b)
             except RequestException as exc:
                 results[ifid] = {"error": str(exc)}
-
         return results
 
-    # -------------------------------------------------------------------------
-    # NMOS + PTP (force-apply sequence)
-    # -------------------------------------------------------------------------
     def apply_nmos_and_ptp(self) -> Dict[str, Any]:
-        """
-        Force-apply NMOS + PTP in a deterministic sequence:
-          1) NMOS global -> OFF (graceful stop)
-          2) NMOS registry -> set address/ports
-          3) NMOS global -> desired mode + label
-          4) PTP -> domain/interval/timeout/dscp
-        Skips any read-before-write checks; always overwrites.
-        """
         import time
         out: Dict[str, Any] = {}
 
-        # ---- Defaults & paths ----
         nmos_mode   = self.refs.get("defaults", {}).get("nmos_mode", "IS-04 & IS-05")
         reg_mode    = self.refs.get("defaults", {}).get("registry_mode", "Static")
         reg_port    = int(self.refs.get("defaults", {}).get("registry_port", 3020))
@@ -204,59 +162,44 @@ class Defaults:
         nmos_reg_path    = self.refs.get("nmos", {}).get("registry", {}).get("path", "nmos/registry")
         ptp_path         = self.refs.get("ptp", {}).get("path", "reference/ptp")
 
-        # bare IPv4 for registry httpAddress
         links = self.config.get("LINKS") or {}
-        hi = links.get("hi") if isinstance(links, dict) else None
-        reg_ip = _host_only(hi)
+        reg_ip = _host_only((links.get("hi") if isinstance(links, dict) else None))
 
-        long_timeout = 12.0  # NMOS can take a moment to cycle
-
-        # ---- 1) NMOS OFF ----
         try:
-            off_body = {"mode": "OFF", "label": hostname}
-            out["nmos_global_off"] = self.client.put(nmos_global_path, json_data=off_body, timeout=long_timeout)
+            out["nmos_global_off"] = self.client.put(nmos_global_path, json_data={"mode": "OFF", "label": hostname})
         except RequestException as exc:
             out["nmos_global_off"] = {"error": str(exc)}
-        time.sleep(0.8)
+        time.sleep(0.6)
 
-        # ---- 2) Registry ----
         try:
-            reg_body = {
-                "registryMode": reg_mode,           # "Auto" | "Static"
-                "httpAddress": reg_ip,              # bare IPv4
+            out["nmos_registry"] = self.client.put(nmos_reg_path, json_data={
+                "registryMode": reg_mode,
+                "httpAddress": reg_ip,
                 "registrationPort": reg_port,
                 "queryPort": query_port
-            }
-            out["nmos_registry"] = self.client.put(nmos_reg_path, json_data=reg_body, timeout=long_timeout)
+            })
         except RequestException as exc:
             out["nmos_registry"] = {"error": str(exc)}
-        time.sleep(0.8)
+        time.sleep(0.6)
 
-        # ---- 3) NMOS desired mode + label ----
         try:
-            on_body = {"mode": nmos_mode, "label": hostname}
-            out["nmos_global_on"] = self.client.put(nmos_global_path, json_data=on_body, timeout=long_timeout)
+            out["nmos_global_on"] = self.client.put(nmos_global_path, json_data={"mode": nmos_mode, "label": hostname})
         except RequestException as exc:
             out["nmos_global_on"] = {"error": str(exc)}
-        time.sleep(0.8)
+        time.sleep(0.6)
 
-        # ---- 4) PTP ----
         try:
-            ptp_body = {
+            out["ptp"] = self.client.put(ptp_path, json_data={
                 "domainNumber": ptp_domain,
-                "announceInterval": ptp_int,                # must be string per API
+                "announceInterval": ptp_int,
                 "announceReceiptTimeoutCount": ptp_to,
                 "dscp": ptp_dscp
-            }
-            out["ptp"] = self.client.put(ptp_path, json_data=ptp_body, timeout=long_timeout)
+            })
         except RequestException as exc:
             out["ptp"] = {"error": str(exc)}
 
         return out
 
-    # -------------------------------------------------------------------------
-    # 2110 Senders / Advanced QoS
-    # -------------------------------------------------------------------------
     def apply_senders(self) -> Dict[str, Any]:
         results = {"video": [], "audio": [], "meta": []}
 
@@ -335,23 +278,47 @@ class Defaults:
 
         return out
 
-    # -------------------------------------------------------------------------
-    # Internals
-    # -------------------------------------------------------------------------
+    # NEW: one-shot wrapper
+    def apply_all_defaults(self) -> Dict[str, Any]:
+        out: Dict[str, Any] = {}
+        try:
+            out["hostname"] = self.apply_network_and_hostname()
+        except Exception as exc:
+            out["hostname"] = {"error": str(exc)}
+
+        try:
+            out["interfaces"] = self.apply_interfaces()
+        except Exception as exc:
+            out["interfaces"] = {"error": str(exc)}
+
+        try:
+            out["nmos_ptp"] = self.apply_nmos_and_ptp()
+        except Exception as exc:
+            out["nmos_ptp"] = {"error": str(exc)}
+
+        try:
+            out["senders"] = self.apply_senders()
+        except Exception as exc:
+            out["senders"] = {"error": str(exc)}
+
+        try:
+            out["advanced_qos"] = self.apply_advanced_qos()
+        except Exception as exc:
+            out["advanced_qos"] = {"error": str(exc)}
+
+        return out
+
     def _fill_rtp_body(self, template: Dict[str, Any], suffix_octet: int, udp_port: int, audio: bool = False) -> Dict[str, Any]:
-        t = json.loads(json.dumps(template))  # deep copy
+        t = json.loads(json.dumps(template))
         red  = f"{self.red_prefix}{self.last_octet}.{suffix_octet}"
         blue = f"{self.blue_prefix}{self.last_octet}.{suffix_octet}"
-
         t["rtp"][0]["txStreamAddress"] = red
         t["rtp"][1]["txStreamAddress"] = blue
         t["rtp"][0]["txStreamPort"] = udp_port
         t["rtp"][1]["txStreamPort"] = udp_port
-
         if audio:
             t["smpteType"] = self.audio_type
             t["profile"]   = self.audio_profile
-
         return t
 
     @staticmethod

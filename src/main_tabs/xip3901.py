@@ -1,98 +1,230 @@
+# src/main_tabs/xip3901.py
+from __future__ import annotations
+
+from typing import Dict, Any, List, Tuple
+
+import os
+import json
+import socket
+import subprocess
+import shlex
 import streamlit as st
 
-import src.utils as utils
-from src.xip3901.default import Defaults
+try:
+    from src.xip3901.default import Defaults as XipDefaults
+    _IMPORT_ERROR = None
+except Exception as e:
+    XipDefaults = None
+    _IMPORT_ERROR = e
+
+_THIS_DIR = os.path.dirname(os.path.realpath(__file__))
+_REPO_ROOT = os.path.abspath(os.path.join(_THIS_DIR, "..", ".."))
+_CONFIG_CANDIDATES = [
+    os.path.join(_REPO_ROOT, "config", "config.json"),
+    "/app/config/config.json",
+    os.path.abspath(os.path.join(_THIS_DIR, "..", "config", "config.json")),
+]
 
 
-def tab(xips: dict, control_port: int):
-    """Render the XIP3901 page."""
-    # Device picker
-    col1, col2, col3, col4 = st.columns([2, 0.8, 1, 1])
-    select = col1.selectbox("Select XIP3901", xips)
+def _load_config() -> Dict[str, Any]:
+    for p in _CONFIG_CANDIDATES:
+        try:
+            if os.path.isfile(p):
+                with open(p, "r", encoding="utf-8") as f:
+                    return json.load(f)
+        except Exception as e:
+            st.warning(f"Failed reading config at {p}: {e}")
+    st.error("config.json not found.\n" + "\n".join(f"• {p}" for p in _CONFIG_CANDIDATES))
+    return {}
 
-    if select == "Select":
-        st.info("Pick a device to begin.")
+
+def _build_option_labels(xips: List[str] | Dict[str, str]) -> Tuple[List[str], Dict[str, str]]:
+    labels: List[str] = []
+    label_to_ip: Dict[str, str] = {}
+    if isinstance(xips, dict):
+        for name, ip in xips.items():
+            if not ip:
+                continue
+            lab = f"{name} — {ip}"
+            labels.append(lab)
+            label_to_ip[lab] = str(ip)
+    else:
+        for ip in xips or []:
+            lab = str(ip)
+            labels.append(lab)
+            label_to_ip[lab] = str(ip)
+
+    # de-dup while preserving order
+    seen = set()
+    uniq_labels, uniq_map = [], {}
+    for lab in labels:
+        if lab in seen:
+            continue
+        seen.add(lab)
+        uniq_labels.append(lab)
+        uniq_map[lab] = label_to_ip[lab]
+    return uniq_labels, uniq_map
+
+
+def _parse_targets(s: str) -> List[str]:
+    raw = [x.strip() for x in (s or "").replace(",", " ").split()]
+    return [x for x in raw if x]
+
+
+def _make_url(ip: str, port: int) -> str:
+    return f"http://{ip}" if int(port) == 80 else f"http://{ip}:{int(port)}"
+
+
+def _ping_host(ip: str, control_port: int = 80, timeout: float = 1.0):
+    try:
+        cmd = f"ping -c 1 -W 1 {shlex.quote(ip)}"
+        rc = subprocess.call(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if rc == 0:
+            return True, "icmp"
+    except Exception:
+        pass
+    try:
+        with socket.create_connection((ip, int(control_port)), timeout=timeout):
+            return True, f"tcp:{control_port}"
+    except Exception:
+        return False, "unreachable"
+
+
+def tab(xips: List[str] | Dict[str, str], control_port: int = 80):
+    st.header("XIP3901 / XIP3911 Devices")
+
+    if XipDefaults is None:
+        st.error(f"Failed to import XIP defaults module: {_IMPORT_ERROR}")
         return
 
-    host = xips.get(select, "")
-    if not host:
-        st.error("Selected device has no IP address in the list.")
-        return
+    _ = _load_config()
+
+    labels, label_to_ip = _build_option_labels(xips)
+
+    colsel1, colsel2 = st.columns([2, 1])
+    with colsel1:
+        selected_labels = st.multiselect(
+            "Select XIP devices",
+            options=labels,
+            default=[],
+            help="Choose from discovered/known devices",
+            key="xip_select_devices",
+        )
+    with colsel2:
+        select_all = st.checkbox("Select all listed", value=False, key="xip_select_all")
+        if select_all:
+            selected_labels = labels
+
+    manual_extra = st.text_input(
+        "Add extra IPs (optional)",
+        value="",
+        help="Comma, space, or newline separated. Example: 10.169.60.1 10.169.60.2",
+        key="xip_manual_ips",
+    )
+
+    selected_ips = [label_to_ip[l] for l in selected_labels if l in label_to_ip]
+    targets = list(dict.fromkeys(selected_ips + _parse_targets(manual_extra)))
+    st.caption(f"Selected targets: {', '.join(targets) if targets else '(none)'}")
 
     # Quick actions
-    col3.write("")  # spacing
-    if col3.button("Ping", key="xip_ping"):
-        st.success("Online" if utils.ping(host, timeout=2) else "Offline")
-
-    col4.link_button("Goto Control", f"http://{host}", use_container_width=True)
-
-    # Build Defaults helper
-    defaults = Defaults(name=select, host=host, port=control_port)
-
-    # Preview multicast + UDP plan
-    with st.expander("Preview multicast & UDP plan"):
-        st.json(defaults.preview_summary())
+    st.subheader("Quick actions")
+    qa1, qa2 = st.columns([1, 2])
+    with qa1:
+        if st.button("Ping selected", disabled=not targets, key="xip_ping"):
+            results = {}
+            for ip in targets:
+                up, via = _ping_host(ip, control_port)
+                results[ip] = {"up": up, "via": via}
+            st.json(results)
+    with qa2:
+        if targets:
+            st.caption("Open device control UIs:")
+            for ip in targets:
+                # NOTE: Streamlit version here does not support `key` for link_button.
+                st.link_button(f"Go to {ip}", _make_url(ip, control_port), use_container_width=False)
 
     st.divider()
-    st.subheader("Apply Configuration")
 
-    a, b, c = st.columns([1, 1, 1])
-    d, e, f = st.columns([1, 1, 1])
+    # Preview (optional)
+    with st.expander("Preview multicast & UDP plan (optional)", expanded=False):
+        if not targets:
+            st.info("Select at least one XIP to preview.")
+        else:
+            previews = {}
+            for ip in targets:
+                d = XipDefaults(name=f"XIP@{ip}", host=ip, port=control_port)
+                try:
+                    previews[ip] = d.preview_summary()
+                except Exception as exc:
+                    previews[ip] = {"error": f"preview failed: {exc}"}
+            st.json(previews)
 
-    # Hostname only
-    if a.button("Set Hostname", use_container_width=True):
-        with st.spinner("Setting hostname..."):
-            res = defaults.apply_network_and_hostname()
-        _render_result(res)
+    st.divider()
 
-    # Interfaces (eth1/eth2 DHCP, eth3 Static, frame Off)
-    if b.button("Configure Interfaces", use_container_width=True):
-        with st.spinner("Configuring eth1/eth2 DHCP, eth3 static, frame off..."):
-            res = defaults.apply_interfaces()
-        _render_result(res)
+    # Apply actions (multi-target)
+    row1 = st.columns([1, 1, 1, 1, 1])
+    with row1[0]:
+        if st.button("Apply ALL defaults (safe sequence)", disabled=not targets, key="xip_apply_all"):
+            results = {}
+            for ip in targets:
+                d = XipDefaults(name=f"XIP@{ip}", host=ip, port=control_port)
+                try:
+                    if hasattr(d, "apply_all_defaults"):
+                        results[ip] = d.apply_all_defaults()
+                    else:
+                        results[ip] = {
+                            "hostname": d.apply_network_and_hostname(),
+                            "interfaces": d.apply_interfaces(),
+                            "nmos_ptp": d.apply_nmos_and_ptp(),
+                            "senders": d.apply_senders(),
+                            "advanced_qos": d.apply_advanced_qos(),
+                        }
+                except Exception as exc:
+                    results[ip] = {"error": str(exc)}
+            st.json(results)
+    
+    with row1[1]:
+        if st.button("Apply Interfaces + Hostname", disabled=not targets, key="xip_apply_if_host"):
+            results = {}
+            for ip in targets:
+                d = XipDefaults(name=f"XIP@{ip}", host=ip, port=control_port)
+                try:
+                    res = d.apply_network_and_hostname()
+                    res["interfaces"] = d.apply_interfaces()
+                    results[ip] = res
+                except Exception as exc:
+                    results[ip] = {"error": str(exc)}
+            st.json(results)
 
-    # NMOS + PTP defaults
-    if c.button("Apply NMOS + PTP", use_container_width=True):
-        with st.spinner("Applying NMOS label/IS-04 and PTP defaults..."):
-            res = defaults.apply_nmos_and_ptp()
-        _render_result(res)
+    with row1[2]:
+        if st.button("Apply NMOS + PTP", disabled=not targets, key="xip_apply_nmos_ptp"):
+            results = {}
+            for ip in targets:
+                d = XipDefaults(name=f"XIP@{ip}", host=ip, port=control_port)
+                try:
+                    results[ip] = d.apply_nmos_and_ptp()
+                except Exception as exc:
+                    results[ip] = {"error": str(exc)}
+            st.json(results)
 
-    # 2110 senders (video/audio/meta)
-    if d.button("Apply 2110 Senders", use_container_width=True):
-        with st.spinner("Pushing 2110 video/audio/meta senders..."):
-            res = defaults.apply_senders()
-        _render_result(res)
+    with row1[3]:
+        if st.button("Apply 2110 Senders", disabled=not targets, key="xip_apply_senders"):
+            results = {}
+            for ip in targets:
+                d = XipDefaults(name=f"XIP@{ip}", host=ip, port=control_port)
+                try:
+                    results[ip] = d.apply_senders()
+                except Exception as exc:
+                    results[ip] = {"error": str(exc)}
+            st.json(results)
 
-    # Advanced QoS (DSCP & payloadType)
-    if e.button("Apply Advanced QoS", use_container_width=True):
-        with st.spinner("Applying DSCP/payload types + global min delay..."):
-            res = defaults.apply_advanced_qos()
-        _render_result(res)
-
-    # Everything end-to-end
-    if f.button("Apply EVERYTHING", use_container_width=True):
-        with st.spinner("Applying hostname, interfaces, NMOS+PTP, senders, QoS..."):
-            res1 = defaults.apply_network_and_hostname()
-            res2 = defaults.apply_interfaces()
-            res3 = defaults.apply_nmos_and_ptp()
-            res4 = defaults.apply_senders()
-            res5 = defaults.apply_advanced_qos()
-        _render_result({
-            "hostname": res1,
-            "interfaces": res2,
-            "nmos_ptp": res3,
-            "senders": res4,
-            "qos": res5
-        })
-
-
-def _render_result(obj):
-    """Pretty-print any result dict/list and surface errors inline."""
-    if isinstance(obj, dict):
-        if "error" in obj:
-            st.error(obj["error"])
-        st.json(obj)
-    elif isinstance(obj, list):
-        st.json(obj)
-    else:
-        st.write(obj)
+    with row1[4]:
+        if st.button("Apply Advanced QoS", disabled=not targets, key="xip_apply_qos"):
+            results = {}
+            for ip in targets:
+                d = XipDefaults(name=f"XIP@{ip}", host=ip, port=control_port)
+                try:
+                    results[ip] = d.apply_advanced_qos()
+                except Exception as exc:
+                    results[ip] = {"error": str(exc)}
+            st.json(results)

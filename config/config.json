@@ -83,5 +83,27 @@
     "XIP3901_RANGE_NAME_PFIX": "XIP3911-",
     "XIP3901_RANGE": "1-40",
     "XIP3901_NETMASK": "255.255.0.0",
-    "XIP3901_GATEWAY": "10.169.20.1"
+    "XIP3901_GATEWAY": "10.169.20.1",
+    "SCORPION_TRUNKS": {
+        "A": {
+            "mode": "Auto (DHCP)",
+            "prefix": "10.20.",
+            "suffix": "2.2",
+            "subnetMask": "255.255.255.252",
+            "gateway": "10.20.2.1"
+        },
+        "B": {
+            "mode": "Auto (DHCP)",
+            "prefix": "10.120.",
+            "suffix": "2.2",
+            "subnetMask": "255.255.255.252",
+            "gateway": "2.1"
+        }
+    },
+    "XIP3901_INTERFACES": {
+        "eth1": { "mode": "Auto (DHCP)", "ipAddress": "0.0.0.0", "subnetMask": "0.0.0.0", "gateway": "0.0.0.0" },
+        "eth2": { "mode": "Auto (DHCP)", "ipAddress": "0.0.0.0", "subnetMask": "0.0.0.0", "gateway": "0.0.0.0" },
+        "eth3": { "mode": "Static", "ipAddress": "10.169.60.1", "subnetMask": "255.255.0.0", "gateway": "10.169.20.1" },
+        "frame":{ "mode": "Off", "ipAddress": "0.0.0.0", "subnetMask": "0.0.0.0", "gateway": "0.0.0.0" }
+    }
 }
