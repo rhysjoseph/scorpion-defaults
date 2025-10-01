@@ -9,6 +9,67 @@ import socket
 import subprocess
 import shlex
 import streamlit as st
+import base64
+
+from src.utils import ping as ping_host
+
+# --- Ping UI helpers (use utils.ping for reachability) ---
+_PONG_ICON_CANDIDATES = [
+    "assets/pong.png",
+    "src/assets/pong.png",
+    "assets/icons/pong.png",
+    "src/static/pong.png",
+    "/app/src/assets/pong.png",
+]
+_FAIL_MP3_CANDIDATES = [
+    "assets/cartoon-fail-trumpet-278822.mp3",
+    "src/assets/cartoon-fail-trumpet-278822.mp3",
+    "/app/src/assets/cartoon-fail-trumpet-278822.mp3",
+]
+
+def _first_existing(paths):
+    for p in paths:
+        if os.path.exists(p):
+            return p
+    return None
+
+def _autoplay_audio(file_path: str):
+    try:
+        with open(file_path, "rb") as f:
+            b64 = base64.b64encode(f.read()).decode("ascii")
+        # Hidden, autoplaying audio element
+        st.markdown(
+            f"""
+            <audio autoplay>
+              <source src="data:audio/mp3;base64,{b64}" type="audio/mpeg">
+            </audio>
+            """,
+            unsafe_allow_html=True,
+        )
+    except Exception:
+        # Fallback (just in case): visible player
+        st.audio(file_path, format="audio/mp3")
+
+def _show_ping_ok(ip: str):
+    c1, c2 = st.columns([1, 5])
+    with c1:
+        icon = _first_existing(_PONG_ICON_CANDIDATES)
+        if icon:
+            st.image(icon, use_container_width=True)
+        else:
+            st.markdown("### ✅")
+    with c2:
+        st.markdown(f"**PONG** — {ip}")
+
+def _show_ping_fail(ip: str):
+    c1, c2 = st.columns([1, 5])
+    with c1:
+        st.markdown("### ❌")
+    with c2:
+        st.error(f"WA WA — {ip} unreachable")
+        mp3 = _first_existing(_FAIL_MP3_CANDIDATES)
+        if mp3:
+            _autoplay_audio(mp3)  # <-- autoplay immediately
 
 # Robust import of Scorpion defaults; keep working UI if it fails
 try:
@@ -148,7 +209,7 @@ def _make_url(ip: str, port: int) -> str:
     return f"http://{ip}" if int(port) == 80 else f"http://{ip}:{int(port)}"
 
 
-def _ping_host(ip: str, control_port: int = 80, timeout: float = 1.0) -> Tuple[bool, str]:
+def _ping_host(ip: str, control_port: int = 80, timeout: float = 2.0) -> Tuple[bool, str]:
     """
     Try ICMP ping (-c 1 -W 1). If ping is unavailable or fails, fall back to TCP connect
     to control_port. Returns (is_up, method_used).
@@ -213,12 +274,13 @@ def tab(scorpions: List[str] | Dict[str, str], control_port: int = 80):
     qa1, qa2 = st.columns([1, 2])
 
     with qa1:
-        if st.button("Ping selected", disabled=not targets):
-            results = {}
+        if st.button("Ping selected", disabled=not targets, key="xip_ping"):
+            st.subheader("Ping results")
             for ip in targets:
-                up, method = _ping_host(ip, control_port=control_port, timeout=1.0)
-                results[ip] = {"up": up, "via": method}
-            st.json(results)
+                if ping_host(ip):
+                    _show_ping_ok(ip)
+                else:
+                    _show_ping_fail(ip)
 
     with qa2:
         if targets:

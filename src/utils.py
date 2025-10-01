@@ -5,7 +5,7 @@ PARENT_DIR = os.path.dirname(os.path.realpath(__file__))
 ROOT_DIR = os.path.dirname(PARENT_DIR)
 
 
-def ping(host, timeout=0.1):
+def ping(host, timeout=0.2):
     """
     Pings a host with a specified timeout and returns True if the host is reachable,
     False otherwise.
