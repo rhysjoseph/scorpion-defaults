@@ -103,7 +103,6 @@
     "XIP3901_INTERFACES": {
         "eth1": { "mode": "Auto (DHCP)", "ipAddress": "0.0.0.0", "subnetMask": "0.0.0.0", "gateway": "0.0.0.0" },
         "eth2": { "mode": "Auto (DHCP)", "ipAddress": "0.0.0.0", "subnetMask": "0.0.0.0", "gateway": "0.0.0.0" },
-        "eth3": { "mode": "Static", "ipAddress": "10.169.60.1", "subnetMask": "255.255.0.0", "gateway": "10.169.20.1" },
         "frame":{ "mode": "Off", "ipAddress": "0.0.0.0", "subnetMask": "0.0.0.0", "gateway": "0.0.0.0" }
     }
 }

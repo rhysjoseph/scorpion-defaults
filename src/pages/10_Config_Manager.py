@@ -75,7 +75,7 @@ AUDIO_PROFILES_COMMON = [
 ]
 AUDIO_PROFILES = AUDIO_PROFILES_COMMON + ["Custom…"]
 
-IFACE_MODES = ["Auto (DHCP)", "Static", "Off"]  # For XIP interfaces
+IFACE_MODES = ["Auto (DHCP)", "Static", "Off"]  # For XIP interfaces (we expose eth1, eth2, frame)
 SC_TRUNK_MODES = ["Auto (DHCP)", "Static"]      # For Scorpion trunk A/B
 
 # ---------- UI ----------
@@ -135,13 +135,13 @@ with col3:
     _info_pair("2110_VIDEO_RANGE", "Per-output last-octet range for **video** (e.g. '101-108')")
     v_rng = st.text_input("2110_VIDEO_RANGE", value=str(config_work.get("2110_VIDEO_RANGE", "")), label_visibility="collapsed")
 with col4:
-    _info_pair("2110_AUDIO_RANGE", "Per-output starting last-octet range for **audio** (e.g. '201-232')")
+    _info_pair("2110_AUDIO_RANGE", "Starting last-octet for **audio** sequence (e.g. '201-232')")
     a_rng = st.text_input("2110_AUDIO_RANGE", value=str(config_work.get("2110_AUDIO_RANGE", "")), label_visibility="collapsed")
 with col5:
     _info_pair("2110_META_RANGE", "Per-output last-octet range for **anc/meta** (e.g. '1-8')")
     m_rng = st.text_input("2110_META_RANGE", value=str(config_work.get("2110_META_RANGE", "")), label_visibility="collapsed")
 
-# ---- NEW: Scorpion control addressing ----
+# ---- Scorpion control addressing ----
 st.subheader("Scorpion control addressing")
 colS1, colS2, colS3 = st.columns(3)
 with colS1:
@@ -154,18 +154,17 @@ with colS3:
     _info_pair("SCORPION_RANGE_NAME_PFIX", "Scorpion hostname prefix (e.g. 'SC_')")
     sc_name_pfix = st.text_input("SCORPION_RANGE_NAME_PFIX", value=str(config_work.get("SCORPION_RANGE_NAME_PFIX", "")), label_visibility="collapsed")
 
-# ---- NEW: Scorpion trunk ports (A/B) ----
+# ---- Scorpion trunk ports (A/B) ----
 st.subheader("Scorpion 2110 trunk ports (A / B)")
-st.caption("Choose DHCP or Static and set addressing for each trunk. For Static, the IP is built as PREFIX + SUFFIX (two octets).")
+st.caption("For Static, IP is PREFIX + SUFFIX (two octets). DHCP/Static maps to device params (remember: 6022.{0,1} is 1=DHCP, 0=Static).")
 
-# Defaults
 trunk = config_work.get("SCORPION_TRUNKS", {}) if isinstance(config_work.get("SCORPION_TRUNKS", {}), dict) else {}
 
 def _trunk_defaults(side: str):
     return {
         "mode": "Auto (DHCP)",
         "prefix": "10.20." if side == "A" else "10.120.",
-        "suffix": "",  # like "34.10" (the last two octets)
+        "suffix": "",  # like "34.10"
         "subnetMask": "255.255.255.252",
         "gateway": ""
     }
@@ -213,35 +212,47 @@ with col11:
     _info_pair("XIP3901_CONTROL_PORT", "XIP HTTP control port (default 80)")
     xip_port = st.number_input("XIP3901_CONTROL_PORT", value=_comma_int(config_work.get("XIP3901_CONTROL_PORT", 80), 80), step=1)
 
-# ---- NEW: XIP3901 Interfaces editor ----
-st.subheader("XIP3901 network interfaces (eth1 / eth2 / eth3 / frame)")
-st.caption("Set mode & addressing per interface. For Static, fill IP, subnet and gateway.")
+# ---- XIP3901 Interfaces editor (eth1, eth2, frame only) ----
+st.subheader("XIP3901 network interfaces (eth1 / eth2 / frame)")
+st.caption("eth3 (out-of-band control) is auto-derived from XIP3901_CONTROL_PREFIX + device last octet and cannot be edited here.")
 
 def _iface_defaults(name: str):
-    # Our app used: eth1/eth2 DHCP, eth3 Static control, frame Off, by default.
     if name in ("eth1", "eth2"):
         return {"mode": "Auto (DHCP)", "ipAddress": "0.0.0.0", "subnetMask": "0.0.0.0", "gateway": "0.0.0.0"}
-    if name == "eth3":
-        # default derives from XIP3901_CONTROL_PREFIX at apply-time if left at 0.0.0.0
-        return {"mode": "Static", "ipAddress": "0.0.0.0", "subnetMask": "255.255.0.0", "gateway": "0.0.0.0"}
     # frame default Off
     return {"mode": "Off", "ipAddress": "0.0.0.0", "subnetMask": "0.0.0.0", "gateway": "0.0.0.0"}
 
 xip_ifaces = config_work.get("XIP3901_INTERFACES", {})
 if not isinstance(xip_ifaces, dict):
     xip_ifaces = {}
-for n in ("eth1", "eth2", "eth3", "frame"):
-    xip_ifaces[n] = {**_iface_defaults(n), **(xip_ifaces.get(n) or {})}
 
-cols = st.columns(4)
-for idx, name in enumerate(("eth1", "eth2", "eth3", "frame")):
-    with cols[idx]:
-        st.markdown(f"**{name}**")
-        mode = st.selectbox(f"Mode ({name})", IFACE_MODES, index=max(0, IFACE_MODES.index(xip_ifaces[name]["mode"])))
-        ip   = st.text_input(f"{name} ipAddress", value=str(xip_ifaces[name]["ipAddress"]))
-        sm   = st.text_input(f"{name} subnetMask", value=str(xip_ifaces[name]["subnetMask"]))
-        gw   = st.text_input(f"{name} gateway", value=str(xip_ifaces[name]["gateway"]))
-        xip_ifaces[name] = {"mode": mode, "ipAddress": ip, "subnetMask": sm, "gateway": gw}
+# Merge defaults for eth1/eth2/frame only
+eth1_defaults = {**_iface_defaults("eth1"), **(xip_ifaces.get("eth1") or {})}
+eth2_defaults = {**_iface_defaults("eth2"), **(xip_ifaces.get("eth2") or {})}
+frm_defaults  = {**_iface_defaults("frame"), **(xip_ifaces.get("frame") or {})}
+
+cols = st.columns(3)
+
+with cols[0]:
+    st.markdown("**eth1 (2110 primary)**")
+    eth1_mode = st.selectbox("Mode (eth1)", IFACE_MODES, index=max(0, IFACE_MODES.index(eth1_defaults["mode"])))
+    eth1_ip   = st.text_input("eth1 ipAddress", value=str(eth1_defaults["ipAddress"]))
+    eth1_sm   = st.text_input("eth1 subnetMask", value=str(eth1_defaults["subnetMask"]))
+    eth1_gw   = st.text_input("eth1 gateway", value=str(eth1_defaults["gateway"]))
+
+with cols[1]:
+    st.markdown("**eth2 (2110 secondary)**")
+    eth2_mode = st.selectbox("Mode (eth2)", IFACE_MODES, index=max(0, IFACE_MODES.index(eth2_defaults["mode"])))
+    eth2_ip   = st.text_input("eth2 ipAddress", value=str(eth2_defaults["ipAddress"]))
+    eth2_sm   = st.text_input("eth2 subnetMask", value=str(eth2_defaults["subnetMask"]))
+    eth2_gw   = st.text_input("eth2 gateway", value=str(eth2_defaults["gateway"]))
+
+with cols[2]:
+    st.markdown("**frame (backplane/management)**")
+    frm_mode = st.selectbox("Mode (frame)", IFACE_MODES, index=max(0, IFACE_MODES.index(frm_defaults["mode"])))
+    frm_ip   = st.text_input("frame ipAddress", value=str(frm_defaults["ipAddress"]))
+    frm_sm   = st.text_input("frame subnetMask", value=str(frm_defaults["subnetMask"]))
+    frm_gw   = st.text_input("frame gateway", value=str(frm_defaults["gateway"]))
 
 # ---- Validation & Save (config.json) ----
 config_errors: List[str] = []
@@ -273,7 +284,7 @@ if save_cfg:
     config_work["SCORPION_RANGE"] = sc_range
     config_work["SCORPION_RANGE_NAME_PFIX"] = sc_name_pfix
 
-    # Scorpion trunks A/B (new block; consumed by Scorpion defaults code)
+    # Scorpion trunks A/B (consumed by Scorpion defaults)
     config_work["SCORPION_TRUNKS"] = {
         "A": {
             "mode": ta_mode,
@@ -291,14 +302,20 @@ if save_cfg:
         }
     }
 
-    # XIP fields
+    # XIP base fields
     config_work["XIP3901_CONTROL_PREFIX"] = xip_ctrl_pfx
     config_work["XIP3901_NETMASK"] = xip_mask
     config_work["XIP3901_GATEWAY"] = xip_gw
     config_work["XIP3901_RANGE"]   = xip_range
     config_work["XIP3901_RANGE_NAME_PFIX"] = xip_name_pfix
     config_work["XIP3901_CONTROL_PORT"]    = int(xip_port)
-    config_work["XIP3901_INTERFACES"] = xip_ifaces  # <-- NEW nest
+
+    # XIP interfaces — SAVE ONLY eth1, eth2, frame (eth3 is intentionally omitted/ignored)
+    config_work["XIP3901_INTERFACES"] = {
+        "eth1": {"mode": eth1_mode, "ipAddress": eth1_ip, "subnetMask": eth1_sm, "gateway": eth1_gw},
+        "eth2": {"mode": eth2_mode, "ipAddress": eth2_ip, "subnetMask": eth2_sm, "gateway": eth2_gw},
+        "frame": {"mode": frm_mode, "ipAddress": frm_ip, "subnetMask": frm_sm, "gateway": frm_gw},
+    }
 
     if _write_json(CONFIG_JSON_PATH, config_work, backup=True):
         st.success("Saved config.json")
@@ -427,7 +444,7 @@ if save_xip:
 st.divider()
 
 # =========================
-# Section C: default_params.json (raw JSON editor)
+# Section C: default_params.json (Scorpion defaults; raw JSON)
 # =========================
 st.header("C) default_params.json (Scorpion defaults)")
 st.caption("This file contains many parameter mappings. Edit as JSON (validated on save).")

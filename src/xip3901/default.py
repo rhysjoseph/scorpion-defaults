@@ -106,40 +106,68 @@ class Defaults:
         return results
 
     def apply_interfaces(self) -> Dict[str, Any]:
+        """
+        Apply interface configuration.
+
+        - eth1/eth2: use Config Manager overrides if provided, else DHCP.
+        - frame:     use Config Manager override if provided, else Off.
+        - eth3:      ALWAYS derived from XIP3901_CONTROL_PREFIX + last_octet (Static).
+                    Any eth3 override in config is ignored by design.
+        """
         results: Dict[str, Any] = {}
 
         def _body(mode: str, ip="0.0.0.0", sm="0.0.0.0", gw_="0.0.0.0"):
             return {"mode": mode, "ipAddress": ip, "subnetMask": sm, "gateway": gw_}
 
+        # Pull optional overrides for eth1/eth2/frame only
         ifaces_cfg = self.config.get("XIP3901_INTERFACES")
-        if isinstance(ifaces_cfg, dict) and all(k in ifaces_cfg for k in ("eth1", "eth2", "eth3", "frame")):
-            for ifid in ("eth1", "eth2", "eth3", "frame"):
-                c = ifaces_cfg.get(ifid) or {}
-                mode = str(c.get("mode", "Auto (DHCP)"))
-                ip   = str(c.get("ipAddress", "0.0.0.0"))
-                sm   = str(c.get("subnetMask", "0.0.0.0"))
-                gw   = str(c.get("gateway", "0.0.0.0"))
-                try:
-                    results[ifid] = self.client.put(f"networking/interfaces/{ifid}",
-                                                    json_data=_body(mode, ip, sm, gw))
-                except RequestException as exc:
-                    results[ifid] = {"error": str(exc)}
-            return results
+        if not isinstance(ifaces_cfg, dict):
+            ifaces_cfg = {}
 
+        # Fallback defaults
+        eth1_cfg = ifaces_cfg.get("eth1", {}) if isinstance(ifaces_cfg.get("eth1"), dict) else {}
+        eth2_cfg = ifaces_cfg.get("eth2", {}) if isinstance(ifaces_cfg.get("eth2"), dict) else {}
+        frm_cfg  = ifaces_cfg.get("frame", {}) if isinstance(ifaces_cfg.get("frame"), dict) else {}
+
+        # Build eth1/eth2/frame bodies (respect overrides if provided)
+        eth1_body = _body(
+            mode=str(eth1_cfg.get("mode", "Auto (DHCP)")),
+            ip=str(eth1_cfg.get("ipAddress", "0.0.0.0")),
+            sm=str(eth1_cfg.get("subnetMask", "0.0.0.0")),
+            gw_=str(eth1_cfg.get("gateway", "0.0.0.0")),
+        )
+        eth2_body = _body(
+            mode=str(eth2_cfg.get("mode", "Auto (DHCP)")),
+            ip=str(eth2_cfg.get("ipAddress", "0.0.0.0")),
+            sm=str(eth2_cfg.get("subnetMask", "0.0.0.0")),
+            gw_=str(eth2_cfg.get("gateway", "0.0.0.0")),
+        )
+        frame_body = _body(
+            mode=str(frm_cfg.get("mode", "Off")),
+            ip=str(frm_cfg.get("ipAddress", "0.0.0.0")),
+            sm=str(frm_cfg.get("subnetMask", "0.0.0.0")),
+            gw_=str(frm_cfg.get("gateway", "0.0.0.0")),
+        )
+
+        # eth3 is ALWAYS derived from control prefix + last octet
         ctrl_net = (self.config.get("XIP3901_CONTROL_PREFIX", "10.169.60") or "10.169.60").rstrip(".")
         mask = self.config.get("XIP3901_NETMASK", "255.255.0.0")
         gw   = self.config.get("XIP3901_GATEWAY", f"{ctrl_net}.1")
+        eth3_body = _body("Static", ip=f"{ctrl_net}.{self.last_octet}", sm=mask, gw_=gw)
+
         payloads = {
-            "eth1": _body("Auto (DHCP)"),
-            "eth2": _body("Auto (DHCP)"),
-            "eth3": _body("Static", ip=f"{ctrl_net}.{self.last_octet}", sm=mask, gw_=gw),
-            "frame": _body("Off"),
+            "eth1": eth1_body,
+            "eth2": eth2_body,
+            "eth3": eth3_body,   # ignore any config override
+            "frame": frame_body,
         }
+
         for ifid, b in payloads.items():
             try:
                 results[ifid] = self.client.put(f"networking/interfaces/{ifid}", json_data=b)
             except RequestException as exc:
                 results[ifid] = {"error": str(exc)}
+
         return results
 
     def apply_nmos_and_ptp(self) -> Dict[str, Any]:
