@@ -311,6 +311,22 @@ def expand_2110_outputs(default_params: dict, config: dict, device_ip: str, outp
 class Defaults:
     """Connects to scorpion to set or read a list of defaults"""
 
+    def _make_device_label(self) -> str:
+        """
+        Build label from config prefix + last octet of control IP, zero-padded.
+        Example: SCORPION_RANGE_NAME_PFIX='SC_' and host '10.169.20.70' -> 'SC_070'
+        """
+        pfix = str(self.config.get("SCORPION_RANGE_NAME_PFIX", "SC_"))
+        # derive last octet robustly
+        try:
+            n = int(str(self.host).strip().split(".")[-1])
+        except Exception:
+            try:
+                n = int(self.last_octet)
+            except Exception:
+                n = 0
+        return f"{pfix}{n:03d}"
+
     def __init__(self, name, host, port=80):
         """
         Args:
@@ -386,8 +402,9 @@ class Defaults:
             raise RuntimeError("Failed to load default_params.json")
 
         # NMOS Name alias (original behaviour)
-        defaults["55"] = self.name
-        defaults["5204"] = self.name
+        label = self._make_device_label()
+        defaults["55"] = label
+        defaults["5204"] = label
 
         # NOTE: we no longer set 6000.* here (trunk IPs) — trunks are applied from config
         # via apply_trunks_from_config() to avoid conflicts with DHCP/Static toggle (6022.x).
